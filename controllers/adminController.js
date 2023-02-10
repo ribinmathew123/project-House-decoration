@@ -90,8 +90,7 @@ const newUserLoad = async (req, res) => {
 
 
 const getproducteditpage = async (req, res) => {
-  // if (req.session.email) {
-    try {
+       try {
       const id = req.query.id;
       const userData = await Product.findById({ _id: id });
       console.log(req.session.error);
