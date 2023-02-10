@@ -14,12 +14,14 @@ const dUri = new DataUri();
 const path = require("path");
 const uploadMiddleware = multer({ storage }).array("images", 10);
 const { cloudinaryConfig, uploader } = require("../config/cloudinary");
+
 const getProductCategoryPage = (req, res) => {
   // catdata
   const catData = { name };
 
   res.render("../views/admin/productcategory.ejs", catData);
 };
+
 
 
 const postaddcategorypage = (req, res) => {
@@ -48,45 +50,50 @@ const getAddProductPage = (req, res) =>
 
 
 
-const postproduct = async (req, res) => {
-  let images=[];
-  // console.log(req.files);
-  // console.log(req.body);
-  if (req.files) {
-    for (let i = 0; i < req.files?.length; i++) {
-      // console.log(req.files[i]);
-      // console.log(req.files[i].originalname);
-      const file = dUri.format(
-        path.extname(req?.files[i]?.originalname).toString(),
-        req.files[i].buffer
-      ).content;
-      await uploader.upload(file).then((result) => {
-        const image = result.url;
-        console.log(result);
-        images.push(result.url)
-      });
-    }
-  }
-  const data = {
-    name: req.body.name,
-    description: req.body.description,
-    category: req.body.category_id,
-    image_url: images,
-    quantity:req.body.quantity,
-    sell:req.body.sell,
-    cost:req.body.cost
-  };
-  // console.log(data);
-  const Product = new productModel(data);
 
-  Product.save()
-    .then(() => {
-      res.redirect("/product/product-lists");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+
+
+const postproduct = async (req, res) => {
+  try {
+    let images = [];
+
+    if (req.files) {
+      for (let i = 0; i < req.files.length; i++) {
+        const file = dUri.format(
+          path.extname(req.files[i].originalname).toString(),
+          req.files[i].buffer
+        ).content;
+  
+        const result = await uploader.upload(file);
+        images.push(result.url);
+      }
+    }
+
+    const data = {
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category_id,
+      image_url: images,
+      quantity: req.body.quantity,
+      sell: req.body.sell,
+      cost: req.body.cost
+    };
+
+    const Product = new productModel(data);
+    await Product.save();
+    res.redirect("/product/product-lists");
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+
+
+
+
+
+
+
 
 const getcategorylist = async (req, res) => {
   // if (req.session.email) {
@@ -181,6 +188,7 @@ const blockproduct = async (req, res) => {
 };
 
 
+
 const cartdataprint = async (req, res) => {
   const email = req.session.userEmail
   let userid = await userdata.findOne({ email: email })
@@ -190,7 +198,6 @@ const cartdataprint = async (req, res) => {
   //   .populate({ path: 'cartItems._id', model: 'Product' });
   res.render("../views/user/cart2.ejs", { proimg: proimg })
 }
-
 
 // cart
 
@@ -203,35 +210,60 @@ const cartdataprint = async (req, res) => {
 
 // cart
 
-async function getAddToCartPage(req, res) {
-  // req.session.cartuserid = req.query.userid 
-  const email = req.session.userEmail
-  let userid = await userdata.findOne({ email: email })
-  let userCart = await cartmodel.findOne({ userId: userid })
-  console.log(userCart);
-  if (!userCart) {
-    await cartmodel.insertMany([{ userId: userid }])
-    userCart = await cartmodel.findOne({ userId: userid })
+const getAddToCartPage = async (req, res) => {
+  try {
+    const email = req.session.userEmail;
+    const userDetails = await userdata.findOne({ email: email });
+
+    
+    const proimg = await cartmodel.findOne({ userId: userDetails._id }).populate(
+      "products.productId"
+    );
+
+    res.render("../views/user/cart2.ejs", {
+      cartList: proimg,
+      usersession: req.session.userEmail,
+    
+    });
+  } catch (err) {
+    console.log(err);
   }
-  let itemIndex = userCart.cartItems.findIndex((cartItems) => {
-    return cartItems.productId == req.query.productid
-  })
-  if (itemIndex > -1) {//-1 if no item matches
-    await cartmodel.updateOne({ userId: userid, 'cartItems.productId': req.query.productid },
-      {
-        $inc: { 'cartItems.$.qty': 1 }
-      }
-    )
+};
+ 
+
+const addCart = async (req, res) => {
+  try {
+    const email = req.session.userEmail;
+    const userDetails = await userdata.findOne({ email });
+    if (!userDetails) {
+      throw new Error(`User with email ${email} not found.`);
+    }
+    let userCart = await cartmodel.findOne({ userId: userDetails._id });
+    if (!userCart) {
+      userCart = new cartmodel({
+        userId: userDetails._id,
+        products: [{ productId: req.query.id, quantity: 1 }],
+      });
+      await userCart.save();
+    } else {
+      await cartmodel.updateOne(
+        { userId: userDetails._id },
+        {
+          $push: { products: { productId: req.query.id, quantity: 1 } },
+        }
+      );
+    }
+
+    res.redirect("/cart");
+  } catch (err) {
+    console.error(err);
   }
-  else {
-    await cartmodel.updateOne({ userId: userid },
-      {
-        $push: { cartItems: { productId: req.query.productid, qty: 1 } }
-      }
-    )
-  }
-  res.redirect('/product/cartdataprint')
-}
+};
+
+
+
+
+
 
 
 

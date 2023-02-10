@@ -19,31 +19,33 @@ const userSchema=new mongoose.Schema
      default:true
     
  }, 
+
+
+
+ 
  addressDetails:[
   {
-   housename:{
+   Fullname:{type:String},
+
+   email:{type:String},
+
+   mobile:Number,
+
+   countryname:{type:String},
+
+   city:{type:String},
+   
+   company:{type:String},
+
+   state:{type:String},
+
+   postal_code:{type:Number},
+
+   houseaddress:{
       type:String
    },
-   area:{
-      type:String
-   },
-   landmark:{
-      type:String
-   },
-   district:{
-      type:String
-   },
-   postoffice:{
-      type:String
-   },
-   state:{
-      type:String
-   },
-   pin:{
-      type:String
-   } 
   }
-],                         },
+],      },
  
  {timestamps:true})
 

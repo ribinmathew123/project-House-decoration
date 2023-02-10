@@ -36,6 +36,9 @@ router.get("/edit-profile", userSession, usercontroller.getusereditProfilePage);
 router.post("/user_profiles/:Dataid",userSession,usercontroller.postusereditProfilePage);
 router.get("/change-Password",userSession,usercontroller.getchangepasswordPage);
 router.post("/change-Password",userSession,usercontroller.postChangePasswordPage);
-router.get("/user-address", userSession, usercontroller.getUserAddressPage);
+
+router.post("/address",userSession,usercontroller.postAddressPage);
+
+
 
 module.exports = router;

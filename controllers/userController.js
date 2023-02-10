@@ -227,14 +227,14 @@ const postusereditProfilePage = async (req, res) => {
       }
     );
 
-    res.redirect("/edit-profile?id=" + req.params.Dataid);
+    res.redirect("/user_profile");
   } catch (error) {
     console.log(error.message);
   }
 };
 
 const getchangepasswordPage = async (req, res) => {
-  res.render("../views/user/changepassword");
+  res.redirect("/user_profile");
 };
 
 // edit user password
@@ -306,30 +306,33 @@ const getusereditProfilePage = async (req, res) => {
   }
 };
 
-const getUserAddressPage = async (req, res) => {
-  // if (req.session.email) {
-  try {
-    const id = req.query.id;
-    console.log(id);
-    const userData = await User.findById({ _id: id });
-    // console.log(req.session.error);
-    if (userData) {
-      let error = req.session.error;
-      req.session.error = null;
-      res.render("../views/user/userAddress", {
-        userDatas: userData,
-        Dataid: req.query.id,
-      });
-    }
+const postAddressPage = async (req, res) => {
 
-    // else {
-    //   res.redirect("/admin");
-    // }
+  try {   let email = req.session.userEmail;
+console.log(email);
+    
+    await User.updateOne({ email:email},{$push:{addressDetails:{
+      Fullname: req.body.name,
+      mobile: req.body.mobile,
+      company: req.body.company,
+      email: req.body.email,
+      countryname: req.body.country,
+      city: req.body.town,
+      state: req.body.state,
+      houseaddress: req.body.address,
+      postal_code: req.body.zip
+      
+    }}})
+
+    res.redirect("/user_profile");
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
   }
 };
 
+
+  
+ 
 // const postuserProfilePage=async(req,res)=>{
 // try {
 
@@ -366,12 +369,10 @@ module.exports = {
   verifyotp,
   getallproductpage,
   getproductdetailspage,
-
   getuserProfilePage,
   getusereditProfilePage,
   getusereditProfilePage,
   postusereditProfilePage,
   getchangepasswordPage,
   postChangePasswordPage,
-  getUserAddressPage,
-};
+  postAddressPage}

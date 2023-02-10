@@ -7,16 +7,13 @@
     <title>Document</title>
 </head>
 <body>
- 
-    <%= proimg.cartItems%>
-
+  <% cartList.products.forEach(function(items){ %>
 
       
-      
-      
-      
+    <div><h6><%=items.productId.name%></h6></div>
 
 
+    <%})%>
 
    
 
