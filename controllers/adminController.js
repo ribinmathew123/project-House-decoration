@@ -88,34 +88,6 @@ const newUserLoad = async (req, res) => {
 
 
 
-// const addUser = async (req, res) => {
-//   try {
-//     User.findOne({ email: req.body.email }).then((user) => {
-//       console.log(user);
-//       if (user) {
-//         if (req.body.email === user.email) {
-//           req.session.wrong = "Email Already Exists";
-//           res.redirect("/admin/new-user");
-//         }
-//       } else {
-//         bcrypt.hash(req.body.password, 10).then((hashedPasword) => {
-//           let user = new User({
-//             name: req.body.name,
-//             email: req.body.email,
-//             password: hashedPasword,
-//           });
-//           user.save();
-
-//           req.session.wrongr = "Registration Success ";
-//           res.redirect("/admin/new-user");
-//         });
-//       }
-//     });
-//   } catch (err) {
-//     console.log("err");
-//   }
-// };
-
 
 const getproducteditpage = async (req, res) => {
   // if (req.session.email) {
