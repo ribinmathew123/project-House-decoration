@@ -104,9 +104,7 @@ const getproducteditpage = async (req, res) => {
         });
       } 
       
-      // else {
-      //   res.redirect("/admin");
-      // }
+   
 
     } catch (error) {
       console.log(error.message);
