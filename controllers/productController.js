@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Category = require("../models/categoryModel");
 const productModel = require("../models/productModel");
 const userdata = require("../models/userModel");
-const cartmodel = require("../models/cart")
+const cartmodel = require("../models/cart");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const storage = multer.memoryStorage();
@@ -22,8 +22,6 @@ const getProductCategoryPage = (req, res) => {
   res.render("../views/admin/productcategory.ejs", catData);
 };
 
-
-
 const postaddcategorypage = (req, res) => {
   const category = new Category({ name: req.body.catname });
   category
@@ -31,7 +29,8 @@ const postaddcategorypage = (req, res) => {
     .then(() => {
       res.redirect("/product/category-list");
     })
-    .catch((error) => {  req.session.error = " Already Exits";
+    .catch((error) => {
+      req.session.error = " Already Exits";
 
       console.log(error);
     });
@@ -48,11 +47,6 @@ const getAddProductPage = (req, res) =>
       console.log(error);
     });
 
-
-
-
-
-
 const postproduct = async (req, res) => {
   try {
     let images = [];
@@ -63,7 +57,7 @@ const postproduct = async (req, res) => {
           path.extname(req.files[i].originalname).toString(),
           req.files[i].buffer
         ).content;
-  
+
         const result = await uploader.upload(file);
         images.push(result.url);
       }
@@ -76,7 +70,7 @@ const postproduct = async (req, res) => {
       image_url: images,
       quantity: req.body.quantity,
       sell: req.body.sell,
-      cost: req.body.cost
+      cost: req.body.cost,
     };
 
     const Product = new productModel(data);
@@ -87,57 +81,39 @@ const postproduct = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
 const getcategorylist = async (req, res) => {
   // if (req.session.email) {
-    try {
-      Category.find({}, (err, userdetails) => {
-        console.log(userdetails);
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("../views/admin/admincategorytable.ejs", {
-            details: userdetails,
-          });
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  } 
-  
-
-
-
-
-
-  
-
-const getproductlistpage = async (req, res) => {
-  
-    try {
-      productModel.find({}, (err, userdetails) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("../views/admin/productList.ejs", {
-            details: userdetails,
-          });
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
+  try {
+    Category.find({}, (err, userdetails) => {
+      console.log(userdetails);
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("../views/admin/admincategorytable.ejs", {
+          details: userdetails,
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
-
+const getproductlistpage = async (req, res) => {
+  try {
+    productModel.find({}, (err, userdetails) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("../views/admin/productList.ejs", {
+          details: userdetails,
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 //  blockcategory,
 const blockcategory = async (req, res) => {
@@ -161,8 +137,6 @@ const blockcategory = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //  blockcproduct,
 const blockproduct = async (req, res) => {
@@ -189,84 +163,115 @@ const blockproduct = async (req, res) => {
 
 
 
-const cartdataprint = async (req, res) => {
-  const email = req.session.userEmail
-  let userid = await userdata.findOne({ email: email })
-  const proimg = await cartmodel.findOne({ userId: userid }).populate('cartItems.productId');
-
-  // const proimg = await cartmodel.findOne({ userId: userid })
-  //   .populate({ path: 'cartItems._id', model: 'Product' });
-  res.render("../views/user/cart2.ejs", { proimg: proimg })
-}
-
-// cart
-
-// const cartdataprint = async (req, res) => {
-//   const email = req.session.userEmail
-//   let userid = await userdata.findOne({ email: email })
-//   const proimg = await cartmodel.findOne({ userId: userid }).populate('cartItems.productId');
-//   res.render("../views/user/cart2.ejs", { proimg: proimg })
-// }
-
-// cart
+// add to cart
 
 const getAddToCartPage = async (req, res) => {
   try {
+    // req.session.cartuserid = req.query.userid
     const email = req.session.userEmail;
-    const userDetails = await userdata.findOne({ email: email });
 
-    
-    const proimg = await cartmodel.findOne({ userId: userDetails._id }).populate(
-      "products.productId"
-    );
+    let userid = await userdata.findOne({ email: email });
+    let userCart = await cartmodel.findOne({ userId: userid });
+    // console.log(userCart);
 
-    res.render("../views/user/cart2.ejs", {
-      cartList: proimg,
-      usersession: req.session.userEmail,
-    
-    });
+    if (req.query?.productid && req.session.userEmail) {
+      if (!userCart) {
+        await cartmodel.insertMany([{ userId: userid }]);
+        userCart = await cartmodel.findOne({ userId: userid });
+      }
+      let itemIndex = userCart.cartItems.findIndex((cartItems) => {
+        return cartItems.productId == req.query.productid;
+      });
+      if (itemIndex > -1) {
+        //-1 if no item matches
+        await cartmodel.updateOne(
+          { userId: userid, "cartItems.productId": req.query.productid },
+          {
+            $inc: { "cartItems.$.qty": 1 },
+          }
+        );
+      } else {
+        await cartmodel.updateOne(
+          { userId: userid },
+          {
+            $push: { cartItems: { productId: req.query.productid, qty: 1 } },
+          }
+        );
+      }
+      res.redirect("/product/cartdataprint");
+    }
   } catch (err) {
     console.log(err);
   }
 };
- 
 
-const addCart = async (req, res) => {
-  try {
-    const email = req.session.userEmail;
-    const userDetails = await userdata.findOne({ email });
-    if (!userDetails) {
-      throw new Error(`User with email ${email} not found.`);
-    }
-    let userCart = await cartmodel.findOne({ userId: userDetails._id });
-    if (!userCart) {
-      userCart = new cartmodel({
-        userId: userDetails._id,
-        products: [{ productId: req.query.id, quantity: 1 }],
-      });
-      await userCart.save();
-    } else {
-      await cartmodel.updateOne(
-        { userId: userDetails._id },
-        {
-          $push: { products: { productId: req.query.id, quantity: 1 } },
-        }
-      );
-    }
 
-    res.redirect("/cart");
-  } catch (err) {
-    console.error(err);
-  }
+
+const cartDisplyPage = async (req, res) => {
+  const email = req.session.userEmail;
+  const user = await userdata.findOne({ email: email });
+  console.log(user);
+
+  const userId = user._id;
+  console.log(user._id);
+
+  const cartList = await cartmodel.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $unwind: "$cartItems",
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "cartItems.productId",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $unwind: "$product",
+    },
+  
+  ]);
+
+  console.log("cartList23423: ", cartList);
+
+  res.render("../views/user/cart.ejs", {
+    cartList: cartList,
+    userId: req.session.userEmail,
+  });
 };
 
+const removeCartItemPage= async(req,res)=>{
+  try {
+    console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+    const id=req.query.id
+    console.log(id);
+
+    cartmodel.updateOne({},{ $pull: { cartItems: { productId: id } } }, 
+      function(err) {
+        if (err) {
+          console.error(err);
+        } else {
+          res.redirect("/product/cartdataprint");
+          console.log('Cart item with product id  was deleted successfully.');
+        }
+      }
+    );
 
 
 
-
-
-
-
+    // const usedrData = await Cart.findByIdAndDelete({ _id: req.query.id });
+    //   res.redirect("/admin/home");
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 module.exports = {
   getProductCategoryPage,
@@ -278,6 +283,7 @@ module.exports = {
   getcategorylist,
   blockcategory,
   uploadMiddleware,
-  getAddToCartPage,cartdataprint,
-  
+  getAddToCartPage,
+  cartDisplyPage,
+  removeCartItemPage
 };

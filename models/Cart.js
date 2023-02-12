@@ -10,30 +10,27 @@ const productModel=require('../models/productModel')
 const cartSchema = new mongoose.Schema({
     userId:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'User'
     },
     
-
-
     
-    products:[{
+    cartItems:[{
             productId:{
-                type:mongoose.Types.ObjectId,
-                ref:'Product',
+                type:mongoose.SchemaTypes.ObjectId,  required:true,
             },
             qty:{
                 type:Number,
                 required:true,
                 default:1,
             },
-            total:{
-                type:Number
-            }
+    
         }],
-        totalPrice:Number,
         discoundamount:{
             type:Number
-        }
+        },
+        total: {
+            type: Number,
+        
+          }
 })
 
 

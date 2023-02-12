@@ -2,7 +2,9 @@ const express = require("express");
 const Admin = require("../models/adminModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const couponModel = require("../models/couponModel");
 const bcrypt = require("bcrypt");
+const { render } = require("ejs");
 
 // get admin loginpage
 const adminLoginpage = async (req, res) => {
@@ -10,7 +12,7 @@ const adminLoginpage = async (req, res) => {
 };
 // adminverification
 
-const adminverification = async (req, res,next) => {
+const adminverification = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = req.body.email;
@@ -21,7 +23,7 @@ const adminverification = async (req, res,next) => {
       console.log(admin);
       if (email == admin.email && password == admin.password) {
         console.log(req.session);
-        req.session.email = email
+        req.session.email = email;
         res.redirect("/admin");
       } else {
         res.render("../views/admin/adminLogin.ejs", {
@@ -31,8 +33,8 @@ const adminverification = async (req, res,next) => {
     } else {
       res.render("../views/admin/adminLogin.ejs", { wrong: "Admin Not Found" });
     }
-  } catch (error){
-    next(error)
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -59,14 +61,10 @@ const getuserlistpage = async (req, res) => {
   }
 };
 
-
-
-
 const adminlogout = async (req, res) => {
   req.session.email = null;
   // req.session.destroy();
   res.redirect("/admin/login");
-
 };
 const newUserLoad = async (req, res) => {
   if (req.session.email) {
@@ -85,49 +83,39 @@ const newUserLoad = async (req, res) => {
   }
 };
 
-
-
-
-
 const getproducteditpage = async (req, res) => {
-       try {
-      const id = req.query.id;
-      const userData = await Product.findById({ _id: id });
-      console.log(req.session.error);
-      if (userData) {
-        let error = req.session.error;
-        req.session.error = null;
-        res.render("../views/admin/updateproduct", {
-          user: userData,
-          error,
-          productid: req.query.id,
-        });
-      } 
-      
-   
-
-    } catch (error) {
-      console.log(error.message);
+  try {
+    const id = req.query.id;
+    const userData = await Product.findById({ _id: id });
+    console.log(req.session.error);
+    if (userData) {
+      let error = req.session.error;
+      req.session.error = null;
+      res.render("../views/admin/updateproduct", {
+        user: userData,
+        error,
+        productid: req.query.id,
+      });
     }
-  
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 const postproducteditpage = async (req, res) => {
-  
-    try {
-      console.log(req.body.name);
-      console.log(req.body.id);
+  try {
+    console.log(req.body.name);
+    console.log(req.body.id);
 
-      const userData = await Product.findByIdAndUpdate(
-        { _id: req.params.product_id },
-        { $set: { name: req.body.name } }
-      );
+    const userData = await Product.findByIdAndUpdate(
+      { _id: req.params.product_id },
+      { $set: { name: req.body.name } }
+    );
 
-      res.redirect("/product/product-lists");
-    } catch (error) {
-      console.log(error.message);
-    }
-  
+    res.redirect("/product/product-lists");
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 // const deleteUser = async (req, res) => {
@@ -166,6 +154,117 @@ const blockuser = async (req, res) => {
   }
 };
 
+// coupon manage
+const getCouponPage = async (req, res) => {
+  try {
+    res.render("../views/admin/couponPage.ejs");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const postCouponPage = async (req, res) => {
+ 
+
+  const data = {
+    couponName: req.body.couponName,
+    description: req.body.des,
+    couponCode: req.body.code,
+    startDate: req.body.start,
+    endDate: req.body.end,
+    minimumAmount: req.body.mini,
+    maximumAmount: req.body.max,
+    discount: req.body.discount,
+  };
+
+  try {
+    const coupon = new couponModel(data);
+    await coupon.save();
+    res.redirect("/admin/couponData");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCouponDisplayPage=async(req,res)=>{
+try {
+const couponData = await couponModel.find();
+  res.render("../views/admin/couponDisplayPage",{couponData});
+  
+} catch (error) {
+  console.log(error);
+}
+}
+
+//cupon edit page
+const getCouponEditPage=async(req,res)=>{
+try {
+
+  console.log(req.query.id)
+const couponData=await couponModel.find({_id:req.query.id})
+console.log(couponData);
+
+  res.render("../views/admin/couponEditPage.ejs",{couponData})
+} catch (error) {
+  console.log(error);
+}
+}
+
+
+
+const getCouponDeletPage=async(req,res)=>{
+  try {
+  
+    console.log(req.query.id)
+  const couponData = await couponModel.findByIdAndDelete({ _id: req.query.id });
+  res.redirect("/admin/couponData");
+  
+  } catch (error) {
+    console.log(error);
+  }
+  }
+
+
+
+
+
+
+
+
+
+
+
+const postCouponEditPage=async(req,res)=>{
+
+  try {
+    console.log(req.query.id );
+
+    const userData = await couponModel.findByIdAndUpdate({ _id: req.query.id },
+      { $set: { 
+        couponName: req.body.couponName,
+        description: req.body.des,  
+        couponCode: req.body.code,
+        startDate: req.body.start,
+        endDate: req.body.end,
+        minimumAmount: req.body.mini,
+        maximumAmount: req.body.max,
+        discount: req.body.discount,} })
+        res.redirect("/admin/couponData");
+
+
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
+
+
+
+
+
+
 module.exports = {
   adminverification,
   adminLoginpage,
@@ -176,4 +275,10 @@ module.exports = {
   getuserlistpage,
   blockuser,
   getproducteditpage,
+  getCouponPage,
+  postCouponPage,
+  getCouponDisplayPage,
+  getCouponEditPage,
+  postCouponEditPage,
+  getCouponDeletPage
 };

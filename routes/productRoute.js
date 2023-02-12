@@ -29,9 +29,9 @@ router.post('/upload', productController.uploadMiddleware);
 
 
 router.get('/cartpage',userSession,productController.getAddToCartPage)
-// router.get('/cartimc',userSession,productController.userAddFromCart)
+router.get('/removecart',userSession,productController.removeCartItemPage)
 // router.get('/cartdec',userSession,productController.userDeductFromCart)
- router.get('/cartdataprint',userSession,productController.cartdataprint)
+ router.get('/cartdataprint',userSession,productController.cartDisplyPage)
 
 
 module.exports = router;

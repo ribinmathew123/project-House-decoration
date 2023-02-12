@@ -16406,23 +16406,33 @@ a.ui-button:active,
 * Components - Breadcrumb
 *****************************/
 .breadcrumb-wrapper {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    margin-bottom: 60px;
+    padding-bottom: 41px;
+    margin-bottom: 35px;
     text-align: center;
 }
+
+
+
+
+
+
+  
+
+
 @media (min-width: 768px) {
     .breadcrumb-wrapper {
-        margin-bottom: 80px;
-        padding-top: 90px;
-        padding-bottom: 90px;
+        margin-bottom: 49px;
+        padding-top: 61px;
+        padding-bottom: 35px;
     }
 }
 @media (min-width: 992px) {
     .breadcrumb-wrapper {
-        margin-bottom: 100px;
+        /* margin-bottom: 100px;
         padding-top: 120px;
-        padding-bottom: 120px;
+        padding-bottom: 120px; */ margin-bottom: 49px;
+    padding-top: 61px;
+    padding-bottom: 35px;
     }
 }
 

@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema({
      type: mongoose.Schema.Types.ObjectId,
   
    },
-   image_url: { type: [String], required: true }
+   image_url: { type: [String], required: true}
 
 },  
 

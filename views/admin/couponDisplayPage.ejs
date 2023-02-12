@@ -1,0 +1,104 @@
+
+<%- include('./layout/adminheader.ejs') %>
+<%- include('./layout/adminsidebar.ejs') %>            
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1></h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/admin/home">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+<div class="card">
+    <div class="card-body">
+      <h5 class="card-title"> Coupon Manage Page</h5>
+
+      <!-- Table with hoverable rows -->
+      <table class="table table-bordered text-center table-hover table-responsive" id=mytable  >
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Code</th>
+
+            <th scope="col">StartDate</th>
+            <th scope="col">EndDate</th>
+            <th scope="col">minimumAmount</th>
+            <th scope="col">maximumAmount</th>
+            <th scope="col">discount</th>
+            <th scope="col">Actions</th>
+
+
+
+
+          </tr>
+        </thead>
+        <tbody>
+            <%couponData.forEach(function(coupon,index){ %> 
+          <tr>
+            <th scope="row"><%= index + 1%></th>
+            <td><%= coupon.couponName%></td>
+            <td><%= coupon.description%></td>
+            <td><%= coupon.couponCode%></td>
+            <td><%= coupon.startDate%></td>
+            <td><%= coupon.endDate%></td>
+            <td><%= coupon.minimumAmount%></td>
+            <td><%= coupon.maximumAmount%></td>
+            <td><%= coupon.discount%></td>
+
+
+            <td>
+        
+            <a class="btn btn-success btn-sm" href="/admin/coupon-edit?id=<%= coupon._id%>"
+              role="button">Edit</a>
+        
+              <a class="btn btn-danger btn-sm" href="/admin/coupon-delete?id=<%= coupon._id%>"
+            role="button">Delete</a>
+              
+          </tr>
+  
+        <% }) %>  
+  
+</table>
+
+    </div>
+  </div>
+ <!-- Right side columns -->
+ <div class="col-lg-4">
+  <!-- Recent Activity -->
+</div><!-- End Right side columns -->
+</div>
+</section>
+</main><!-- End #main -->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- Vendor JS Files -->
+<script src="/public/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/public/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/public/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/public/assets/vendor/quill/quill.min.js"></script>
+<script src="/public/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/public/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/public/assets/vendor/php-email-form/validate.js"></script>
+<!-- Template Main JS File -->
+<script src="/public/assets/js/main.js"></script>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
+  <script>
+  $(document).ready(function(){
+    $("#myinput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#mytable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  }); 
+ </script>
+</html>

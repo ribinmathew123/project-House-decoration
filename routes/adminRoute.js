@@ -20,5 +20,16 @@ router.get("/user-lists", adminSession, admincontroller.blockuser);
 router.post("/login", withOutAdminSession, admincontroller.adminverification);
 router.post(  "/product-edit/:product_id",adminSession,admincontroller.postproducteditpage);
 router.get("/product-edit", adminSession, admincontroller.getproducteditpage);
+router.get("/coupon", adminSession, admincontroller.getCouponPage);
+router.post("/coupon",adminSession,admincontroller.postCouponPage)
+router.get("/couponData",adminSession,admincontroller.getCouponDisplayPage)
+router.get("/coupon-edit",adminSession,admincontroller.getCouponEditPage)
+router.post("/coupon-Edit",adminSession,admincontroller.postCouponEditPage)
+
+router.get("/coupon-Delete",adminSession,admincontroller.getCouponDeletPage)
+
+
+
+
 
 module.exports = router;

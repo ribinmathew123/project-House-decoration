@@ -1,0 +1,142 @@
+<%- include('./layout/adminheader.ejs') %>
+  <%- include('./layout/adminsidebar.ejs') %>
+
+    <main id="main" class="main">
+
+      <div class="pagetitle">
+        <h1>Enter Coupon Details </h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/home">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+
+      <section class="section dashboard">
+        <div class="row d-flex justify-content-center">
+
+          <!-- Left side columns -->
+          <div class="col-lg-10">
+            <div class="row">
+
+              <form class="row g-3" action="/admin/couponData" method="">
+                <div class="col-12">
+
+                   <div class="text-center ">
+
+                     <button type="submit" class="btn btn-success">Show coupon Details</button>
+
+                    </div>
+                  </div>
+              </form>
+         </div>
+        </div>
+
+
+
+
+              <!-- End Reports -->
+
+              <form class="row g-3" action="/admin/coupon" method="post">
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Coupon Name</label>
+                  <input type="text" class="form-control" name="couponName" id="inputNanme4" required>
+                </div>
+                
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label" >Coupon Description</label>
+                  <input type="text" class="form-control" name="des" id="inputNanme4" required>
+                </div>
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label" >Coupon code</label>
+                  <input type="text" class="form-control" name="code" id="inputNanme4" required>
+                </div>
+
+
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label" >Start Date</label>
+                  <input type="date" class="form-control" name="start" id="inputNanme4" required>
+                </div>
+
+
+
+                <div class="col-12">
+                  <label for="inputAddress" class="form-label">End Date</label>
+                  <input type="date" class="form-control" name="end" id="inputAddress" placeholder="" required>
+                </div>
+                
+
+                <div class="col-12">
+                    <label for="inputAddress" class="form-label">Discount (%)</label>
+                    <input type="text" class="form-control" name="discount" id="inputAddress" placeholder="" required>
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Minimum Purchase Amount</label>
+                    <input type="text" class="form-control" name="mini" id="inputAddress" placeholder="" required>
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Maximum Purchase Amount</label>
+                    <input type="text" class="form-control" name="max" id="inputAddress" placeholder="" required>
+                  </div>
+
+
+                <div class="text-center ">
+
+
+                  <button type="submit" class="btn btn-primary">Submit</button>
+
+                </div>
+              </form>
+
+              <!-- Vertical Form -->
+
+
+
+
+
+
+
+
+            </div>
+          </div><!-- End Left side columns -->
+
+          <!-- Right side columns -->
+          <div class="col-lg-4">
+
+            <!-- Recent Activity -->
+
+
+
+
+
+
+
+
+          </div><!-- End Right side columns -->
+
+        </div>
+      </section>
+
+    </main><!-- End #main -->
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="/public/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="/public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="/public/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="/public/assets/vendor/quill/quill.min.js"></script>
+    <script src="/public/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="/public/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="/public/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="/public/assets/js/main.js"></script>
+
+    </body>
+
+    </html>
