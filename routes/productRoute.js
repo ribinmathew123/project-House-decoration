@@ -30,8 +30,10 @@ router.post('/upload', productController.uploadMiddleware);
 
 router.get('/cartpage',userSession,productController.getAddToCartPage)
 router.get('/removecart',userSession,productController.removeCartItemPage)
-// router.get('/cartdec',userSession,productController.userDeductFromCart)
+router.put('/increment-decrement-count/:type',userSession,productController.postCartIncDec)
  router.get('/cartdataprint',userSession,productController.cartDisplyPage)
+ router.get('/checkout',userSession,productController.getCheckoutPage)
+
 
 
 module.exports = router;

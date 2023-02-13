@@ -138,6 +138,8 @@ const blockcategory = async (req, res) => {
   }
 };
 
+
+
 //  blockcproduct,
 const blockproduct = async (req, res) => {
   try {
@@ -205,8 +207,6 @@ const getAddToCartPage = async (req, res) => {
   }
 };
 
-
-
 const cartDisplyPage = async (req, res) => {
   const email = req.session.userEmail;
   const user = await userdata.findOne({ email: email });
@@ -235,7 +235,6 @@ const cartDisplyPage = async (req, res) => {
     {
       $unwind: "$product",
     },
-  
   ]);
 
   console.log("cartList23423: ", cartList);
@@ -246,32 +245,74 @@ const cartDisplyPage = async (req, res) => {
   });
 };
 
-const removeCartItemPage= async(req,res)=>{
+
+
+const removeCartItemPage = async (req, res) => {
   try {
-    console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-    const id=req.query.id
+    const id = req.query.id;
     console.log(id);
 
-    cartmodel.updateOne({},{ $pull: { cartItems: { productId: id } } }, 
-      function(err) {
+    cartmodel.updateOne(
+      {},
+      { $pull: { cartItems: { productId: id } } },
+      function (err) {
         if (err) {
           console.error(err);
         } else {
           res.redirect("/product/cartdataprint");
-          console.log('Cart item with product id  was deleted successfully.');
+          console.log("Cart item with product id  was deleted successfully.");
         }
       }
     );
-
-
-
-    // const usedrData = await Cart.findByIdAndDelete({ _id: req.query.id });
-    //   res.redirect("/admin/home");
-    
   } catch (error) {
     console.log(error);
   }
+};
+
+const postCartIncDec = async (req, res, next) => {
+  try {
+    const type = req.params.type;
+    const userId = req.body.user_id;
+    const productId = req.body.product_id;
+
+    console.log(req.body);
+
+    let update = {};
+    if (type === 'inc') {
+      update = { $inc: { "cartItems.$.qty": 1 } };
+    } else if (type === 'dec') {
+      update = { $inc: { "cartItems.$.qty": -1 } };
+    } else {
+      return res.status(400).json({ error: "Invalid type parameter. Only 'inc' or 'dec' are allowed." });
+    }
+
+    const result = await cartmodel.updateOne({ userId: userId, "cartItems.productId": productId }, update);
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ error: "Cart item not found." });
+    }
+
+    res.json({
+      msg: "Cart item quantity updated successfully."
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Something went wrong. Please try again later." });
+  }
+};
+
+
+// checkoutpage
+const getCheckoutPage=async(req,res)=>
+{
+  try {
+    res.render("../views/user/checkout.ejs")
+  } catch (error) {
+    console.log(error);
+    
+  }
 }
+
 
 module.exports = {
   getProductCategoryPage,
@@ -285,5 +326,6 @@ module.exports = {
   uploadMiddleware,
   getAddToCartPage,
   cartDisplyPage,
-  removeCartItemPage
+  removeCartItemPage,
+  postCartIncDec,getCheckoutPage,
 };
