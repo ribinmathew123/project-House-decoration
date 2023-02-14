@@ -45,7 +45,7 @@ function decrementCount(userId, productId, price) {
       sub_total.innerText = Number(sub_total.innerText) - Number(price);
     });
   } else {
-    alert("error");
+    console.log("error");
   }
 }
 // Make an AJAX request to update the total price

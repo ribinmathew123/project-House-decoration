@@ -109,7 +109,7 @@ const postproducteditpage = async (req, res) => {
 
     const userData = await Product.findByIdAndUpdate(
       { _id: req.params.product_id },
-      { $set: { name: req.body.name } }
+      { $set: { name: req.body.name,quantity:req.body.quantity,sell:req.body.sell,description:req.body.description } }
     );
 
     res.redirect("/product/product-lists");

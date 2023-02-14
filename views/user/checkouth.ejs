@@ -40,8 +40,12 @@
         </div>
     </div> <!-- ...:::: End Breadcrumb Section:::... -->
 
+    <% userDatas.addressDetails.forEach(function(user){ %>
+      <% console.log (userDatas+"111111111111111") %>
         <div>
+            <%= user.Fullname %>
         </div>
+        <% }) %>
 
     <!-- ...:::: Start Checkout Section:::... -->
     <div class="checkout-section">
@@ -56,6 +60,8 @@
                         <form action="#">
 
 
+                            <select  class="custom-select d-block w-100 py-2" onchange=" setaddress(this.value)">
+                                <option value="">Select an option</option>
                                 
                                   <option value=""   ></option>
                               
@@ -535,7 +541,28 @@
             </div>
         </div>
     </div> 
-   
+    <!-- <script>
+    function setaddress(id){
+      console.log('reach');
+    $.ajax({
+        url:'/checkoutform',
+        method:'post',
+        data : {
+            addresId : id
+        },
+        success:(response)=>{
+            console.log(response.data);
+            $("#name").val(response.data[0].name);
+            $("#mobno").val(response.data[0].phone);
+            $("#address").val(response.data[0].address);
+            $("#zip").val(response.data[0].pincode);
+            
+            
+            }
+
+    })
+}
+  </script> -->
     <script src="/public/asset/js/vendor/vendor.min.js"></script>
     <script src="/public/asset/js/plugins/plugins.min.js"></script>
 

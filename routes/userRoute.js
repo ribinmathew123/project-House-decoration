@@ -32,12 +32,15 @@ router.post("/verify/:user_id", noSession, usercontroller.verify);
 router.get("/user_profile", userSession, usercontroller.getuserProfilePage);
 
 router.get("/edit-profile", userSession, usercontroller.getusereditProfilePage);
+router.get("/profile-address", userSession, usercontroller.getProfileAddressPage);
+
 
 router.post("/user_profiles/:Dataid",userSession,usercontroller.postusereditProfilePage);
 router.get("/change-Password",userSession,usercontroller.getchangepasswordPage);
 router.post("/change-Password",userSession,usercontroller.postChangePasswordPage);
 
 router.post("/address",userSession,usercontroller.postAddressPage);
+router.post("/checkoutform",userSession,usercontroller.postAddress);
 
 
 

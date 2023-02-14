@@ -5,8 +5,9 @@ const { sendOTPViaEmail } = require("../util/sendOtpViaEmail");
 const { response } = require("express");
 const sendOtpViaEmail = require("../util/sendOtpViaEmail");
 const Product = require("../models/productModel");
+const Categories = require("../models/categoryModel");
 
-// get user sign up page or keep section in home page
+// get user sign up page or keep section in home
 
 const usersignup = async (req, res, next) => {
   if (req.body.username) {
@@ -20,7 +21,7 @@ const usersignup = async (req, res, next) => {
 
       res.render("../views/user/signup.ejs", { error });
     } catch (error) {
-      next(error)
+      next(error);
       console.log("error.message");
     }
   }
@@ -135,7 +136,7 @@ const userVerification = async (req, res) => {
             res.redirect("/");
           } else {
             res.render("../views/user/userLogin.ejs", {
-              wrongs: "block",
+              wrongs: "Invalid Credentials",
             });
           }
         })
@@ -155,23 +156,74 @@ const userVerification = async (req, res) => {
     });
   }
 };
+
+// load home page
+
 const loadHome = async (req, res) => {
   req.session.userEmail;
-
-  res.render("../views/user/userHome.ejs");
-};
-
-// dissply all product
-const getallproductpage = async (req, res) => {
   try {
     Product.find({}, (err, details) => {
       // console.log(details);
       if (err) {
         console.log(err);
       } else {
-        res.render("../views/user/secondpage.ejs", { alldetails: details });
+        res.render("../views/user/userHome.ejs", { alldetails: details });
       }
     });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+const getProfileAddressPage=async(req,res)=>{
+
+  try {
+
+    let email = req.session.userEmail;
+    const userData = await User.findOne({ email: email });
+    console.log(userData+"ggggggggggggggggggggggggggggg");
+    
+   res.render("../views/user/useraddressprint.ejs", {
+      login: req.session,
+      userDatas: userData,
+    });
+
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+// dissply all product
+const getallproductpage = async (req, res) => {
+  try {
+    const categoryData = await Categories.find({}, { name: 1 });
+
+    Product.find(
+      req.query?.category ? { category: req.query.category } : null,
+      (err, details) => {
+        // console.log(details);
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("../views/user/secondpage.ejs", {
+            alldetails: details,
+            catData: categoryData,
+          });
+        }
+      }
+    );
   } catch (error) {
     console.log(error.message);
   }
@@ -307,22 +359,28 @@ const getusereditProfilePage = async (req, res) => {
 };
 
 const postAddressPage = async (req, res) => {
+  try {
+    let email = req.session.userEmail;
+    console.log(email);
 
-  try {   let email = req.session.userEmail;
-console.log(email);
-    
-    await User.updateOne({ email:email},{$push:{addressDetails:{
-      Fullname: req.body.name,
-      mobile: req.body.mobile,
-      company: req.body.company,
-      email: req.body.email,
-      countryname: req.body.country,
-      city: req.body.town,
-      state: req.body.state,
-      houseaddress: req.body.address,
-      postal_code: req.body.zip
-      
-    }}})
+    await User.updateOne(
+      { email: email },
+      {
+        $push: {
+          addressDetails: {
+            Fullname: req.body.name,
+            mobile: req.body.mobile,
+            company: req.body.company,
+            email: req.body.email,
+            countryname: req.body.country,
+            city: req.body.town,
+            state: req.body.state,
+            houseaddress: req.body.address,
+            postal_code: req.body.zip,
+          },
+        },
+      }
+    );
 
     res.redirect("/user_profile");
   } catch (error) {
@@ -330,9 +388,6 @@ console.log(email);
   }
 };
 
-
-  
- 
 // const postuserProfilePage=async(req,res)=>{
 // try {
 
@@ -358,6 +413,29 @@ const logout = async (req, res) => {
   res.end();
 };
 
+const postAddress = async (req, res, next) => {
+  try {
+    // console.log(req.session);
+    //  let userData= req.session
+    let email = req.session.userEmail;
+    const userData = await User.findOne({ email: email });
+console.log("nnnnnnnnnnnnnnnnnnnnnn");
+    console.log(userData);
+    console.log("nnnnnnnnnnnnnnnnnnnnnn");
+    res.render("../views/user/checkout.ejs", {
+      login: req.session,
+      userDatas: userData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+
+
 module.exports = {
   userVerification,
   userLogin,
@@ -375,4 +453,6 @@ module.exports = {
   postusereditProfilePage,
   getchangepasswordPage,
   postChangePasswordPage,
-  postAddressPage}
+  postAddressPage,postAddress,
+  getProfileAddressPage
+};

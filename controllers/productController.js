@@ -36,16 +36,18 @@ const postaddcategorypage = (req, res) => {
     });
 };
 
-const getAddProductPage = (req, res) =>
+const getAddProductPage = (req, res) => 
   Category.find()
     .then((categories) => {
-      console.log(categories);
       const catData = { edit: false, categories, name: "Add Product" };
+
+
       res.render("../views/admin/product.ejs", { catData });
     })
     .catch((error) => {
       console.log(error);
     });
+
 
 const postproduct = async (req, res) => {
   try {
@@ -192,6 +194,8 @@ const getAddToCartPage = async (req, res) => {
             $inc: { "cartItems.$.qty": 1 },
           }
         );
+
+        
       } else {
         await cartmodel.updateOne(
           { userId: userid },
@@ -306,12 +310,127 @@ const postCartIncDec = async (req, res, next) => {
 const getCheckoutPage=async(req,res)=>
 {
   try {
-    res.render("../views/user/checkout.ejs")
+
+      const email = req.session.userEmail;
+      const user = await userdata.findOne({ email: email });
+      console.log(user);
+    
+      const userId = user._id;
+      console.log(user._id);
+    
+      const cartList = await cartmodel.aggregate([
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+        },
+        {
+          $unwind: "$cartItems",
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "cartItems.productId",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        {
+          $unwind: "$product",
+        },
+      ]);
+    
+      
+
+      console.log("cartList: ", cartList);
+
+    
+      res.render("../views/user/checkout.ejs", {
+        cartList: cartList,
+        userId: req.session.userEmail,
+      });
+
   } catch (error) {
     console.log(error);
     
   }
 }
+
+const couponcheck=async(req,res)=>{
+try {
+  
+    // console.log(req.body.inputValue);
+
+    const user = await userdata.findOne({ email: req.session.userEmail });
+    let userid = user._id
+    console.log(userid+"gggggggggggggggggg");
+    const cartdata = await cartmodel.findOne({ userId: userid });
+    const checkcoupon = await couponmodel.findOne({ name: req.body.inputValue });
+    const checkcouponused = await couponmodel.findOne({ name: req.body.inputValue ,"userdata":{$elemMatch:{userId:userid}} })
+    const finded = await User.find({
+        coupondata : { $elemMatch: {  coupons:req.body.inputValue } }})
+    let exp =checkcoupon.expiredate
+    let date = new Date().toJSON()
+    let total = parseInt(cartdata.totalPrice)
+    let minamound = parseInt(checkcoupon.minpurchaseamount)
+    if (checkcoupon != null ) {
+      console.log('iam in');
+  
+      if (date < exp.toJSON()) {
+        console.log("date is not expire");
+  if ( finded == '') {
+  
+  
+      // if(cartdata.status == true){
+        // console.log(total);
+        // console.log(minamound);
+        if (total > minamound) {
+          console.log('total is more');
+          
+     
+        }
+        
+        else {
+          console.log('lesser than min amound' + cartdata.totalPrice * checkcoupon.discount/ 100);
+         let discoun=parseInt(cartdata.totalPrice) * parseInt(checkcoupon.discount)/ 100
+        let  discount=parseInt(cartdata.totalPrice)-parseInt(discoun)
+          console.log(discount);
+          await User.updateOne({ _id:userdata._id },
+            {
+              $push: { coupondata: { coupons:req.body.inputValue} }
+            })
+         console.log(userdata._id);
+         
+          await cartmodel.updateOne({ userId:userdata._id},{ $set: {discoundamount:discount}})
+        }
+    }
+    else {
+      console.log('coupon is used');
+    }
+      }
+      else {
+        console.log('created date is not reach');
+        console.log(expdate);
+      }
+    }
+    else {
+      console.log('ther is no coupon');
+    }
+  // let a=10
+  // if(a===a){
+    let dis =cartdata.discoundamount
+    res.json({dis})
+  
+  // const success= (req,res)=>{
+  // res.render('../views/payment/sucess.ejs')
+  // }
+
+  
+} catch (error) {
+  console.log(error);
+}
+}
+
 
 
 module.exports = {
@@ -327,5 +446,5 @@ module.exports = {
   getAddToCartPage,
   cartDisplyPage,
   removeCartItemPage,
-  postCartIncDec,getCheckoutPage,
+  postCartIncDec,getCheckoutPage,couponcheck,
 };

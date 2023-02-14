@@ -13,7 +13,11 @@
       href="/public/asset/images/favicon.ico"
       type="image/png"
     />
-
+    
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    
+   
+    
     <link rel="stylesheet" href="/public/asset/css/vendor/vendor.min.css" />
     <link rel="stylesheet" href="/public/asset/css/plugins/plugins.min.css" />
     <link rel="stylesheet" href="/public/asset/css/style.css" />
@@ -54,26 +58,26 @@
                         <a href="/product-display">All Product</a>
                       </li>
                       <li>
-                        <a href="/product-details"> Product Details</a>
+                        <!-- <a href="/product-details"> Product Details</a> -->
                       </li>
-                      <li class="has-dropdown has-megaitem">
+                      <!-- <li class="has-dropdown has-megaitem">
                         <a href="product-details-default.html"
                           >Shop <i class="fa fa-angle-down"></i
-                        ></a>
+                        ></a> -->
                         <!-- Mega Menu -->
                         <div class="mega-menu">
                           <ul class="mega-menu-inner">
                             <li class="mega-menu-item">
                               <ul class="mega-menu-sub">
-                                <li><a href="cart.html">Cart</a></li>
+                                
+                                <li><a href="/product/cartdataprint">Cart</a></li>
                                 <li>
-                                  <a href="empty-cart.html">Empty Cart</a>
+                                  <a href="">Empty Cart</a>
                                 </li>
-                                <li><a href="wishlist.html">Wishlist</a></li>
-                                <li><a href="checkout.html">Checkout</a></li>
-                                <li><a href="login.html">Login</a></li>
+                                <li><a href="">Wishlist</a></li>
+                                <li><a href="">Checkout</a></li>
+                                <li><a href="/userlogin">Login</a></li>
                                 <li>
-                                  <a href="my-account.html">My Account</a>
                                 </li>
                               </ul>
                             </li>
@@ -100,30 +104,36 @@
                   class="header-action-link action-color--black action-hover-color--golden"
                 >
                   <li>
-                    <a href="#offcanvas-wishlish" class="offcanvas-toggle">
+                    <a href="" class="offcanvas-toggle">
                       <i class="icon-heart"></i>
                       <span class="item-count">0</span>
                     </a>
                   </li>
 
                   <li>
-                    <a href="/user_profile" class="offcanvas-toggle">
+                    <a href="/user_profile">
                       <i class="icon-user"> </i>
                     </a>
                   </li>
 
                   <li>
+                    <a href="/product/cartdataprint">
+                        <i class="icon-bag"></i>
+                        <span class="item-count"></span>
+                </li>
+
+                  <!-- <li>
                     <a href="/product/cartdataprint" class="offcanvas-toggle">
                       <i class="icon-bag"></i>
                       <span class="item-count">0</span>
                     </a>
-                  </li>
+                  </li> -->
                   <li>
                     <a href="#search">
                       <i class="icon-magnifier"></i>
                     </a>
                   </li>
-                  <li class="nav-item dropdown">
+                  <!-- <li class="nav-item dropdown">
                     <a
                       class="nav-link dropdown-toggle"
                       id="pagesDropdown"
@@ -132,8 +142,8 @@
                       aria-haspopup="true"
                       aria-expanded="false"
                       ><i class="fas fa-user me-1 text-gray fw-normal"></i
-                      >Account</a
-                    >
+                      ></a
+                    > -->
                     <div
                       class="dropdown-menu mt-3 shadow-sm"
                       aria-labelledby="pagesDropdown"
@@ -200,16 +210,16 @@
                     <i class="icon-magnifier"></i>
                   </a>
                 </li>
-                <li>
+                <!-- <li>
                   <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                     <i class="icon-heart"></i>
                     <span class="item-count">0</span>
                   </a>
-                </li>
+                </li> -->
                 <li>
-                  <a href="#offcanvas-add-cart" class="offcanvas-toggle">
-                    <i class="icon-bag"></i>
-                    <span class="item-count">0</span>
+                  <a href="/product/cartdataprint" class="btn btn-block btn-golden">View Cart</a>
+                 
+                    <span class="item-count"></span>
                   </a>
                 </li>
                 <li>
@@ -255,7 +265,7 @@
                 <a href="/product-display">All Product</a>
               </li>
               <li>
-                <a href="/product-details"> Product Details</a>
+                <!-- <a href="/product-details"> Product Details</a> -->
               </li>
             </ul>
           </div>
@@ -287,9 +297,9 @@
         
 
         <ul class="user-link">
-          <li><a href="wishlist.html">Wishlist</a></li>
-          <li><a href="cart.html">Cart</a></li>
-          <li><a href="checkout.html">Checkout</a></li>
+       
+                 <li><a href="/userlogin">Login</a></li>
+          <li><a href="/logout">Logout</a></li>
         </ul>
       </div>
       <!-- End Mobile contact Info -->

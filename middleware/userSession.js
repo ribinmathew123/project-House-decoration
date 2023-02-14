@@ -7,6 +7,7 @@ const userSession=(req,res,next)=>{
         res.redirect('/userlogin')
     }
 }
+
 function noSession(req,res,next){
     if(!req.session?.userEmail){
         next()

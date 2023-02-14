@@ -28,11 +28,13 @@ router.post('/upload', productController.uploadMiddleware);
 
 
 
-router.get('/cartpage',userSession,productController.getAddToCartPage)
+router.post('/cartpage',userSession,productController.getAddToCartPage)
 router.get('/removecart',userSession,productController.removeCartItemPage)
 router.put('/increment-decrement-count/:type',userSession,productController.postCartIncDec)
  router.get('/cartdataprint',userSession,productController.cartDisplyPage)
  router.get('/checkout',userSession,productController.getCheckoutPage)
+router.get('/couponcheck',userSession,productController.couponcheck)
+
 
 
 

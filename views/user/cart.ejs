@@ -3,6 +3,9 @@
 
 
 
+
+
+
     <!-- End  Offcanvas Addcart Section -->
 
     <!-- Start Offcanvas Mobile Menu Section -->
@@ -94,22 +97,23 @@
                         </td>
 
                         <td class="product_name"><%=item.product.name%></td>
-                        <td class="product-price">$<%=item.product.price%></td>
+                        <td class="product-price">$<%=item.product.cost%></td>
                         <td class="product_quantity">
-                          <label>Quantity</label>
-
-
-                            <button class="increment-button btn" onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.price%>')" data-product-id="<%= item.cartItems.productId%>">+</button>
-                          <!-- <a type="button" href="/product/removecart?id=<%= item.cartItems.productId%>" ><i class="fa fa-trash-o"></i></a> -->
-                  
-
+                          <div class="d-flex justify-content-center align-items-center w-100">
+                            <button type="submit" onclick="decrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" class="decrement-button d-flex justify-content-center align-items-center" data-product-id="<%= item.product._id %>">
+                              <i class="fas fa-minus-circle"></i>
+                            </button>
+                           <p   id="Quantity<%= item.cartItems.productId%>" class="quantity-text d-flex justify-content-center align-items-center w-100"><%= item.cartItems.qty %></p>
+                            <button class="increment-button btn d-flex justify-content-center align-items-center" onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" data-product-id="<%= item.cartItems.productId%>">
+                              <i class="fas fa-plus-circle"></i>
+                            </button>
+                          </div>
                           
-                        <p id="Quantity<%= item.cartItems.productId%>"><%= item.cartItems.qty %></p>
-                        <button type="submit"onclick="decrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.price%>')" class="decrement-button" data-product-id="<%= item.product._id %>">-</button>
+                          
                       </td>
 
 
-                        <% var price = item.cartItems.qty * item.product.price %>
+                        <% var price = item.cartItems.qty * item.product.cost %>
                         <% totalAmount += price %>
                         <% console.log(totalAmount) %>
                     
@@ -163,6 +167,9 @@
                 <div class="coupon_inner">
                   <p>Enter your coupon code if you have one.</p>
                   <input class="mb-2" placeholder="Coupon code" type="text" />
+
+        <a href="/product/cartpage?productid=" class="btn"> Apply coupon</a>  
+
                   <button type="submit" class="btn btn-md btn-golden">
                     Apply coupon
                   </button>
@@ -192,7 +199,7 @@
                     <p class="cart_amount">$ <span id="total-amount2"><%= totalAmount%></span></p>
                   </div>
                   <div class="checkout_btn">
-                    <a href="#" class="btn btn-md btn-golden"
+                    <a href="/product/checkout" class="btn btn-md btn-golden"
                       >Proceed to Checkout</a
                     >
                   </div>
@@ -276,18 +283,18 @@
                                       <div class="modal-add-cart-info"><i class="fa fa-check-square"></i>Added to cart
                                           successfully!</div>
                                       <div class="modal-add-cart-product-cart-buttons">
-                                          <a href="cart.html">View Cart</a>
-                                          <a href="checkout.html">Checkout</a>
+                                          <a href="cartpage">View Cart</a>
+                                          <!-- <a href="checkout.html">Checkout</a> -->
                                       </div>
                                   </div>
                               </div>
                           </div>
                           <div class="col-md-5 modal-border">
                               <ul class="modal-add-cart-product-shipping-info">
-                                  <li> <strong><i class="icon-shopping-cart"></i> There Are 5 Items In Your
-                                          Cart.</strong></li>
-                                  <li> <strong>TOTAL PRICE: </strong> <span>$187.00</span></li>
-                                  <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
+                                  <li> <strong><i class="icon-shopping-cart"></i>
+                                          </strong></li>
+                                  <li> <strong></strong> <span></span></li>
+                                  <li class="modal-continue-button"><a href="/product-display" data-bs-dismiss="modal">CONTINUE
                                           SHOPPING</a></li>
                               </ul>
                           </div>
@@ -379,8 +386,8 @@
                               <div class="modal-product-details-content-area">
                                   <!-- Start  Product Details Text Area-->
                                   <div class="product-details-text">
-                                      <h4 class="title">Nonstick Dishwasher PFOA</h4>
-                                      <div class="price"><del>$70.00</del>$80.00</div>
+                                      <!-- <h4 class="title">Nonstick Dishwasher PFOA</h4> -->
+                                      <!-- <div class="price"><del>$70.00</del>$80.00</div> -->
                                   </div> <!-- End  Product Details Text Area-->
                                   <!-- Start Product Variable Area -->
                                   <div class="product-details-variable">
