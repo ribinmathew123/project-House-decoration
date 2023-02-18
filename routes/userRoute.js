@@ -17,15 +17,11 @@ router.get("/userlogin", noSession, usercontroller.userLogin);
 
 router.get("/product-display", usercontroller.getallproductpage);
 
-router.get(
-  "/product-details/:product_id",
-  usercontroller.getproductdetailspage
-);
+router.get(  "/product-details/:product_id",usercontroller.getproductdetailspage);
 
 router.post("/userlogin", noSession, usercontroller.userVerification);
 
 router.post("/signup", noSession, usercontroller.insertUserData);
-
 
 router.post("/verify/:user_id", noSession, usercontroller.verify);
 
@@ -40,6 +36,7 @@ router.get("/change-Password",userSession,usercontroller.getchangepasswordPage);
 router.post("/change-Password",userSession,usercontroller.postChangePasswordPage);
 
 router.post("/address",userSession,usercontroller.postAddressPage);
+router.get("/getAddressDetails/:userid",userSession,usercontroller.fetchAddress)
 router.post("/checkoutform",userSession,usercontroller.postAddress);
 
 

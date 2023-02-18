@@ -183,7 +183,6 @@ const getProfileAddressPage=async(req,res)=>{
 
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
-    console.log(userData+"ggggggggggggggggggggggggggggg");
     
    res.render("../views/user/useraddressprint.ejs", {
       login: req.session,
@@ -332,8 +331,6 @@ const postChangePasswordPage = async (req, res) => {
   }
 };
 
-// let password=userdatas.password
-// console.log(password);
 
 const getusereditProfilePage = async (req, res) => {
   // if (req.session.email) {
@@ -359,10 +356,14 @@ const getusereditProfilePage = async (req, res) => {
 };
 
 const postAddressPage = async (req, res) => {
+  console.log("address page gggggggggggggggggggggggggggggggggggggg");
+  let email = req.session.userEmail;
+
+console.log(email+"address page gggggggggggggggggggggggggggggggggggggg");
+
   try {
     let email = req.session.userEmail;
-    console.log(email);
-
+console.log("address page gggggggggggggggggggggggggggggggggggggg");
     await User.updateOne(
       { email: email },
       {
@@ -419,9 +420,6 @@ const postAddress = async (req, res, next) => {
     //  let userData= req.session
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
-console.log("nnnnnnnnnnnnnnnnnnnnnn");
-    console.log(userData);
-    console.log("nnnnnnnnnnnnnnnnnnnnnn");
     res.render("../views/user/checkout.ejs", {
       login: req.session,
       userDatas: userData,
@@ -432,6 +430,25 @@ console.log("nnnnnnnnnnnnnnnnnnnnnn");
 };
 
 
+
+
+const fetchAddress = async (req, res) => {
+  console.log("fetch entering......................");
+  const addressId=req.params.userid
+  try {
+    const addressId = req.params.userid;
+    const email = req.session.userEmail;
+    const userData = await User.findOne({ email });
+    const addressDetails = userData.addressDetails.id(addressId);
+    if (!addressDetails) {
+      return res.status(404).json({ message: 'Address not found' });
+    }
+    res.json(addressDetails);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  } 
+}
 
 
 
@@ -454,5 +471,5 @@ module.exports = {
   getchangepasswordPage,
   postChangePasswordPage,
   postAddressPage,postAddress,
-  getProfileAddressPage
+  getProfileAddressPage,fetchAddress
 };

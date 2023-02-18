@@ -91,7 +91,7 @@
 
                       <% cartList.forEach((item)=>{%>
 
-                      <tr>
+                      <tr id="cart-item-<%= item.cartItems.productId %>">
                         <td class="product_thumb">
                           <img src="<%= item.product.image_url[0] %>" />
                         </td>
@@ -124,16 +124,14 @@
                         </span> 
                        </td>
                         <td class="product_remove">
-                          <a
-                            type="button"
-                            href="/product/removecart?id=<%= item.cartItems.productId%>"
-                            ><i class="fa fa-trash-o"></i
-                          ></a>
+                          <button onclick="deleteItem('<%= item.cartItems.productId %>')">
+                            <i class="fa fa-trash-o"></i>
+                          </button>
                         </td>
                       </tr>
                       <!-- End Cart Single Item-->
                       <!-- Start Cart Single Item-->
-
+                  
                       <%})%>
                     </tbody>
                   </table>
@@ -163,16 +161,16 @@
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
-                <h3>Coupon</h3>
-                <div class="coupon_inner">
-                  <p>Enter your coupon code if you have one.</p>
-                  <input class="mb-2" placeholder="Coupon code" type="text" />
+              <h3>Coupon</h3>
+              <div class="coupon_inner">
+                <p>Enter your coupon code if you have one.</p>
+                <input class="mb-2" placeholder="Coupon code" type="text" id="coupon-code-input" />
+                <button class="btn btn-md btn-golden" onclick="applyCoupon('<%= totalAmount%>')">
+                  Apply coupon
+                </button>
+              
+              
 
-        <a href="/product/cartpage?productid=" class="btn"> Apply coupon</a>  
-
-                  <button type="submit" class="btn btn-md btn-golden">
-                    Apply coupon
-                  </button>
                 </div>
               </div>
             </div>
@@ -186,6 +184,7 @@
                 <div class="coupon_inner">
                   <div class="cart_subtotal">
                     <p>Subtotal</p>
+                 
                     <p class="cart_amount">$ <span id="total-amount1"> <%= totalAmount%></span></p>
                   </div>
                   <div class="cart_subtotal">
@@ -213,11 +212,8 @@
     </div>
     <!-- ...:::: End Cart Section:::... -->
 
-    <%}else{%>
-
-    
+    <%}else{%>    
       <h1 class="text-center">No items available</h1>
-  
     <%}%>
     
     <!-- Start Footer Section -->
@@ -460,6 +456,19 @@
           </div>
       </div>
   </div> 
+
+
+
+  
+
+
+
+
+
+
+
+
+
   <script src="/public/asset/js/vendor/vendor.min.js"></script>
   <script src="/public/asset/js/plugins/plugins.min.js"></script>
   <script src="/public/asset/js/cart.js"></script>

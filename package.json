@@ -19,6 +19,7 @@
     "nocache": "^3.0.4",
     "nodemailer": "^6.9.0",
     "path": "^0.12.7",
+    "razorpay": "^2.8.4",
     "session": "^0.1.0",
     "urlencoder": "^0.1.0"
   },

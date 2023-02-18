@@ -3,11 +3,8 @@ const express = require("express");
 const app = express();
 const sessions = require("express-session");
 const noCache = require("nocache");
-const nodemailer = require("nodemailer");
-const mongoose = require("mongoose");
 const cookeiParser = require("cookie-parser");
 const { cloudinaryConfig } = require("./config/cloudinary");
-const bcrypt = require("bcrypt");
 const adminRouter = require("./routes/adminRoute");
 const productRouter = require("./routes/productRoute");
 const userRouter = require("./routes/userRoute");
@@ -41,18 +38,18 @@ app.use("/", userRouter);
 
 
 
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
- // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//  // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 
 
