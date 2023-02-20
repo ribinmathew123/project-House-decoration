@@ -39,6 +39,9 @@ router.post("/address",userSession,usercontroller.postAddressPage);
 router.get("/getAddressDetails/:userid",userSession,usercontroller.fetchAddress)
 router.post("/checkoutform",userSession,usercontroller.postAddress);
 
+router.post("/cashon-delivery",userSession,usercontroller.postCashonDelivery)
+router.get("/order-list",userSession,usercontroller.getUserOrderPage)
+
 
 
 module.exports = router;

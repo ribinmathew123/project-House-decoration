@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Home DEc</title>
+
+    <link
+      rel="shortcut icon"
+      href="/public/asset/images/favicon.ico"
+      type="image/png"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css"
+    />
+
+    <link rel="stylesheet" href="/public/asset/css/vendor/vendor.min.css" />
+    <link rel="stylesheet" href="/public/asset/css/plugins/plugins.min.css" />
+    <link rel="stylesheet" href="/public/asset/css/style.css" />
+  </head>
+
+  <body>
+    <!-- Start Header Area -->
+    <header class="header-section d-none d-xl-block">
+      <div class="header-wrapper">
+        <div
+          class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden"
+        >
+          <div class="container-fluid">
+            <div class="row">
+              <div
+                class="col-12 d-flex align-items-center justify-content-between"
+              >
+                <!-- Start Header Logo -->
+                <div class="header-logo">
+                  <div class="logo">
+                    <!-- -------------------put your log --------------- -->
+                  </div>
+                </div>
+                <!-- End Header Logo -->
+
+                <!-- Start Header Main Menu -->
+                <div
+                  class="main-menu menu-color--black menu-hover-color--golden"
+                >
+                  <nav>
+                    <ul>
+                      <li>
+                        <a href="/">Home</a>
+                      </li>
+                      <li>
+                        <a href="/product-display">Shop</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+                <!-- End Header Main Menu Start -->
+
+                <!-- Start Header Action Link -->
+                <ul
+                  class="header-action-link action-color--black action-hover-color--golden"
+                >
+                  <li>
+                    <a href="" class="offcanvas-toggle">
+                      <i class="icon-heart"></i>
+                      <span class="item-count">0</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="/user_profile">
+                      <i class="icon-user"> </i>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="/product/cart-disply">
+                      <i class="icon-bag"></i>
+                      <span class="item-count"></span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#search">
+                      <i class="icon-magnifier"></i>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      href="#offcanvas-about"
+                      class="offacnvas offside-about offcanvas-toggle"
+                    >
+                      <i class="icon-menu"></i>
+                    </a>
+                  </li>
+                </ul>
+                <!-- End Header Action Link -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Start Header Area -->
+
+    <!-- Start Mobile Header -->
+    <div
+      class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none"
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col-12 d-flex align-items-center justify-content-between">
+            <!-- Start Mobile Left Side -->
+            <div class="mobile-header-left">
+              <ul class="mobile-menu-logo">
+                <li>
+                  <a href="/">
+                    <div class="logo">
+                      <!-------------------- put your logo --------------->
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- End Mobile Left Side -->
+
+            <!-- Start Mobile Right Side -->
+            <div class="mobile-right-side">
+              <ul
+                class="header-action-link action-color--black action-hover-color--golden"
+              >
+                <li>
+                  <a href="#search">
+                    <i class="icon-magnifier"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="" class="offcanvas-toggle">
+                    <i class="icon-heart"></i>
+                    <span class="item-count">3</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="" class="offcanvas-toggle">
+                    <i class="icon-bag"></i>
+                    <span class="item-count">3</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#mobile-menu-offcanvas"
+                    class="offcanvas-toggle offside-menu"
+                  >
+                    <i class="icon-menu"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- End Mobile Right Side -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Mobile Header -->
+
+    <!--  Start Offcanvas Mobile Menu Section -->
+    <div
+      id="mobile-menu-offcanvas"
+      class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section"
+    >
+      <!-- Start Offcanvas Header -->
+      <div class="offcanvas-header text-right">
+        <button class="offcanvas-close">
+          <i class="ion-android-close"></i>
+        </button>
+      </div>
+      <!-- End Offcanvas Header -->
+      <!-- Start Offcanvas Mobile Menu Wrapper -->
+      <div class="offcanvas-mobile-menu-wrapper">
+        <!-- Start Mobile Menu  -->
+        <div class="mobile-menu-bottom">
+          <!-- Start Mobile Menu Nav -->
+
+          <!-- End Mobile Menu Nav -->
+        </div>
+        <!-- End Mobile Menu -->
+
+        <!-- Start Mobile contact Info -->
+        <div class="mobile-contact-info">
+          <div class="logo">
+            <a href="/"
+              ><img src="assets/images/logo/logo_white.png" alt=""
+            /></a>
+          </div>
+
+          <ul class="user-link">
+            <li><a href="">Wishlist</a></li>
+            <li><a href="/product/cart-disply">Cart</a></li>
+            <li><a href="/userlogin">Login</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+        <!-- End Mobile contact Info -->
+      </div>
+    </div>
+
+    <div
+      id="offcanvas-about"
+      class="offcanvas offcanvas-rightside offcanvas-mobile-about-section"
+    >
+      <!-- Start Offcanvas Header -->
+      <div class="offcanvas-header text-right">
+        <button class="offcanvas-close">
+          <i class="ion-android-close"></i>
+        </button>
+      </div>
+      <!-- End Offcanvas Header -->
+      <!-- Start Offcanvas Mobile Menu Wrapper -->
+      <!-- Start Mobile contact Info -->
+      <div class="mobile-contact-info">
+        <div class="logo">
+          <a href="/"><img src="assets/images/logo/logo_white.png" alt="" /></a>
+        </div>
+
+        <ul class="user-link">
+          <li><a href="">Wishlist</a></li>
+
+          <li><a href="/product/cart-disply">Cart</a></li>
+          <li><a href="/userlogin">Login</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+      <!-- End Mobile contact Info -->
+    </div>
+    <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
+
+    <!-- Start Offcanvas Addcart Section -->
+    <div
+      id="offcanvas-add-cart"
+      class="offcanvas offcanvas-rightside offcanvas-add-cart-section"
+    >
+      <!-- Start Offcanvas Header -->
+      <div class="offcanvas-header text-right">
+        <button class="offcanvas-close">
+          <i class="ion-android-close"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Start Offcanvas Search Bar Section -->
+    <div id="search" class="search-modal">
+      <button type="button" class="close">×</button>
+      <form>
+        <input type="search" placeholder="type keyword(s) here" />
+        <button type="submit" class="btn btn-lg btn-golden">Search</button>
+      </form>
+    </div>
+    <!-- End Offcanvas Search Bar Section -->
+
+    <!------- headr posion ending ---------->
+
+    <!-- ...:::: Start Breadcrumb Section:::... -->
+    <div class="breadcrumb-section breadcrumb-bg-color--golden">
+      <div class="breadcrumb-wrapper">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <h3 class="breadcrumb-title">Checkout</h3>
+              <div
+                class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden"
+              >
+                <nav aria-label="breadcrumb">
+                  <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/product/cart-disply">Shop</a></li>
+                    <li class="active" aria-current="page">Checkout</li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ...:::: End Breadcrumb Section:::... -->
+
+    <!-- ...:::: Start Checkout Section:::... -->
+    <div class="checkout-section">
+      <div class="container">
+        <div class="row">
+          <!-- User Quick Action Form -->
+          <div class="col-12">
+            <div
+              class="user-actions accordion"
+              data-aos="fade-up"
+              data-aos-delay="0"
+            >
+              <h3>
+                <i class="fa fa-file-o" aria-hidden="true"></i>
+                Returning customer?
+                <a
+                  class="Returning"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#checkout_login"
+                  aria-expanded="true"
+                  >Click here to login</a
+                >
+              </h3>
+              <div
+                id="checkout_login"
+                class="collapse"
+                data-parent="#checkout_login"
+              >
+                <div class="checkout_info">
+                  <p>
+                    If you have shopped with us before, please enter your
+                    details in the boxes below. If you are a new customer please
+                    proceed to the Billing &amp; Shipping section.
+                  </p>
+                  <form action="#">
+                    <div class="form_group default-form-box">
+                      <label>Username or email <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                    <div class="form_group default-form-box">
+                      <label>Password <span>*</span></label>
+                      <input type="password" />
+                    </div>
+                    <div class="form_group group_3 default-form-box">
+                      <button
+                        class="btn btn-md btn-black-default-hover"
+                        type="submit"
+                      >
+                        Login
+                      </button>
+                      <label class="checkbox-default">
+                        <input type="checkbox" />
+                        <span>Remember me</span>
+                      </label>
+                    </div>
+                    <a href="#">Lost your password?</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div
+              class="user-actions accordion"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <h3>
+                <i class="fa fa-file-o" aria-hidden="true"></i>
+                Returning customer?
+                <a
+                  class="Returning"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#checkout_coupon"
+                  aria-expanded="true"
+                  >Click here to enter your code</a
+                >
+              </h3>
+              <div
+                id="checkout_coupon"
+                class="collapse checkout_coupon"
+                data-parent="#checkout_coupon"
+              >
+                <div class="checkout_info">
+                  <form action="#">
+                    <input placeholder="Coupon code" type="text" />
+                    <button
+                      class="btn btn-md btn-black-default-hover"
+                      type="submit"
+                    >
+                      Apply coupon
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- User Quick Action Form -->
+        </div>
+        <!-- Start User Details Checkout Form -->
+        <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
+          <div class="row">
+            <div class="col-lg-6 col-md-6">
+              <form action="#">
+                <h3>Billing Details</h3>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="default-form-box">
+                      <label>First Name <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="default-form-box">
+                      <label>Last Name <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <label>Company Name</label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <label for="country">country <span>*</span></label>
+                      <select
+                        class="country_option nice-select wide"
+                        name="country"
+                        id="country"
+                      >
+                        <option value="2">Bangladesh</option>
+                        <option value="3">Algeria</option>
+                        <option value="4">Afghanistan</option>
+                        <option value="5">Ghana</option>
+                        <option value="6">Albania</option>
+                        <option value="7">Bahrain</option>
+                        <option value="8">Colombia</option>
+                        <option value="9">Dominican Republic</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <label>Street address <span>*</span></label>
+                      <input
+                        placeholder="House number and street name"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <input
+                        placeholder="Apartment, suite, unit etc. (optional)"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <label>Town / City <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="default-form-box">
+                      <label>State / County <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="default-form-box">
+                      <label>Phone<span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="default-form-box">
+                      <label> Email Address <span>*</span></label>
+                      <input type="text" />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label
+                      class="checkbox-default"
+                      for="newAccount"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#newAccountPassword"
+                    >
+                      <input type="checkbox" id="newAccount" />
+                      <span>Create an account?</span>
+                    </label>
+                    <div
+                      id="newAccountPassword"
+                      class="collapse mt-3"
+                      data-parent="#newAccountPassword"
+                    >
+                      <div class="card-body1 default-form-box">
+                        <label> Account password <span>*</span></label>
+                        <input placeholder="password" type="password" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label
+                      class="checkbox-default"
+                      for="newShipping"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#anotherShipping"
+                    >
+                      <input type="checkbox" id="newShipping" />
+                      <span>Ship to a different address?</span>
+                    </label>
+
+                    <div
+                      id="anotherShipping"
+                      class="collapse mt-3"
+                      data-parent="#anotherShipping"
+                    >
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="default-form-box">
+                            <label>First Name <span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="default-form-box">
+                            <label>Last Name <span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="default-form-box">
+                            <label>Company Name</label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="select_form_select default-form-box">
+                            <label for="countru_name"
+                              >country <span>*</span></label
+                            >
+                            <select
+                              class="niceselect_option wide"
+                              name="cuntry"
+                              id="countru_name"
+                            >
+                              <option value="2">Bangladesh</option>
+                              <option value="3">Algeria</option>
+                              <option value="4">Afghanistan</option>
+                              <option value="5">Ghana</option>
+                              <option value="6">Albania</option>
+                              <option value="7">Bahrain</option>
+                              <option value="8">Colombia</option>
+                              <option value="9">Dominican Republic</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-12">
+                          <div class="default-form-box">
+                            <label>Street address <span>*</span></label>
+                            <input
+                              placeholder="House number and street name"
+                              type="text"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="default-form-box">
+                            <input
+                              placeholder="Apartment, suite, unit etc. (optional)"
+                              type="text"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="default-form-box">
+                            <label>Town / City <span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="default-form-box">
+                            <label>State / County <span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="default-form-box">
+                            <label>Phone<span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="default-form-box">
+                            <label> Email Address <span>*</span></label>
+                            <input type="text" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-3">
+                    <div class="order-notes">
+                      <label for="order_note">Order Notes</label>
+                      <textarea
+                        id="order_note"
+                        placeholder="Notes about your order, e.g. special notes for delivery."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <form action="#">
+                <h3>Your order</h3>
+                <div class="order_table table-responsive">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Handbag fringilla <strong> × 2</strong></td>
+                        <td>$165.00</td>
+                      </tr>
+                      <tr>
+                        <td>Handbag justo <strong> × 2</strong></td>
+                        <td>$50.00</td>
+                      </tr>
+                      <tr>
+                        <td>Handbag elit <strong> × 2</strong></td>
+                        <td>$50.00</td>
+                      </tr>
+                      <tr>
+                        <td>Handbag Rutrum <strong> × 1</strong></td>
+                        <td>$50.00</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Cart Subtotal</th>
+                        <td>$215.00</td>
+                      </tr>
+                      <tr>
+                        <th>Shipping</th>
+                        <td><strong>$5.00</strong></td>
+                      </tr>
+                      <tr class="order_total">
+                        <th>Order Total</th>
+                        <td><strong>$220.00</strong></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div class="payment_method">
+                  <div class="panel-default">
+                    <label
+                      class="checkbox-default"
+                      for="currencyCod"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#methodCod"
+                    >
+                      <input type="checkbox" id="currencyCod" />
+                      <span>Cash on Delivery</span>
+                    </label>
+
+                    <div
+                      id="methodCod"
+                      class="collapse"
+                      data-parent="#methodCod"
+                    >
+                      <div class="card-body1">
+                        <p>
+                          Please send a check to Store Name, Store Street, Store
+                          Town, Store State / County, Store Postcode.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel-default">
+                    <label
+                      class="checkbox-default"
+                      for="currencyPaypal"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#methodPaypal"
+                    >
+                      <input type="checkbox" id="currencyPaypal" />
+                      <span>PayPal</span>
+                    </label>
+                    <div
+                      id="methodPaypal"
+                      class="collapse"
+                      data-parent="#methodPaypal"
+                    >
+                      <div class="card-body1">
+                        <p>
+                          Pay via PayPal; you can pay with your credit card if
+                          you don’t have a PayPal account.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="order_button pt-3">
+                    <button
+                      class="btn btn-md btn-black-default-hover"
+                      type="submit"
+                    >
+                      Proceed to PayPal
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Start User Details Checkout Form -->
+      </div>
+    </div>
+    <!-- ...:::: End Checkout Section:::... -->
+
+    <!-- Start Footer Section -->
+    <footer class="footer-section footer-bg section-top-gap-100">
+      <div class="footer-wrapper footer-top container">
+        <div class="footer-copyright">
+          <p class="copyright-text">
+            &copy; 2021 <a href="index.html">therankme</a>. Made with
+            <i class="fa fa-heart text-danger"></i> by
+            <a href="https://therankme.com/" target="_blank">therankme</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer Section-->
+
+    <script src="/public/asset/js/vendor/vendor.min.js"></script>
+    <script src="/public/asset/js/plugins/plugins.min.js"></script>
+
+    <!-- Main JS -->
+    <script src="/public/asset/js/main.js"></script>
+  </body>
+</html>

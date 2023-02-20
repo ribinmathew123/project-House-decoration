@@ -83,7 +83,7 @@
                                   <td><%= category.name%></td>
 
                                   <td>
-                                    <% if(category.iBlocked==true) {%>
+                                    <% if(category.status==true) {%>
                                       <a class="btn btn-warning btn-sm" href="/product/category-lists?id=<%= category._id%>"
                                         role="button">Block</a>
                                       <%}

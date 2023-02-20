@@ -5,19 +5,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>House Deco</title>
+    <title>Home DEc</title>
 
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link
       rel="shortcut icon"
       href="/public/asset/images/favicon.ico"
       type="image/png"
     />
-    
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
-    
-   
-    
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css"
+    />
+
     <link rel="stylesheet" href="/public/asset/css/vendor/vendor.min.css" />
     <link rel="stylesheet" href="/public/asset/css/plugins/plugins.min.css" />
     <link rel="stylesheet" href="/public/asset/css/style.css" />
@@ -38,9 +45,7 @@
                 <!-- Start Header Logo -->
                 <div class="header-logo">
                   <div class="logo">
-                    <a href="index.html"
-                      ><img src="assets/images/logo/logo_black.png" alt=""
-                    /></a>
+                    <!-- -------------------put your log --------------- -->
                   </div>
                 </div>
                 <!-- End Header Logo -->
@@ -55,44 +60,7 @@
                         <a href="/">Home</a>
                       </li>
                       <li>
-                        <a href="/product-display">All Product</a>
-                      </li>
-                      <li>
-                        <!-- <a href="/product-details"> Product Details</a> -->
-                      </li>
-                      <!-- <li class="has-dropdown has-megaitem">
-                        <a href="product-details-default.html"
-                          >Shop <i class="fa fa-angle-down"></i
-                        ></a> -->
-                        <!-- Mega Menu -->
-                        <div class="mega-menu">
-                          <ul class="mega-menu-inner">
-                            <li class="mega-menu-item">
-                              <ul class="mega-menu-sub">
-                                
-                                <li><a href="/product/cart-disply">Cart</a></li>
-                                <li>
-                                  <a href="">Empty Cart</a>
-                                </li>
-                                <li><a href="">Wishlist</a></li>
-                                <li><a href="">Checkout</a></li>
-                                <li><a href="/userlogin">Login</a></li>
-                                <li>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                          <!-- Mega Menu Sub Link -->
-                          <div class="menu-banner">
-                            <a href="#" class="menu-banner-link">
-                              <img
-                                class="menu-banner-img"
-                                src="assets/images/banner/menu-banner.jpg"
-                                alt=""
-                              />
-                            </a>
-                          </div>
-                        </div>
+                        <a href="/product-display">Shop</a>
                       </li>
                     </ul>
                   </nav>
@@ -122,45 +90,16 @@
                         <span class="item-count"></span>
                 </li>
 
-                  <!-- <li>
-                    <a href="/product/cartdataprint" class="offcanvas-toggle">
-                      <i class="icon-bag"></i>
-                      <span class="item-count">0</span>
-                    </a>
-                  </li> -->
+
+
+
+
+            
                   <li>
                     <a href="#search">
                       <i class="icon-magnifier"></i>
                     </a>
                   </li>
-                  <!-- <li class="nav-item dropdown">
-                    <a
-                      class="nav-link dropdown-toggle"
-                      id="pagesDropdown"
-                      href="#"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      ><i class="fas fa-user me-1 text-gray fw-normal"></i
-                      ></a
-                    > -->
-                    <div
-                      class="dropdown-menu mt-3 shadow-sm"
-                      aria-labelledby="pagesDropdown"
-                    >
-                      <a
-                        class="dropdown-item border-0 transition-link"
-                        href="/userlogin"
-                        >Login</a
-                      >
-                      <a
-                        class="dropdown-item border-0 transition-link"
-                        href="/logout"
-                        >Log out</a
-                      >
-                    </div>
-                  </li>
-
                   <li>
                     <a
                       href="#offcanvas-about"
@@ -192,7 +131,7 @@
                 <li>
                   <a href="/">
                     <div class="logo">
-                      <img src="assets/images/logo/logo_black.png" alt="" />
+                      <!-------------------- put your logo --------------->
                     </div>
                   </a>
                 </li>
@@ -210,16 +149,16 @@
                     <i class="icon-magnifier"></i>
                   </a>
                 </li>
-                <!-- <li>
-                  <a href="#offcanvas-wishlish" class="offcanvas-toggle">
-                    <i class="icon-heart"></i>
-                    <span class="item-count">0</span>
-                  </a>
-                </li> -->
                 <li>
-                  <a href="/product/cart-disply" class="btn btn-block btn-golden">View Cart</a>
-                 
-                    <span class="item-count"></span>
+                  <a href="" class="offcanvas-toggle">
+                    <i class="icon-heart"></i>
+                    <span class="item-count">3</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="" class="offcanvas-toggle">
+                    <i class="icon-bag"></i>
+                    <span class="item-count">3</span>
                   </a>
                 </li>
                 <li>
@@ -239,6 +178,9 @@
     </div>
     <!-- End Mobile Header -->
 
+
+
+
     <!--  Start Offcanvas Mobile Menu Section -->
     <div
       id="mobile-menu-offcanvas"
@@ -256,30 +198,33 @@
         <!-- Start Mobile Menu  -->
         <div class="mobile-menu-bottom">
           <!-- Start Mobile Menu Nav -->
-          <div class="offcanvas-menu">
-            <ul>
-              <li>
-                <a href="/">Home</a>
-              </li>
-              <li>
-                <a href="/product-display">All Product</a>
-              </li>
-              <li>
-                <!-- <a href="/product-details"> Product Details</a> -->
-              </li>
-            </ul>
-          </div>
+          
           <!-- End Mobile Menu Nav -->
         </div>
         <!-- End Mobile Menu -->
 
+        <!-- Start Mobile contact Info -->
+        <div class="mobile-contact-info">
+          <div class="logo">
+            <a href="/"
+              ><img src="assets/images/logo/logo_white.png" alt=""
+            /></a>
+          </div>
+
+          
+          
+
+          <ul class="user-link">
+            <li><a href="">Wishlist</a></li>
+            <li><a href="/product/cart-disply">Cart</a></li>
+            <li><a href="/userlogin">Login</a></li>
+            <li><a href="/logout">Logout</a></li>        </ul>
+          </ul>
+        </div>
         <!-- End Mobile contact Info -->
       </div>
-      <!-- End Offcanvas Mobile Menu Wrapper -->
     </div>
-    <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
 
-    <!-- Start Offcanvas Mobile Menu Section -->
     <div
       id="offcanvas-about"
       class="offcanvas offcanvas-rightside offcanvas-mobile-about-section"
@@ -294,28 +239,43 @@
       <!-- Start Offcanvas Mobile Menu Wrapper -->
       <!-- Start Mobile contact Info -->
       <div class="mobile-contact-info">
-        
+        <div class="logo">
+          <a href="/"><img src="assets/images/logo/logo_white.png" alt="" /></a>
+        </div>
 
         <ul class="user-link">
-       
-                 <li><a href="/userlogin">Login</a></li>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
+          <li><a href="">Wishlist</a></li>
+          
+          <li><a href="/product/cart-disply">Cart</a></li>
+          <li><a href="/userlogin">Login</a></li>
+          <li><a href="/logout">Logout</a></li>        </ul>
       </div>
       <!-- End Mobile contact Info -->
     </div>
     <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
 
-
-
     <!-- Start Offcanvas Addcart Section -->
     <div
       id="offcanvas-add-cart"
-      class="offcanvas offcanvas-rightside offcanvas-add-cart-section">
+      class="offcanvas offcanvas-rightside offcanvas-add-cart-section"
+    >
       <!-- Start Offcanvas Header -->
       <div class="offcanvas-header text-right">
         <button class="offcanvas-close">
           <i class="ion-android-close"></i>
         </button>
       </div>
-      <!-- End Offcanvas Header --></div>
+    </div>
+
+    <!-- Start Offcanvas Search Bar Section -->
+    <div id="search" class="search-modal">
+      <button type="button" class="close">×</button>
+      <form>
+        <input type="search" placeholder="type keyword(s) here" />
+        <button type="submit" class="btn btn-lg btn-golden">Search</button>
+      </form>
+    </div>
+    <!-- End Offcanvas Search Bar Section -->
+
+    <!------- headr posion ending ---------->
+

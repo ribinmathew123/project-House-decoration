@@ -1,11 +1,14 @@
 const express = require("express");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
+
 const bcrypt = require("bcrypt");
 const { sendOTPViaEmail } = require("../util/sendOtpViaEmail");
 const { response } = require("express");
 const sendOtpViaEmail = require("../util/sendOtpViaEmail");
 const Product = require("../models/productModel");
 const Categories = require("../models/categoryModel");
+const orderModel=require("../models/orderModel")
 
 // get user sign up page or keep section in home
 
@@ -175,7 +178,7 @@ const loadHome = async (req, res) => {
   }
 };
 
-
+// user profile 
 
 const getProfileAddressPage=async(req,res)=>{
 
@@ -198,12 +201,6 @@ const getProfileAddressPage=async(req,res)=>{
 
 
 
-
-
-
-
-
-
 // dissply all product
 const getallproductpage = async (req, res) => {
   try {
@@ -216,7 +213,7 @@ const getallproductpage = async (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          res.render("../views/user/secondpage.ejs", {
+          res.render("../views/user/shop.ejs", {
             alldetails: details,
             catData: categoryData,
           });
@@ -242,30 +239,123 @@ const getproductdetailspage = async (req, res) => {
   }
 };
 
+
+// data
+const getUserOrderPage=async(req,res)=>
+{
+  console.log("data entering")
+  try {
+    let email = req.session.userEmail;
+
+   
+     const user = await  User.findOne({ email: email });
+    
+        const userId = user._id;
+        console.log(userId);
+    
+         const orderList = await orderModel.aggregate([
+         {
+           $match: {
+             userId: new mongoose.Types.ObjectId(userId),
+           },
+        },
+          {
+             $unwind: "$orderItems",
+          },
+         {
+         $lookup: {
+              from: "products",
+                localField: "orderItems.productId",
+               foreignField: "_id",
+               as: "product",
+             },
+           },
+          {
+             $unwind: "$product",
+           },
+        ]);
+        console.log("order start yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
+
+        console.log(orderList);
+        console.log("order end hggggggggggggggggggggggggggggggggggggg");
+
+        res.render("../views/user/userOrder.ejs", {
+          // cartList: cartList,
+          // userData: user,
+          // userId: req.session.userEmail,
+        });
+
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+
+
+
+
 // userProfile
 
 const getuserProfilePage = async (req, res, next) => {
   try {
-    // console.log(req.session);
-    //  let userData= req.session
+  
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
+    const userId = user._id;
 
-    console.log(userData);
+    const orderList = await orderModel.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+     },
+       {
+          $unwind: "$orderItems",
+       },
+      {
+      $lookup: {
+           from: "products",
+             localField: "orderItems.productId",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+       {
+          $unwind: "$product",
+        },
+     ]);
+     console.log("order start TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+
+
+     console.log(orderList);
+     console.log("order end QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
+
     res.render("../views/user/userProfile", {
       login: req.session,
-      userDatas: userData,
+      userDatas: userData,orderList,
     });
   } catch (error) {
     next(error);
   }
 };
 
+
+
+
+
+
+
 // edit user data
 const postusereditProfilePage = async (req, res) => {
   try {
-    console.log(req.body.name);
-    console.log(req.params.Dataid);
+    // console.log(req.body.name);
+    // console.log(req.params.Dataid);
 
     await User.findByIdAndUpdate(
       { _id: req.params.Dataid },
@@ -356,14 +446,11 @@ const getusereditProfilePage = async (req, res) => {
 };
 
 const postAddressPage = async (req, res) => {
-  console.log("address page gggggggggggggggggggggggggggggggggggggg");
   let email = req.session.userEmail;
 
-console.log(email+"address page gggggggggggggggggggggggggggggggggggggg");
 
   try {
     let email = req.session.userEmail;
-console.log("address page gggggggggggggggggggggggggggggggggggggg");
     await User.updateOne(
       { email: email },
       {
@@ -450,6 +537,41 @@ const fetchAddress = async (req, res) => {
   } 
 }
 
+const postCashonDelivery = async (req, res) => {
+
+  console.log("starting................"); 
+  console.log(req.body); 
+
+  const totalAmount = $('#total-amount').text();
+  console.log( totalAmount);
+
+
+  console.log(" body ending");
+ 
+  try {
+    const $ = cheerio.load('<span id="total-amount"><%=totalAmount%></span>');
+
+    const totalAmount = $('#total-amount').text();
+    console.log(totalAmount);
+
+
+
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -470,6 +592,9 @@ module.exports = {
   postusereditProfilePage,
   getchangepasswordPage,
   postChangePasswordPage,
-  postAddressPage,postAddress,
-  getProfileAddressPage,fetchAddress
+  postAddressPage,
+  postAddress,
+  getProfileAddressPage,
+  fetchAddress,
+  postCashonDelivery,getUserOrderPage,
 };

@@ -29,7 +29,7 @@ const userSchema=new mongoose.Schema
 
    email:{type:String},
 
-   mobile:Number,
+   mobile:{type:Number},
 
    countryname:{type:String},
 

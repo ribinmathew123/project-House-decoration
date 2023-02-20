@@ -118,18 +118,7 @@ const postproducteditpage = async (req, res) => {
   }
 };
 
-// const deleteUser = async (req, res) => {
-//   if (req.session.email) {
-//     try {
-//       const usedrData = await User.findByIdAndDelete({ _id: req.query.id });
-//       res.redirect("/admin/home");
-//     } catch (error) {
-//       console.log(error.message);
-//     }
-//   } else {
-//     res.redirect("/admin");
-//   }
-// };
+
 
 // block user
 const blockuser = async (req, res) => {

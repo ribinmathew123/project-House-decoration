@@ -2,8 +2,16 @@
 
 
 
-
-
+<style>
+  .product_remove button:hover {
+    color: red;
+  }
+  .decrement-button:hover {
+    color: blue;
+  }.increment-button:hover {
+    color: blue;
+  }
+</style>
 
 
     <!-- End  Offcanvas Addcart Section -->
@@ -42,12 +50,11 @@
             <div class="col-12">
               <h3 class="breadcrumb-title">Cart</h3>
               <div
-                class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden"
-              >
+                class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden" >
                 <nav aria-label="breadcrumb">
                   <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="shop-grid-sidebar-left.html">Shop</a></li>
+                    <li><a href="/product-display">Shop</a></li>
                     <li class="active" aria-current="page">Cart</li>
                   </ul>
                 </nav>
@@ -59,97 +66,137 @@
     </div>
     <!-- ...:::: End Breadcrumb Section:::... -->
 
-    <!-- ...:::: Start Cart Section:::... -->
-    
-    <% if(cartList.length> 0){%>
 
+
+    <!-- cart disply section start -->
+
+    <% if(cartList.length> 0){%>
     <div class="cart-section">
       <!-- Start Cart Table -->
       <div class="cart-table-wrapper" data-aos="fade-up" data-aos-delay="0">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="table_desc">
-                <div class="table_page table-responsive">
-                  <table>
-                    <!-- Start Cart Table Head -->
+          <div class="container">
+              <div class="row">
+                  <div class="col-12">
+                      <div class="table_desc">
+                          <div class="table_page table-responsive">
+                              <table>
+                                  <!-- Start Cart Table Head -->
+                                  <thead>
+                                      <tr>
+                                          <th class="product_thumb">Image</th>
+                                          <th class="product_name">Product</th>
+                                          <th class="product-price">Price</th>
+                                          <th class="product_quantity">Quantity</th>
+                                          <th class="product_total">Total</th>
+                                          <th class="product_remove">Delete</th>
 
-                    <thead>
-                      <tr>
-                        <th class="product_thumb">Image</th>
-                        <th class="product_name">Product</th>
-                        <th class="product-price">Price</th>
-                        <th class="product_quantity">Quantity</th>
-                        <th class="product_total">Total</th>
-                        <th class="product_remove">Delete</th>
-                      </tr>
-                    </thead>
-                    <!-- End Cart Table Head -->
-                    <tbody>
-                      <!-- Start Cart Single Item-->
-                      <% var totalAmount=0 %>
+                                      </tr>
+                                  </thead> <!-- End Cart Table Head -->
+                                  <tbody>
 
-                      <% cartList.forEach((item)=>{%>
+                                    <% var totalAmount=0 %>
 
-                      <tr id="cart-item-<%= item.cartItems.productId %>">
-                        <td class="product_thumb">
-                          <img src="<%= item.product.image_url[0] %>" />
-                        </td>
+                                    <% cartList.forEach((item)=>{%>
+                                      
+                                      <!-- Start Cart Single Item-->
+                                      <tr id="cart-item-<%= item.cartItems.productId %>">
 
-                        <td class="product_name"><%=item.product.name%></td>
-                        <td class="product-price">$<%=item.product.cost%></td>
-                        <td class="product_quantity">
-                          <div class="d-flex justify-content-center align-items-center w-100">
-                            <button type="submit" onclick="decrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" class="decrement-button d-flex justify-content-center align-items-center" data-product-id="<%= item.product._id %>">
-                              <i class="fas fa-minus-circle"></i>
-                            </button>
-                           <p   id="Quantity<%= item.cartItems.productId%>" class="quantity-text d-flex justify-content-center align-items-center w-100"><%= item.cartItems.qty %></p>
-                            <button class="increment-button btn d-flex justify-content-center align-items-center" onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" data-product-id="<%= item.cartItems.productId%>">
-                              <i class="fas fa-plus-circle"></i>
-                            </button>
+                
+
+                                      <td class="product_thumb">  <img src="<%= item.product.image_url[0] %>" /> </td>
+                                         
+
+                                          <td class="product_name"><%=item.product.name%></td>
+
+                                          <td class="product-price">$<%=item.product.cost%></td>
+
+                              <!-- decrement and increment section start -->
+
+                                          <td class="product_quantity">
+                                            <div class="d-flex justify-content-center align-items-center w-100">
+                                              <button type="submit" onclick="decrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" class="decrement-button d-flex justify-content-center align-items-center" data-product-id="<%= item.product._id %>">
+                                                <i class="fas fa-minus-circle"></i>
+                                              </button>
+                                             <p   id="Quantity<%= item.cartItems.productId%>" class="quantity-text d-flex justify-content-center align-items-center w-100"><%= item.cartItems.qty %></p>
+                                              <button class="increment-button btn d-flex justify-content-center align-items-center" onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" data-product-id="<%= item.cartItems.productId%>">
+                                                <i class="fas fa-plus-circle"></i>
+                                              </button>
+                                            </div> 
+                                        </td>
+
+                                <!-- decrement and increment section end -->
+
+                               <!-- price section start -->
+                               <% var price = item.cartItems.qty * item.product.cost %>
+                               <% totalAmount += price %>
+                               <td  class="product_total">$<span id="total-price<%= item.cartItems.productId%>"  >
+                                <%= price%>
+                              </span> 
+                             </td>
+                              <!-- price section end -->
+
+                                 <!-- delete -->
+                                  
+                                 <td class="product_remove">
+                                  <button onclick="deleteItem('<%= item.cartItems.productId %>','<%= price%>')">
+                                    <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                                 <!-- delete -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+                              
+
+
+                                      
+                                      </tr> <!-- End Cart Single Item-->
+                                      <%})%>
+
+                                      
+                                  </tbody>
+
+                                  
+
+
+                              </table>
+
+
+                          <div class="cart_submit">
+                            <a  href="/product-display" class="btn btn-md btn-golden" type="submit">update cart</a>
                           </div>
-                          
-                          
-                      </td>
-
-
-                        <% var price = item.cartItems.qty * item.product.cost %>
-                        <% totalAmount += price %>
-                        <% console.log(totalAmount) %>
-                    
-
-
-                        <td  class="product_total">$<span id="total-price<%= item.cartItems.productId%>"  >
-                          <%= price%>
-                        </span> 
-                       </td>
-                        <td class="product_remove">
-                          <button onclick="deleteItem('<%= item.cartItems.productId %>')">
-                            <i class="fa fa-trash-o"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <!-- End Cart Single Item-->
-                      <!-- Start Cart Single Item-->
-                  
-                      <%})%>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="cart_submit">
-                  <a
-                    href="/product-display"
-                    class="btn btn-md btn-golden"
-                    type="submit"
-                    >update cart</a
-                  >
-                </div>
+                          </div> </div>
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
-        </div>
-      </div>
-      <!-- End Cart Table -->
+      </div> <!-- End Cart Table -->
+
+
+  <!-- cart disply section end -->
+
+
+
+
+
+
+
+
+
+
+
 
       <!-- Start Coupon Start -->
       <div class="coupon_area">
@@ -165,11 +212,9 @@
               <div class="coupon_inner">
                 <p>Enter your coupon code if you have one.</p>
                 <input class="mb-2" placeholder="Coupon code" type="text" id="coupon-code-input" />
-                <button class="btn btn-md btn-golden" onclick="applyCoupon('<%= totalAmount%>')">
+                <button class="btn btn-md btn-golden" onclick="applyCoupon()">
                   Apply coupon
                 </button>
-              
-              
 
                 </div>
               </div>
@@ -184,8 +229,8 @@
                 <div class="coupon_inner">
                   <div class="cart_subtotal">
                     <p>Subtotal</p>
-                 
-                    <p class="cart_amount">$ <span id="total-amount1"> <%= totalAmount%></span></p>
+                    <p class="cart_amount">$ <span id="total-amount2"><%= totalAmount%></span></p>
+
                   </div>
                   <div class="cart_subtotal">
                     <p>Shipping</p>
@@ -195,7 +240,9 @@
 
                   <div class="cart_subtotal">
                     <p>Total</p>
-                    <p class="cart_amount">$ <span id="total-amount2"><%= totalAmount%></span></p>
+                    <p class="cart_amount">$ <span id="total-amount1"> <%= totalAmount%></span></p>
+
+                    <!-- <p class="cart_amount">$ <span id="total-amount2"><%= totalAmount%></span></p> -->
                   </div>
                   <div class="checkout_btn">
                     <a href="/product/checkout" class="btn btn-md btn-golden"
@@ -213,8 +260,25 @@
     <!-- ...:::: End Cart Section:::... -->
 
     <%}else{%>    
-      <h1 class="text-center">No items available</h1>
-    <%}%>
+ <!-- ...::::Start About Us Center Section:::... -->
+ <div class="empty-cart-section section-fluid">
+  <div class="emptycart-wrapper">
+      <div class="container">
+          <div class="row">
+              <div class="col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3">
+                  <div class="emptycart-content text-center">
+                      <div class="image">
+                          <img class="img-fluid" src="/public/asset/images/emprt-cart/empty-cart.png" alt="">
+                      </div>
+                      <h4 class="title">Your Cart is Empty</h4>
+                      <h6 class="sub-title">Sorry Mate... No item Found inside your cart!</h6>
+                      <a href="/product-display" class="btn btn-lg btn-golden">Continue Shopping</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div> <!-- ...::::End  About Us Center Section:::... -->    <%}%>
     
     <!-- Start Footer Section -->
     <footer class="footer-section footer-bg section-top-gap-100">
@@ -237,7 +301,7 @@
                   <div class="row justify-content-between align-items-center align-items-center flex-column flex-md-row mb-n6">
                       <!-- <div class="col-auto mb-6"> -->
                           <div class="footer-copyright">
-                              <p class="copyright-text">&copy; 2023 Admin</a></p>
+                              <p class="copyright-text">&copy; 2023 Admin</p>
 
                           </div>
                       </div>
@@ -439,7 +503,9 @@
                                                   Cart</a>
                                           </div>
                                       </div>
-                                  </div> <!-- End Product Variable Area -->
+                                  </div> 
+                                  
+                                  <!-- End Product Variable Area -->
                                   <!-- <div class="modal-product-about-text">
                                       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia iste
                                           laborum ad impedit pariatur esse optio tempora sint ullam autem deleniti nam
@@ -460,11 +526,11 @@
 
 
   
+ 
 
 
 
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 
 
@@ -473,7 +539,9 @@
   <script src="/public/asset/js/plugins/plugins.min.js"></script>
   <script src="/public/asset/js/cart.js"></script>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Main JS -->
   <script src="/public/asset/js/main.js"></script>
 </body>

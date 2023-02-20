@@ -22,7 +22,7 @@ router.post('/upload', adminSession,productController.uploadMiddleware);
 router.post('/cartpage',userSession,productController.getAddToCartPage)
 router.put('/removecart',userSession,productController.removeCartItemPage)
 router.put('/increment-decrement-count/:type',userSession,productController.postCartIncDec)
-router.get('/cartdataprint',userSession,productController.cartDisplyPage)
+router.get('/cart-disply',userSession,productController.cartDisplyPage)
 router.get('/checkout',userSession,productController.getCheckoutPage)
 router.post('/couponcheck',userSession,productController.couponcheck)
 router.get('/wish-list',userSession,productController.userAddToWishlist)

@@ -5,6 +5,7 @@ const Category = require("../models/categoryModel");
 const productModel = require("../models/productModel");
 const userdata = require("../models/userModel");
 const cartmodel = require("../models/cart");
+const orderModel = require("../models/orderModel");
 const couponmodel=require("../models/couponModel")
 const wishlistData=require("../models/wishlistModel")
 const multer = require("multer");
@@ -51,7 +52,7 @@ const getAddProductPage = (req, res) =>
       console.log(error);
     });
 
-    
+
 const postproduct = async (req, res) => {
   try {
     let images = [];
@@ -125,16 +126,17 @@ const blockcategory = async (req, res) => {
   try {
     const check = await Category.findById({ _id: req.query.id });
 
-    console.log(req.query);
-    if (check.iBlocked == true) {
+
+
+    if (check.status == true) {
       await Category.findByIdAndUpdate(
         { _id: req.query.id },
-        { $set: { iBlocked: false } }
+        { $set: { status: false } }
       );
     } else {
       await Category.findByIdAndUpdate(
         { _id: req.query.id },
-        { $set: { iBlocked: true } }
+        { $set: { status: true } }
       );
     }
     res.redirect("/product/category-list");
@@ -148,7 +150,6 @@ const blockproduct = async (req, res) => {
   try {
     const check = await productModel.findById({ _id: req.query.id });
 
-    console.log(req.query);
     if (check.iBlocked == true) {
       await productModel.findByIdAndUpdate(
         { _id: req.query.id },
@@ -212,10 +213,8 @@ const cartDisplyPage = async (req, res) => {
   const email = req.session.userEmail;
 
   const user = await userdata.findOne({ email: email });
-  console.log(user);
 
   const userId = user._id;
-  console.log(user._id);
 
   const cartList = await cartmodel.aggregate([
     {
@@ -239,36 +238,12 @@ const cartDisplyPage = async (req, res) => {
     },
   ]);
 
-  console.log("cartList23423: ", cartList);
 
   res.render("../views/user/cart.ejs", {
     cartList: cartList,
     userId: req.session.userEmail,
   });
 };
-
-// const removeCartItemPage = async (req, res) => {
-//   try {
-//     const id = req.query.id;
-//     console.log(id);
-
-//     cartmodel.updateOne(
-//       {},
-//       { $pull: { cartItems: { productId: id } } },
-//       function (err) {
-//         if (err) {
-//           console.error(err);
-//         } else {
-//           res.redirect("/product/cartdataprint");
-//           console.log("Cart item with product id  was deleted successfully.");
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 
 
 
@@ -302,13 +277,13 @@ const removeCartItemPage = async (req, res) => {
 
 
 
+
 const postCartIncDec = async (req, res, next) => {
   try {
     const type = req.params.type;
     const userId = req.body.user_id;
     const productId = req.body.product_id;
 
-    console.log(req.body);
 
     let update = {};
     if (type === "inc") {
@@ -343,6 +318,9 @@ const postCartIncDec = async (req, res, next) => {
   }
 };
 
+
+
+
 // checkoutpage
 const getCheckoutPage = async (req, res) => {
   try {
@@ -350,7 +328,6 @@ const getCheckoutPage = async (req, res) => {
     const user = await userdata.findOne({ email: email });
 
     const userId = user._id;
-    console.log(user._id);
 
     const cartList = await cartmodel.aggregate([
       {
@@ -373,10 +350,56 @@ const getCheckoutPage = async (req, res) => {
         $unwind: "$product",
       },
     ]);
+    //  console.log("cartList: cart datas...................", cartList);
 
-    // console.log("cartList: ", cartList);
 
-    console.log(user);
+    cartList.forEach((item) => {
+      console.log("item starting");
+      console.log("Product Name : "+item.product.name );
+      console.log("Product image : "+item.product.image_url[0] );
+      console.log("quantity"+ item.cartItems.qty );
+      console.log("Product ID:" + item.cartItems.productId );
+      console.log("user ID:"+item.userId );
+
+
+    });
+    console.log("item ending");
+
+    
+    const totalAmount = cartList.reduce((total, item) => {
+      return total + item.cartItems.qty * item.product.cost;
+    }, 0);
+    //  con
+    const order = new orderModel({
+      userId: userId,
+      orderItems: cartList.map((item) => ({
+        productId: item.product._id,
+        quantity: item.cartItems.qty,
+      })),
+      totalPrice: totalAmount,
+    });
+    await order.save();
+    
+
+    // const order = new ordermodel({
+    //   userId: item.userId,
+    //   productId: item.cartItems.productId,
+    //   productName: item.product.name,
+    //   productImage: item.product.image_url[0],
+    //   quantity: item.cartItems.qty
+    // });
+    
+    // order.save((err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log("Order saved successfully");
+    //   }
+    // });
+    // console.log("cartList:", cartList);
+
+
+
     res.render("../views/user/checkout.ejs", {
       cartList: cartList,
       userData: user,
@@ -536,16 +559,15 @@ const couponcheck = async (req, res) => {
 
 
 
-    if (!coupon) {
+    if (coupon) {
+      console.log("Coupon found");
+      res.status(200).json(coupon);
+
+    } else {
+      // Coupon not 
       console.log("Coupon not found");
       res.status(400).json({ error: "Coupon not found" });
-      return;
-    
-    } else {
-      // Coupon not found
-      console.log("Coupon found");
 
-      res.status(404).json({ message: "Coupon not found" });
     }
   } catch (error) {
     console.error(error);
