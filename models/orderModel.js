@@ -16,11 +16,12 @@ const orderSchema = new mongoose.Schema({
       },
       quantity: {
         type: Number,
-      }
+      }, orderStatus: {
+        type: String,
+        default: 'pending'
+      },
     }],
-    shippingAddress: {
-      type: String,
-    },
+   
     paymentMethod: {
       type: String,
     },
@@ -46,7 +47,47 @@ const orderSchema = new mongoose.Schema({
     },
     deliveredAt: {
       type: Date
-    }
+    },
+
+  
+    name: {
+      type: String,
+    },
+
+    shop: {
+      type: String,
+      
+    },
+
+    state: {
+      type: String,
+
+    },
+    city: {
+      type: String,
+
+    },
+    street: {
+      type: String,
+
+    },
+   
+    code: {
+      type: Number,
+
+    },
+    mobile: {
+      type: Number,
+
+    },
+    email: {
+      type: String,
+
+    },
+    paymentMethod:{type:String},
+   
+  
+
   }, {
     timestamps: true
   });

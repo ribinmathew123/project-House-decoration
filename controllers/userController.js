@@ -191,7 +191,6 @@ const getProfileAddressPage=async(req,res)=>{
       login: req.session,
       userDatas: userData,
     });
-
     
   } catch (error) {
     console.log(error);
@@ -243,7 +242,6 @@ const getproductdetailspage = async (req, res) => {
 // data
 const getUserOrderPage=async(req,res)=>
 {
-  console.log("data entering")
   try {
     let email = req.session.userEmail;
 
@@ -274,11 +272,9 @@ const getUserOrderPage=async(req,res)=>
              $unwind: "$product",
            },
         ]);
-        console.log("order start yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 
 
-        console.log(orderList);
-        console.log("order end hggggggggggggggggggggggggggggggggggggg");
+      
 
         res.render("../views/user/userOrder.ejs", {
           // cartList: cartList,
@@ -329,11 +325,7 @@ const getuserProfilePage = async (req, res, next) => {
           $unwind: "$product",
         },
      ]);
-     console.log("order start TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-
-
-     console.log(orderList);
-     console.log("order end QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+   
 
 
     res.render("../views/user/userProfile", {
@@ -476,23 +468,7 @@ const postAddressPage = async (req, res) => {
   }
 };
 
-// const postuserProfilePage=async(req,res)=>{
-// try {
 
-//   let email=req.session.userEmail
-//   const userdatas = await User.findOne({ email: email });
-//   // let userid = userdatas._id
-//       // console.log(orderdata);
-//   // res.render("../views/user/userprofile.ejs",{userdatas,order})
-// }
-
-// catch (error) {
-//   console.log(error);
-// }
-
-// }
-
-//  user logout
 
 const logout = async (req, res) => {
   req.session.userEmail = null;
@@ -536,6 +512,7 @@ const fetchAddress = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   } 
 }
+
 
 const postCashonDelivery = async (req, res) => {
 

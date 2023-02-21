@@ -11,7 +11,7 @@ function incrementCount(userId, productId, price) {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ 
+    body: JSON.stringify({
       product_id: productId,
       user_id: userId,
     }),
@@ -22,8 +22,6 @@ function incrementCount(userId, productId, price) {
     total.innerText = parseInt(total.innerText) + Number(price);
   });
 }
-
-
 
 function decrementCount(userId, productId, price) {
   let quantity = document.querySelector("#Quantity" + productId);
@@ -53,10 +51,6 @@ function decrementCount(userId, productId, price) {
   }
 }
 
-
-
-
-
 // Make an AJAX request to update the total price
 function updateTotalPrice(quantity, productId) {
   $.ajax({
@@ -73,79 +67,65 @@ function updateTotalPrice(quantity, productId) {
   });
 }
 
-
-
-
-
-
 // cart product delete
 
-function deleteItem(productId,price) {
+function deleteItem(productId, price) {
+  //   fetch(`/product/removecart?id=${productId}`, { method: "PUT" })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         console.log(
+  //           `Item with product id ${productId} was deleted successfully.`
+  //         );
+  //         const itemRow = document.getElementById(`cart-item-${productId}`);
+  //         if (itemRow) {
+  //           itemRow.remove();
+  //         }
+  //       } else {
+  //         console.error(
+  //           "Failed to delete item:",
+  //           response.status,
+  //           response.statusText
+  //         );
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Failed to delete item:", error);
+  //     });
+  // }
 
-//   fetch(`/product/removecart?id=${productId}`, { method: "PUT" })
-//     .then((response) => {
-//       if (response.ok) {
-//         console.log(
-//           `Item with product id ${productId} was deleted successfully.`
-//         );
-//         const itemRow = document.getElementById(`cart-item-${productId}`);
-//         if (itemRow) {
-//           itemRow.remove();
-//         }
-//       } else {
-//         console.error(
-//           "Failed to delete item:",
-//           response.status,
-//           response.statusText
-//         );
-//       }
-//     })
-//     .catch((error) => {
-//       console.error("Failed to delete item:", error);
-//     });
-// }
-
-
-let quantity = document.querySelector("#Quantity" + productId);
-let total = document.querySelector("#total-price" + productId);
-let sub_total = document.querySelector("#total-amount1");
-let total_amount = document.querySelector("#total-amount2");
+  let quantity = document.querySelector("#Quantity" + productId);
+  let total = document.querySelector("#total-price" + productId);
+  let sub_total = document.querySelector("#total-amount1");
+  let total_amount = document.querySelector("#total-amount2");
   swal({
     title: "Are you sure?",
     text: "Once deleted, you will not be able to recover this item!",
     icon: "warning",
     buttons: true,
     dangerMode: true,
-  })
-  .then((willDelete) => {
+  }).then((willDelete) => {
     if (willDelete) {
       fetch(`/product/removecart?id=${productId}`, {
-        method: 'PUT',
+        method: "PUT",
       })
-      .then(response => {
-        console.log(response);
-        const itemRow = document.getElementById(`cart-item-${productId}`);
-        if (itemRow) {
-          itemRow.remove();
-          total.innerText = parseInt(total.innerText) - Number(price);
-          total_amount.innerText = Number(total_amount.innerText) - Number(price);
-          sub_total.innerText = Number(sub_total.innerText) - Number(price);
-        }
-      })
-      .catch(error => {
-        // Handle errors here
-        console.error(error);
-      });
+        .then((response) => {
+          console.log(response);
+          const itemRow = document.getElementById(`cart-item-${productId}`);
+          if (itemRow) {
+            itemRow.remove();
+            total.innerText = parseInt(total.innerText) - Number(price);
+            total_amount.innerText =
+              Number(total_amount.innerText) - Number(price);
+            sub_total.innerText = Number(sub_total.innerText) - Number(price);
+          }
+        })
+        .catch((error) => {
+          // Handle errors here
+          console.error(error);
+        });
     }
   });
 }
-
-
-  
-
-
-
-
 
 // coupon code
 function applyCoupon() {
@@ -161,7 +141,7 @@ function applyCoupon() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      total_amount.innerText =Number(total_amount.innerText-data.discount)
+      total_amount.innerText = Number(total_amount.innerText - data.discount);
     })
     .catch((error) => {
       console.error("Failed to apply coupon:" + error);
@@ -170,3 +150,40 @@ function applyCoupon() {
 
 
 
+
+
+
+document.querySelector("#paymentForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  let total_amount = document.querySelector("#totalAmount").innerText;
+
+  console.log(total_amount+"tatoal amount");
+
+  const payment = document.querySelectorAll('input[name="payment"]');
+  console.log(payment[0].value);
+  if (payment[1].value == "online") {
+    fetch("/product/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    })
+      .then((response) => response.json())
+      .then((order) => {
+        console.log(order);
+        var options = {
+          key: "rzp_test_7gAGPftwtY20XB",
+          name: "Test Company",
+          amount:order.amount*100,
+
+          order_id: order.id,
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+      })
+      .catch((error) => {
+        console.error("Failed to apply coupon:" + error);
+      });
+  }
+});

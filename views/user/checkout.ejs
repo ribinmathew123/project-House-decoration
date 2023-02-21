@@ -9,7 +9,7 @@
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
-   
+
     <!-- ...:::: Start Breadcrumb Section:::... -->
     <div class="breadcrumb-section breadcrumb-bg-color--golden">
         <div class="breadcrumb-wrapper">
@@ -46,182 +46,201 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
 
-                            
-                            <h3>Billing Details</h3>
-                            <div class="row">
+
+                        <h3>Billing Details</h3>
+                        <div class="row">
+
+                            <div class="col-12" id="selectedAddressDetails">
+
+                                <div class="select_form_select default-form-box">
+                                    <label for="countru_name">Your Address </label>
+                                    <select class="niceselect_option wide" name="cuntry" id="countru_name"
+                                        onchange="updateAddressDetails(this.value)">
+                                        <option value="2">Select Your Address</option>
+                                        <% if (userData.addressDetails && userData.addressDetails.length> 0) { %>
+                                            <% for (let i=0; i < userData.addressDetails.length; i++) { %>
+
+                                                <option value="<%= userData.addressDetails[i]._id %>">
+                                                    <%= userData.addressDetails[i].Fullname %>
+                                                        <%= userData.addressDetails[i].houseaddress %>
+                                                </option>
+
+                                                <% } %>
+                                                    <% } else { %>
+                                                        <p>No address selected</p>
+                                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                            <form id="paymentForm" action="/product/checkoutn" method="post">
 
                                 <div class="col-12" id="selectedAddressDetails">
+                                    <div class="default-form-box">
+                                        <label>Full Name <span>*</span></label>
+                                        <input type="text" id="name" name="name" value="">
 
-                                    <div class="select_form_select default-form-box">
-                                        <label for="countru_name">Your Address </label>
-                                        <select class="niceselect_option wide" name="cuntry"
-                                            id="countru_name" onchange="updateAddressDetails(this.value)">
-                                            <option value="2">Select Your Address</option>
-                                            <% if (userData.addressDetails && userData.addressDetails.length > 0) { %>
-                                                <% for (let i = 0; i < userData.addressDetails.length; i++) { %>
-
-                                            <option value="<%= userData.addressDetails[i]._id %>"><%= userData.addressDetails[i].Fullname %><%= userData.addressDetails[i].houseaddress %></option>
-                                            
-                                            <% } %>
-                                            <% } else { %>
-                                                <p>No address selected</p>
-                                              <% } %>
-                                        </select>
                                     </div>
-                                </div>                             
-                                
-                                
-                              
-   <form action="/cashon-delivery" method="POST">
+                                    <!-- Display other address details here -->
 
-<div class="col-12" id="selectedAddressDetails">
-      <div class="default-form-box">
-        <label>Full Name <span>*</span></label>
-        <input type="text" id="name" name="name" value="">
+                                </div>
 
-      </div>
-      <!-- Display other address details here -->
- 
-  </div>
 
-        
-                                    <div class="col-12">
-                                        <div class="default-form-box">
-                                            <label>Company/Shop</label>
-                                            <input  id="shop" name="shop" type="text">
-                                        </div>
+                                <div class="col-12">
+                                    <div class="default-form-box">
+                                        <label>Company/Shop</label>
+                                        <input id="shop" name="shop" type="text">
                                     </div>
-                                
+                                </div>
 
-                                    <div class="col-12">
-                                        <div class="default-form-box">
-                                            <label>
 
-                                                State <span>*</span></label>
-                                            <input  id="state" name="state" type="text" required>
-                                        </div>
+                                <div class="col-12">
+                                    <div class="default-form-box">
+                                        <label>
+
+                                            State <span>*</span></label>
+                                        <input id="state" name="state" type="text" required>
                                     </div>
+                                </div>
 
 
-                                    <div class="col-12">
-                                        <div class="default-form-box">
-                                            <label>Town / City <span>*</span></label>
-                                            <input type="text"  id="city" placeholder="city" name="city" required>
-                                        </div>
+                                <div class="col-12">
+                                    <div class="default-form-box">
+                                        <label>Town / City <span>*</span></label>
+                                        <input type="text" id="city" placeholder="city" name="city" required>
                                     </div>
+                                </div>
 
-                                    <div class="col-12">
-                                        <div class="default-form-box">
-                                            <label>Street Address <span>*</span></label>
-                                            <input name="street"  id="street"  type="text"
-                                                required>
-                                        </div>
+                                <div class="col-12">
+                                    <div class="default-form-box">
+                                        <label>Street Address <span>*</span></label>
+                                        <input name="street" id="street" type="text"  required>
                                     </div>
+                                </div>
 
 
-                                    <div class="col-12">
-                                        <div class="default-form-box">
-                                            <label>
-                                                Postal Code/ZIP <span>*</span></label>
-                                            <input type="number" id="code" name="code" required>
-                                        </div>
+                                <div class="col-12">
+                                    <div class="default-form-box">
+                                        <label>
+                                            Postal Code/ZIP <span>*</span></label>
+                                        <input type="number" id="code" name="code" required>
                                     </div>
+                                </div>
 
-                                    <!-- end postal code -->
+                                <!-- end postal code -->
 
-                                    <div class="col-lg-6">
-                                        <div class="default-form-box">
-                                            <label> Mobile<span>*</span></label>
-                                            <input type="number" id="mobile" name="mobile" required>
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="default-form-box">
+                                        <label> Mobile<span>*</span></label>
+                                        <input type="number" id="mobile" name="mobile" required>
                                     </div>
+                                </div>
 
-                                    <div class="col-lg-6">
-                                        <div class="default-form-box">
-                                            <label> Email Address <span>*</span></label>
-                                            <input type="email" name="email" id="email" required>
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="default-form-box">
+                                        <label> Email Address <span>*</span></label>
+                                        <input type="email" name="email" id="email" required>
                                     </div>
+                                </div>
 
-<!-- end email -->
+                                <!-- end email -->
 
 
-</div></div>
+                        </div>
+                    </div>
 
-                                    
-                                    <!--  -->
+
+                    <!--  -->
                     <div class="col-lg-6 col-md-6">
                         <!-- <form action="#"> -->
-                            <h3>Your order</h3>
-                            <div class="order_table table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% var totalAmount=0 %>
+                        <h3>Your order</h3>
+                        <div class="order_table table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% var totalAmount=0 %>
 
 
-                                            <% cartList.forEach((item)=>{%>
+                                        <% cartList.forEach((item)=>{%>
 
-                                                <tr>
-                                                    <td> <strong>
-                                                            <%=item.product.name%> × <%= item.cartItems.qty %>
-                                                        </strong></td>
+                                            <tr>
+                                                <td> <strong>
+                                                        <%=item.product.name%> × <%= item.cartItems.qty %>
+                                                    </strong></td>
 
-                                                    <% var itemTotal=item.cartItems.qty * item.product.cost %>
-                                                        <% totalAmount +=itemTotal %>
-
-
-                                                            <td> $<%= itemTotal%>
-                                                            </td>
-                                                </tr>
-
-                                                <%})%>
+                                                <% var itemTotal=item.cartItems.qty * item.product.cost %>
+                                                    <% totalAmount +=itemTotal %>
 
 
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Cart Subtotal</th>
-                                            <td>$<%=totalAmount%>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Shipping</th>
-                                            <td><strong>$0.00</strong></td>
-                                        </tr>
-                                        <tr class="order_total">
-                                            <th>Order Total</th>
-                                            <td><strong>$ <span  id="totalAmount"><%=totalAmount%></span> </strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="payment_method">
-                         
-                                <div class="panel-default">
-                                 
+                                                        <td> $<%= itemTotal%>
+                                                        </td>
+                                            </tr>
 
-                                <div class="order_button pt-3 ">
+                                            <%})%>
 
 
-                                    <button class="btn btn-md btn-black-default-hover" type="submit">
-                                        Cash on Delivery (COD) </button>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Cart Subtotal</th>
+                                        <td>$<%=totalAmount%>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Shipping</th>
+                                        <td><strong>$0.00</strong></td>
+                                    </tr>
+                                    <tr class="order_total">
+                                        <th>Order Total</th>
+                                        <td><strong>$ <span id="totalAmount"> 
+                                                    <%=totalAmount%>
+                                                </span> </strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
+
+
+                        <div class="payment_method">
+                            <div class="panel-default">
+
+
+                                <!-- <label><input type="radio" value="COD" name="paymentMethod" class="mr-2" checked required> COD (cash on delivery)</label> -->
+                                <div class="">
+                                    <label class="radio-default" for="currencyCod" data-bs-toggle="collapse"
+                                        data-bs-target="#methodCod">
+                                        <input type="radio"  name="payment" value="cod" id="payment" >
+                                        <span>Cash on Delivery</span>
+                                    </label>
+
+
+                                    <label class="radio-default" for="currencyCod" data-bs-toggle="collapse"
+                                        data-bs-target="#methodCod">
+                                        <input type="radio" name="payment" value="online" id="payment">
+                                        <span>Online Payment</span>
+                                    </label>
 
                                 </div>
-                                <div class="order_button mb-2 pt-3">
+                                <div class="order_button pt-3">
                                     <button class="btn btn-md btn-black-default-hover" type="submit">Proceed to
-                                        razorpay </button>
+                                        PayPal</button>
                                 </div>
-                                <button type="submit">action</button>
 
-                            </form> 
+
+
+
+
+                                </form>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div> <!-- Start User Details Checkout Form -->
@@ -234,49 +253,50 @@
 
 
 
- 
-</body>
-<%- include('partials/footer') %>
 
-    
- <script>
-    async function updateAddressDetails(addressId) {
-        const res = await fetch('/getAddressDetails/'+addressId);
-        const data = await res.json();
-        console.log('Data retrieved from the server:', data);
-        if(data.message==='Address not found'){
-            document.querySelector('#name').value = "";
-            document.querySelector('#shop').value = "";
-            document.querySelector('#state').value = "";
-            document.querySelector('#city').value = "";
-            document.querySelector('#street').value = "";  
-            document.querySelector('#email').value = "";
-            document.querySelector('#country').value = "";
-            document.getElementById('#mobile').value = "";
-            document.querySelector('#code').value = "";
-        }else{
-            document.querySelector('#name').value = data.Fullname;
-            document.querySelector('#shop').value = data.company;
-            document.querySelector('#state').value = data.state;
-            document.querySelector('#city').value = data.city;
-            document.querySelector('#street').value = data.houseaddress;
-            document.querySelector('#code').value = data.postal_code;
-            document.querySelector('#email').value = data.email;
-            document.getElementById('mobile').value = data.mobile;
-        }
-    }
-    </script>
+    </body>
+    <%- include('partials/footer') %>
 
 
-    <script src="/public/asset/js/vendor/vendor.min.js"></script>
-    <script src="/public/asset/js/plugins/plugins.min.js"></script>
+        <script>
+            async function updateAddressDetails(addressId) {
+                const res = await fetch('/getAddressDetails/' + addressId);
+                const data = await res.json();
+                console.log('Data retrieved from the server:', data);
+                if (data.message === 'Address not found') {
+                    document.querySelector('#name').value = "";
+                    document.querySelector('#shop').value = "";
+                    document.querySelector('#state').value = "";
+                    document.querySelector('#city').value = "";
+                    document.querySelector('#street').value = "";
+                    document.querySelector('#email').value = "";
+                    document.querySelector('#country').value = "";
+                    document.getElementById('#mobile').value = "";
+                    document.querySelector('#code').value = "";
+                } else {
+                    document.querySelector('#name').value = data.Fullname;
+                    document.querySelector('#shop').value = data.company;
+                    document.querySelector('#state').value = data.state;
+                    document.querySelector('#city').value = data.city;
+                    document.querySelector('#street').value = data.houseaddress;
+                    document.querySelector('#code').value = data.postal_code;
+                    document.querySelector('#email').value = data.email;
+                    document.getElementById('mobile').value = data.mobile;
+                }
+            }
+        </script>
 
-    <!-- Main JS -->
-    <script src="/public/asset/js/main.js"></script>
-    <script src="/public/asset/js/cart.js"></script>
+
+        <script src="/public/asset/js/vendor/vendor.min.js"></script>
+        <script src="/public/asset/js/plugins/plugins.min.js"></script>
+
+        <!-- Main JS -->
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="/public/asset/js/main.js"></script>
+<script src="/public/asset/js/cart.js"> </script>
 
 
-    
 
 
-    </html>
+
+        </html>

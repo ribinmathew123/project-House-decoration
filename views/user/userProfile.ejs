@@ -173,8 +173,6 @@
                                         <div class="col-sm-9 text-secondary">
                                             <input type="password" name="new" class="form-control" id="inputNanme4"
                                                 required value="">
-
-
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -213,6 +211,7 @@
 <!-- order -->
 
 
+<% var totalAmount=0 %>
 
 
 <div class="tab-pane fade" id="orders">
@@ -221,32 +220,37 @@
         <table>
             <thead>
                 <tr>
+
                     <th>Order</th>
-                    <th>Image</th>
                     <th>Name</th>
-                    <th></th>
-
-
+                    <th>Quantity</th>
+                    <th>Payment Method</th>
                     <th>Status</th>
-                    <th>Total</th>
-                    <th>Actions</th>
+                    <th>Price</th>
+                     <th>Address</th> 
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>May 10, 2018</td>
-                    <td><span class="success">Completed</span></td>
-                    <td>$25.00 for 1 item </td>
-                    <td><a href="cart.html" class="view">view</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>May 10, 2018</td>
-                    <td>Processing</td>
-                    <td>$17.00 for 1 item </td>
-                    <td><a href="cart.html" class="view">view</a></td>
-                </tr>
+                <% orderList.forEach((item,index)=>{%>
+
+                    <tr id="cart-item-<%= item.orderItems.productId %>">
+
+                    <td><%= index + 1%></td>
+                    <td><%=item.product.name%></td>
+                    <td><%=item.orderItems.quantity%></td>
+                    <td ><%=item.paymentMethod%></td>
+                    <td><span class="success"><%=item.orderItems.orderStatus%></span></td>
+                    <td >$<%=item.product.cost%></td>
+                    <td ><%=item.name%> <%=item.street%> <%=item.city%> <%=item.state%> <%=item.code%></td>
+
+                </tr>  
+            
+                <%})%>
+              
+
+                
+                
+            
             </tbody>
         </table>
     </div>
@@ -257,26 +261,30 @@
         <table>
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Downloads</th>
-                    <th>Expires</th>
-                    <th>Download</th>
+                             <th scope="col">No</th>
+							<th scope="col">Fullname</th>
+							<th scope="col">Email</th>
+							<th scope="col">Mobile number</th>
+							<th scope="col">Address</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody>                    <% userDatas.addressDetails.forEach(function(user,index){ %>
+
                 <tr>
-                    <td>Shopnovilla - Free Real Estate PSD Template</td>
-                    <td>May 10, 2018</td>
-                    <td><span class="danger">Expired</span></td>
-                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
-                </tr>
-                <tr>
-                    <td>Organic - ecommerce html template</td>
-                    <td>Sep 11, 2018</td>
-                    <td>Never</td>
-                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
-                </tr>
-            </tbody>
+
+                            <th scope="row"><%= index + 1%></th>
+							<td><%= user.Fullname %></td>
+							<td><%= user.email %></td>
+							<td><%= user.mobile %></td>
+							<td><%= user.houseaddress %><%= user.city %> <br><%= user.state %> <br> <%= user.postal_code %></td>
+
+							
+						
+
+						  </tr>
+						  <tbody>
+
+						<% }) %>    
         </table>
     </div>
 </div>

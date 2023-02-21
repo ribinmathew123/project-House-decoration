@@ -11,18 +11,20 @@ const wishlistData=require("../models/wishlistModel")
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const storage = multer.memoryStorage();
-
+const Razorpay=require("razorpay")
 const DataUri = new require("datauri/parser");
 const dUri = new DataUri();
 const path = require("path");
 const uploadMiddleware = multer({ storage }).array("images", 10);
 const { cloudinaryConfig, uploader } = require("../config/cloudinary");
+const order = require("../models/orderModel");
 
 const getProductCategoryPage = (req, res) => {
   // catdata
   const catData = { name };
-  res.render("../views/admin/productcategory.ejs", catData);
-};
+  const errorData=req.session.error
+  res.render("../views/admin/productcategory.ejs",catData );
+}
 
 
 const postaddcategorypage = (req, res) => {
@@ -33,7 +35,10 @@ const postaddcategorypage = (req, res) => {
       res.redirect("/product/category-list");
     })
     .catch((error) => {
+      res.redirect("/product/category");
+
       req.session.error = " Already Exits";
+
 
       console.log(error);
     });
@@ -46,7 +51,7 @@ const getAddProductPage = (req, res) =>
     .then((categories) => {
       const catData = { edit: false, categories, name: "Add Product" };
 
-      res.render("../views/admin/product.ejs", { catData });
+      res.render("../views/admin/product.ejs",{ catData });
     })
     .catch((error) => {
       console.log(error);
@@ -353,32 +358,32 @@ const getCheckoutPage = async (req, res) => {
     //  console.log("cartList: cart datas...................", cartList);
 
 
-    cartList.forEach((item) => {
-      console.log("item starting");
-      console.log("Product Name : "+item.product.name );
-      console.log("Product image : "+item.product.image_url[0] );
-      console.log("quantity"+ item.cartItems.qty );
-      console.log("Product ID:" + item.cartItems.productId );
-      console.log("user ID:"+item.userId );
+    // cartList.forEach((item) => {
+    //   console.log("item starting");
+    //   console.log("Product Name : "+item.product.name );
+    //   console.log("Product image : "+item.product.image_url[0] );
+    //   console.log("quantity"+ item.cartItems.qty );
+    //   console.log("Product ID:" + item.cartItems.productId );
+    //   console.log("user ID:"+item.userId );
 
 
-    });
-    console.log("item ending");
+    // });
+    // console.log("item ending");
 
     
-    const totalAmount = cartList.reduce((total, item) => {
-      return total + item.cartItems.qty * item.product.cost;
-    }, 0);
-    //  con
-    const order = new orderModel({
-      userId: userId,
-      orderItems: cartList.map((item) => ({
-        productId: item.product._id,
-        quantity: item.cartItems.qty,
-      })),
-      totalPrice: totalAmount,
-    });
-    await order.save();
+    // const totalAmount = cartList.reduce((total, item) => {
+    //   return total + item.cartItems.qty * item.product.cost;
+    // }, 0);
+    // //  con
+    // const order = new orderModel({
+    //   userId: userId,
+    //   orderItems: cartList.map((item) => ({
+    //     productId: item.product._id,
+    //     quantity: item.cartItems.qty,
+    //   })),
+    //   totalPrice: totalAmount,
+    // });
+    // await order.save();
     
 
     // const order = new ordermodel({
@@ -409,6 +414,79 @@ const getCheckoutPage = async (req, res) => {
     console.log(error);
   }
 };
+
+
+
+const postCheckoutPage = async (req, res) => {
+  try {
+    const email = req.session.userEmail;
+    const user = await userdata.findOne({ email: email });
+
+    const userId = user._id;
+
+    const cartList = await cartmodel.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $unwind: "$cartItems",
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "cartItems.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: "$product",
+      },
+    ]);
+   
+
+    console.log("item ending");
+    const totalAmount = cartList.reduce((total, item) => {
+      return total + item.cartItems.qty * item.product.cost;
+    }, 0);
+    //  con
+
+    console.log(req.body.paymentMethod);
+
+    const order = new orderModel({
+      userId: userId,
+      
+
+      orderItems: cartList.map((item) => ({
+        productId: item.product._id,
+        quantity: item.cartItems.qty,
+      })),
+      totalPrice: totalAmount,
+      name: req.body.name,
+      shop: req.body.shop,
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      code: req.body.code,
+      mobile: req.body.mobile,
+      email: req.body.email,
+      paymentMethod:req.body.paymentMethod
+    });
+    await order.save();
+    
+    res.render("../views/user/successPage.ejs", {
+      cartList: cartList,
+      userData: user,
+      userId: req.session.userEmail,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
 // const couponcheck = async (req, res) => {
 //   try {
@@ -535,6 +613,116 @@ const getCheckoutPage = async (req, res) => {
 //   }
 // };
 
+const getorderManagement=async(req,res)=>
+{
+try {
+
+  const orderList = await orderModel.aggregate([
+     {
+        $unwind: "$orderItems",
+     },
+    {
+    $lookup: {
+         from: "products",
+           localField: "orderItems.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+     {
+        $unwind: "$product",
+      },
+   ]);
+ 
+
+console.log(orderList);
+  res.render("../views/admin/adminOrderManagement.ejs", {
+  orderList,
+  });
+} catch (error) {
+  next(error);
+}
+};
+
+
+// order status changing
+
+const orderStatusChanging = async (req, res, next) => {
+  try {
+      const id = req.params.id;
+      const productId = req.params.productId;
+      const data = req.body;
+      
+     console.log(req.params.productId); 
+     
+
+    
+      await orderModel.updateOne(
+          
+
+          { _id: id, "orderItems.productId": productId },
+          {
+            $set: {
+              "orderItems.$.orderStatus": data.orderStatus
+            }             //     orderStatus: data.orderStatus,
+              //     paymentMethod: data.paymentStatus,
+              
+          }
+      )
+      res.redirect("/product/order-management");
+  } catch (err) {
+      // next(err)
+      console.log(err);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+//           orderModel.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "products",
+//                     localField: "orderItems.productId",
+//                     foreignField: "_id",
+//                     as: "product"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "userId",
+//                     foreignField: "_id",
+//                     as: "users"
+//                 }
+//             },
+//             {
+//                 $sort: {
+//                     createdAt: -1
+//                 }
+//             }
+//         ]).then((orderDetails) => {
+//           console.log(orderDetails+"orderDetailsuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+//             res.render("../views/admin/adminOrderManagement.ejs", { orderDetails });
+//         })
+//     } 
+    
+//     catch (err) {  console.log(err);
+
+//     }
+// };
+
+
+
 
 
 
@@ -555,9 +743,6 @@ const couponcheck = async (req, res) => {
     console.log(coupon.minimumAmount);
 
     console.log("coupon details end");
-
-
-
 
     if (coupon) {
       console.log("Coupon found");
@@ -638,9 +823,7 @@ const wishlistDisplyPage = async (req, res) => {
       $unwind: "$productData",
     },
   ]);
-console.log("55555555555555555555555555");
   console.log("cartList23423: ", cartList);
-  console.log("55555555555555555555555555");
 
   res.render("../views/user/wishList.ejs"
   , {
@@ -650,11 +833,31 @@ console.log("55555555555555555555555555");
 
 
 
+const postOrderpage=async(req,res)=>
+{
+// const{amount}=req.body
+
+const email = req.session.userEmail;
+    const user = await order.findOne({ email: email });
+  amount=user.totalPrice
+
+const razorpayInstance = new Razorpay({ 
+// key_id:process.env.KEY_ID,
+key_id:"rzp_test_7gAGPftwtY20XB",
+key_secret:"vtqqLXg2NsCftCLpYZShms7M"
+
+})
+razorpayInstance.orders.create({
+
+amount:amount,
+  currency:"INR"
+},(err,order)=>{
+  console.log(order)
+  res.json({success:true,order,amount})
+})
 
 
-
-
-
+}
 
 
 
@@ -678,4 +881,7 @@ module.exports = {
   couponcheck,
  wishlistDisplyPage,
   userAddToWishlist,
+  postCheckoutPage,
+  postOrderpage,
+  getorderManagement, orderStatusChanging
 };

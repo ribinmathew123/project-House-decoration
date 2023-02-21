@@ -1,7 +1,7 @@
 
 const instance = new Razorpay({
     key_id: process.env.KEY_ID,
-    key_secret: process.KEY_SECRET,
+    key_secret: process.env.KEY_SECRET,
   });
 
   const cloudinaryConfig = (req, res, next) => {

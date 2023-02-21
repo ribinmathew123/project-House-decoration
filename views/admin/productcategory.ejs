@@ -11,7 +11,8 @@
           <li class="breadcrumb-item active">Dashboard</li>
         </ol>
       </nav>
-    </div><!-- End Page Title -->
+    </div><!-- End Page Title -->            
+
 
     <section class="section dashboard">
       <div class="row d-flex justify-content-center">
@@ -20,11 +21,12 @@
         <div class="col-lg-10">
           <div class="row">
 
-            <!-- End Reports -->					
-
+            <!-- End Reports -->	
+           
 
             <form class="row g-3" action="/product/category" method="post" >
-              <div class="col-12">
+              <div class="col-12">           
+
                 <label for="inputNanme4" class="form-label">Enter  Category Name </label>
                 <input type="text"   name="catname" class="form-control" id="inputNanme4" required>
               </div>
@@ -37,6 +39,7 @@
             
             <!-- Vertical Form -->
 
+         
 
 
 
@@ -53,7 +56,8 @@
           <!-- Recent Activity -->
           
 
-          
+          <p style="color:red ;"><%= locals.errorData%></p>
+
 
           
 
