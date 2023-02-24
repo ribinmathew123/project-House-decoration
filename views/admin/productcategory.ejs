@@ -23,21 +23,24 @@
 
             <!-- End Reports -->	
            
+            <p style="color:red ;"><%= errorData %></p>
 
-            <form class="row g-3" action="/product/category" method="post" >
+            <form class="row g-3" action="/product/category" method="post" onsubmit="return validateCategoryName();">
               <div class="col-12">           
-
                 <label for="inputNanme4" class="form-label">Enter  Category Name </label>
-                <input type="text"   name="catname" class="form-control" id="inputNanme4" required>
+                <input type="text" name="catname" class="form-control" id="name">
+                <span id="categoryNameError" style="color: red; display: none;">Please enter a category name</span>
               </div>
-             
               <div class="text-center">
                 <button type="submit" class="btn btn-primary">ADD</button>
-             
               </div>
             </form>
             
             <!-- Vertical Form -->
+
+
+
+            <!-- JavaScript validation function -->
 
          
 
@@ -56,7 +59,6 @@
           <!-- Recent Activity -->
           
 
-          <p style="color:red ;"><%= locals.errorData%></p>
 
 
           
@@ -100,5 +102,22 @@
 
 
  </script>
+
+
+
+
+<script>
+  function validateCategoryName() {
+    const categoryNameInput = document.querySelector('#name');
+    const categoryNameError = document.querySelector('#categoryNameError');
+    if (categoryNameInput.value.trim() === '') {
+      categoryNameError.style.display = 'block'; // Show the error message
+      return false; // Prevent the form from submitting
+    } else {
+      categoryNameError.style.display = 'none'; // Hide the error message
+      return true; // Allow the form to submit
+    }
+  }
+  </script>
 
 </html>

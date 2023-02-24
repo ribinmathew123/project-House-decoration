@@ -303,6 +303,7 @@ const getuserProfilePage = async (req, res, next) => {
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
     const userId = user._id;
+    
 
     const orderList = await orderModel.aggregate([
       {
@@ -330,7 +331,8 @@ const getuserProfilePage = async (req, res, next) => {
 
     res.render("../views/user/userProfile", {
       login: req.session,
-      userDatas: userData,orderList,
+      userDatas: userData,orderList, 
+      Dataid: userId,
     });
   } catch (error) {
     next(error);
@@ -423,7 +425,7 @@ const getusereditProfilePage = async (req, res) => {
     if (userData) {
       let error = req.session.error;
       req.session.error = null;
-      res.render("../views/user/editUserPage", {
+      res.render("../views/user/userProfile.ejs", {
         userDatas: userData,
         Dataid: req.query.id,
       });
@@ -436,6 +438,13 @@ const getusereditProfilePage = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
+
+
+
+
+
 
 const postAddressPage = async (req, res) => {
   let email = req.session.userEmail;
@@ -470,12 +479,48 @@ const postAddressPage = async (req, res) => {
 
 
 
+
+
+
+const updateAddressPage = async (req, res) => {
+  const addressid = req.params.id;
+
+  try {
+    const email = req.session.userEmail;
+    await User.updateOne(
+      { email: email, "addressDetails._id": addressid },
+      {
+        $set: {
+          "addressDetails.$.Fullname": req.body.name,
+          "addressDetails.$.mobile": req.body.mobile,
+          "addressDetails.$.company": req.body.company,
+          "addressDetails.$.email": req.body.email,
+          "addressDetails.$.countryname": req.body.country,
+          "addressDetails.$.city": req.body.town,
+          "addressDetails.$.state": req.body.state,
+          "addressDetails.$.houseaddress": req.body.address,
+          "addressDetails.$.postal_code": req.body.zip,
+        },
+      }
+    );
+    res.redirect("/user_profile");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+
 const logout = async (req, res) => {
   req.session.userEmail = null;
   console.log("user session disstroyed");
   res.redirect("/userlogin");
   res.end();
 };
+
+
 
 const postAddress = async (req, res, next) => {
   try {
@@ -491,6 +536,8 @@ const postAddress = async (req, res, next) => {
     next(error);
   }
 };
+
+
 
 
 
@@ -512,6 +559,12 @@ const fetchAddress = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   } 
 }
+
+
+
+
+
+
 
 
 const postCashonDelivery = async (req, res) => {
@@ -541,6 +594,79 @@ const postCashonDelivery = async (req, res) => {
 
 
 
+
+const userAddressDelete = async (req, res) => {
+  try {
+  const id = req.query.id;
+  await User.updateOne(
+  {},
+  { $pull: { addressDetails: { _id: id } } }
+  );
+  console.log("Address deleted successfully.");
+  res.status(200).redirect("/user_profile");
+  } catch (error) {
+  console.error(error);
+  res.status(500).send("Error deleting address");
+  }
+  };
+  
+
+
+  // const userAddressEdit=async(req,res)=>{
+
+  //   try {
+
+  //     let email = req.session.userEmail;
+  //     const userData = await User.findOne({ email: email });
+  //     console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+  //     console.log(userData._id);
+  //     console.log('==========================hhhhhhhhhhhhhhhhhhhhh==========')
+      
+  //    res.render("../views/user/addressEditPage.ejs", {
+  //       login: req.session,
+  //       userDatas: userData._id,
+
+
+       
+  //     });
+      
+
+   
+  //   } catch (error) {
+  //     console.log(error);
+      
+  //   }
+  // }
+
+  const userAddressEdit = async (req, res) => {
+    try {
+      
+      const addressId = req.query.addressId;
+      console.log(addressId+"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      const email = req.session.userEmail;
+      const userData = await User.findOne({ email: email });
+  
+      const address = userData.addressDetails.find(
+        (address) => address._id.toString() === addressId
+      );
+  
+      res.render("../views/user/addressEditPage.ejs", {
+        login: req.session,
+        address: address,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+
+
+
+  
+  
+  
+  
 
 
 
@@ -573,5 +699,9 @@ module.exports = {
   postAddress,
   getProfileAddressPage,
   fetchAddress,
-  postCashonDelivery,getUserOrderPage,
+  postCashonDelivery,
+  getUserOrderPage,
+  userAddressDelete,
+  userAddressEdit,
+  updateAddressPage
 };

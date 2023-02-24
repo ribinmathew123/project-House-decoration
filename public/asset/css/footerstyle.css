@@ -1,0 +1,31 @@
+
+    /* Reset default margin and padding for all elements */
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Style the footer container */
+    .footer {
+        background-color: rgb(60, 51, 51);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+    
+    /* Style the links inside the footer */
+    .footer a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+    
+    /* Responsive media query for small screens */
+    @media only screen and (max-width: 600px) {
+        .footer {
+            position: static;
+        }
+    }

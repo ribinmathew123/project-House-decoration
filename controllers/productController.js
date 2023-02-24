@@ -19,30 +19,66 @@ const uploadMiddleware = multer({ storage }).array("images", 10);
 const { cloudinaryConfig, uploader } = require("../config/cloudinary");
 const order = require("../models/orderModel");
 
+
+
+
 const getProductCategoryPage = (req, res) => {
   // catdata
   const catData = { name };
   const errorData=req.session.error
-  res.render("../views/admin/productcategory.ejs",catData );
+  req.session.error=null
+  res.render("../views/admin/productcategory.ejs",{ catData, errorData } );
 }
-
-
 const postaddcategorypage = (req, res) => {
-  const category = new Category({ name: req.body.catname });
-  category
-    .save()
-    .then(() => {
-      res.redirect("/product/category-list");
+  let categoryName = req.body.catname.trim(); // trim whitespace
+
+
+  Category.findOne({ name: categoryName })
+    .then(existingCategory => {
+      if (existingCategory) {
+        req.session.error = "Category already exists.";
+        res.redirect("/product/category");
+      } else {
+        const category = new Category({ name: categoryName });
+        category.save()
+          .then(() => {
+            res.redirect("/product/category-list");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     })
     .catch((error) => {
-      res.redirect("/product/category");
-
-      req.session.error = " Already Exits";
-
-
       console.log(error);
+      // Handle error checking if category exists
     });
 };
+
+
+
+
+
+
+
+// const postaddcategorypage = (req, res) => {
+//   const category = new Category({ name: req.body.catname });
+
+
+//   category
+//     .save()
+//     .then(() => {
+//       res.redirect("/product/category-list");
+//     })
+//     .catch((error) => {
+//       res.redirect("/product/category");
+
+//       req.session.error = " Already Exits";
+
+
+//       console.log(error);
+//     });
+// };
 
 
 
@@ -417,6 +453,7 @@ const getCheckoutPage = async (req, res) => {
 
 
 
+
 const postCheckoutPage = async (req, res) => {
   try {
     const email = req.session.userEmail;
@@ -485,6 +522,71 @@ const postCheckoutPage = async (req, res) => {
     console.log(error);
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -613,6 +715,8 @@ const postCheckoutPage = async (req, res) => {
 //   }
 // };
 
+
+
 const getorderManagement=async(req,res)=>
 {
 try {
@@ -635,7 +739,7 @@ try {
    ]);
  
 
-console.log(orderList);
+console.log(orderList+"ggggggggggggggggggggggggggggggggggggggggggggggg");
   res.render("../views/admin/adminOrderManagement.ejs", {
   orderList,
   });
@@ -883,5 +987,6 @@ module.exports = {
   userAddToWishlist,
   postCheckoutPage,
   postOrderpage,
-  getorderManagement, orderStatusChanging
+  getorderManagement, 
+  orderStatusChanging
 };

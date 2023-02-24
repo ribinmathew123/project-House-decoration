@@ -69,29 +69,7 @@ function updateTotalPrice(quantity, productId) {
 
 // cart product delete
 
-function deleteItem(productId, price) {
-  //   fetch(`/product/removecart?id=${productId}`, { method: "PUT" })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         console.log(
-  //           `Item with product id ${productId} was deleted successfully.`
-  //         );
-  //         const itemRow = document.getElementById(`cart-item-${productId}`);
-  //         if (itemRow) {
-  //           itemRow.remove();
-  //         }
-  //       } else {
-  //         console.error(
-  //           "Failed to delete item:",
-  //           response.status,
-  //           response.statusText
-  //         );
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to delete item:", error);
-  //     });
-  // }
+function deleteItem(productId, price) {  
 
   let quantity = document.querySelector("#Quantity" + productId);
   let total = document.querySelector("#total-price" + productId);
@@ -156,6 +134,7 @@ function applyCoupon() {
 document.querySelector("#paymentForm").addEventListener("submit", (e) => {
   e.preventDefault();
   let total_amount = document.querySelector("#totalAmount").innerText;
+  
 
   console.log(total_amount+"tatoal amount");
 

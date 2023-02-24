@@ -1,8 +1,9 @@
 const express = require("express");
+const sessions = require("express-session");
+
 const router = express.Router();
 const { noSession, userSession } = require("../middleware/userSession");
 
-const sessions = require("express-session");
 const usercontroller = require("../controllers/userController");
 
 router.get("/signup", noSession, usercontroller.usersignup);
@@ -36,11 +37,19 @@ router.get("/change-Password",userSession,usercontroller.getchangepasswordPage);
 router.post("/change-Password",userSession,usercontroller.postChangePasswordPage);
 
 router.post("/address",userSession,usercontroller.postAddressPage);
+router.post("/update-address/:id",userSession,usercontroller.updateAddressPage);
+
+
 router.get("/getAddressDetails/:userid",userSession,usercontroller.fetchAddress)
 router.post("/checkoutform",userSession,usercontroller.postAddress);
 
 router.post("/cashon-delivery",userSession,usercontroller.postCashonDelivery)
 router.get("/order-list",userSession,usercontroller.getUserOrderPage)
+router.get("/address-delete",userSession,usercontroller.userAddressDelete)
+router.get("/address-edit",userSession,usercontroller.userAddressEdit)
+// router.get("/address-edit/:addressId", userSession, usercontroller.userAddressEdit);
+
+
 
 
 
