@@ -17,6 +17,7 @@ router.post('/product-list',adminSession,productController.uploadMiddleware,prod
 router.post('/category',adminSession,productController.postaddcategorypage)
 router.post('/upload', adminSession,productController.uploadMiddleware);
 router.post('/cartpage',userSession,productController.getAddToCartPage)
+
 router.put('/removecart',userSession,productController.removeCartItemPage)
 router.put('/increment-decrement-count/:type',userSession,productController.postCartIncDec)
 router.get('/cart-disply',userSession,productController.cartDisplyPage)
@@ -28,6 +29,9 @@ router.post('/checkoutn',userSession,productController.postCheckoutPage)
 router.post('/order',userSession,productController.postOrderpage)
 router.get('/order-management',adminSession,productController.getorderManagement)
 router.post('/order-statuschange/:id/:productId',adminSession,productController.orderStatusChanging)
+router.post('/confirm-order',userSession,productController.paymentConfirm)
+
+
 
 
 

@@ -69,8 +69,7 @@ function updateTotalPrice(quantity, productId) {
 
 // cart product delete
 
-function deleteItem(productId, price) {  
-
+function deleteItem(productId, price) {
   let quantity = document.querySelector("#Quantity" + productId);
   let total = document.querySelector("#total-price" + productId);
   let sub_total = document.querySelector("#total-amount1");
@@ -105,64 +104,119 @@ function deleteItem(productId, price) {
   });
 }
 
-// coupon code
+let status = false;
 function applyCoupon() {
   const couponCode = document.getElementById("coupon-code-input").value;
   let total_amount = document.querySelector("#total-amount1");
-  fetch("/product/couponcheck", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ couponCode: couponCode }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      total_amount.innerText = Number(total_amount.innerText - data.discount);
-    })
-    .catch((error) => {
-      console.error("Failed to apply coupon:" + error);
-    });
-}
 
-
-
-
-
-
-document.querySelector("#paymentForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  let total_amount = document.querySelector("#totalAmount").innerText;
-  
-
-  console.log(total_amount+"tatoal amount");
-
-  const payment = document.querySelectorAll('input[name="payment"]');
-  console.log(payment[0].value);
-  if (payment[1].value == "online") {
-    fetch("/product/order", {
+  if (!status) {
+    fetch("/product/couponcheck", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ couponCode: couponCode }),
     })
       .then((response) => response.json())
-      .then((order) => {
-        console.log(order);
-        var options = {
-          key: "rzp_test_7gAGPftwtY20XB",
-          name: "Test Company",
-          amount:order.amount*100,
+      .then((data) => {
+        console.log(data);
+        console.log(data.minimumAmount);
 
-          order_id: order.id,
-        };
-        var rzp = new Razorpay(options);
-        rzp.open();
+        if (data.minimumAmount <= total_amount.innerText) {
+          const discountAmount = data.discount / 100;
+          const toalDiscount = Number(total_amount.innerText * discountAmount);
+          total_amount.innerText = Number(
+            total_amount.innerText - toalDiscount
+          );
+          status = true;
+        } else {
+          console.log("Minimum amount not met");
+        }
       })
       .catch((error) => {
         console.error("Failed to apply coupon:" + error);
       });
   }
-});
+}
+
+
+
+function onlinePayment(userId) {
+  const total_amount = document.querySelector("#totalAmount").innerText;
+  const name = document.querySelector("#name").value;
+  const shop = document.querySelector("#shop").value;
+  const state = document.querySelector("#state").value;
+  const city = document.querySelector("#city").value;
+  const street = document.querySelector("#street").value;
+  const code = document.querySelector("#code").value;
+  const email = document.querySelector("#email").value;
+  const mobile = document.getElementById("mobile").value;
+
+  const status = document.getElementById("rzp-button1");
+  const statusdata = status.getAttribute("data-value");
+
+  fetch("/product/order", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      total_amount,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      var options = {
+        key: "rzp_test_7gAGPftwtY20XB", // Enter the Key ID generated from the Dashboard
+        name: "Test Company",
+        amount: res.order.amount,
+        order_id: res.order.id, // For one time payment
+        handler: function (response) {
+          console.log(response);
+          fetch("/product/confirm-order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name,
+              shop,
+              state,
+              city,
+              street,
+              code,
+              email,
+              mobile,
+              userId,
+              statusdata,
+              response,
+            }),
+          })
+            .then(() => {
+              console.log("Order confirmation successful");
+              window.location.replace("/admin");
+            })
+            .catch((error) => {
+              console.error("Error while confirming order:", error);
+            });
+        },
+      };
+
+      var rzp1 = new Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        new sweet({
+          title: "payment failed",
+        });
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+      });
+      rzp1.open();
+    })
+    .then(() => {});
+}

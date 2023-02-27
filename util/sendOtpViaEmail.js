@@ -25,8 +25,8 @@ const sendOtpViaEmail = (email, otp) => {
       } else {
         resolve(true);
       }
-      console.log("Message sent: %s", info.messageId);
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      // console.log("Message sent: %s", info.messageId);
+      // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       res.render("../views/user/otp");
     });
   });

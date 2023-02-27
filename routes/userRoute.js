@@ -1,5 +1,7 @@
 const express = require("express");
 const sessions = require("express-session");
+const salesReport =require("../util/export")
+
 
 const router = express.Router();
 const { noSession, userSession } = require("../middleware/userSession");
@@ -47,6 +49,19 @@ router.post("/cashon-delivery",userSession,usercontroller.postCashonDelivery)
 router.get("/order-list",userSession,usercontroller.getUserOrderPage)
 router.get("/address-delete",userSession,usercontroller.userAddressDelete)
 router.get("/address-edit",userSession,usercontroller.userAddressEdit)
+
+router.get("/forgot-password",usercontroller.getforgotPasswordPage)
+router.post("/forgot-password",usercontroller.postforgotPasswordPage)
+router.post("/resend-otp/:user_id",usercontroller.resendotppage)
+router.get("/exportorder", salesReport.exportorder);
+
+
+
+
+// router.get("/forgot-otp",usercontroller.userOtpPage)
+// router.get("/forgot-otp",usercontroller.userOtpPage)
+
+
 // router.get("/address-edit/:addressId", userSession, usercontroller.userAddressEdit);
 
 

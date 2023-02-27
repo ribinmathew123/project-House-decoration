@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const ObjectId=mongoose.Schema.Types.ObjectId;
 const couponSchema = new mongoose.Schema({
   couponName: {
     type: String,
@@ -33,7 +33,8 @@ const couponSchema = new mongoose.Schema({
   discount: {
     type: Number,
     required: true
-  }
+  },
+ user:{type:Array}
 });
 
 const Coupon = mongoose.model('Coupon', couponSchema);

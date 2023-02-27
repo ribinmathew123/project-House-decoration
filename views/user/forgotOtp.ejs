@@ -19,13 +19,10 @@
                 <div class="card-body p-md-5">
                   <div class="row justify-content-center">
                     <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                      <% if (otpError) { %>
-                        <p style="color: red;"><%= locals.otpError %></p>
-                      <% } %>
 
                       <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Enter OTP </p>
       
-                      <form action="/verify/<%=userId%>" method="post" class="mx-1 mx-md-4" >
+                      <form action="" method="post" class="mx-1 mx-md-4" >
                       
       
                         <div class="d-flex flex-row align-items-center mb-4">
@@ -36,22 +33,12 @@
                             <input type="text" id="form3Example1c" name="otp" placeholder="Enter the otp " class="form-control" required />
                           </div>
                         </div>
-                        
                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                         </div>
       
                       </form>
-
-
-
-                      
-                       <form class="d-flex justify-content-center mx-4 mb-3 mb-lg-4" action="/resend-otp/<%=userId%>"  method="post" >
-                        <button class="btn btn-danger mt-3  " id="resend-button" btn="" btn-dark="">Resend OTP</button>                 
-                      </form>
-
-
-
+      
                     </div>
                     <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2 shadow-lg p-3 mb-2 bg-body rounded">
       
@@ -67,35 +54,6 @@
         </div>
       </section>
 </body>
-
-
-
-
-<script>
-  function disable(){
-      const resend_button= document.getElementById("resend-button")
-      resend_button.disabled = true;
-  }
-  disable()
-  setTimeout(function(){
-      const resend_button= document.getElementById("resend-button")
-      resend_button.disabled = false;
-  },15000)
-  let count =15
-  const timerDiv = document.getElementById('resend-button');
-  const timer = setInterval(function() {
-    count--;
-    if(count>0){
-      timerDiv.textContent = 'Resend OTP in '+count+'s';
-    }
-    else{
-      timerDiv.textContent='Resend OTP'
-    }
-  }, 1000);
-  setTimeout(function() {
-    clearInterval(timer);
-  }, 15000);
-  </script>
 </html>
 
 

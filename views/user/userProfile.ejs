@@ -1,16 +1,7 @@
 <%- include('partials/header') %>
     <!-- Start Offcanvas Search Bar Section -->
 
-    <style>
-        .product_remove button:hover {
-          color: red;
-        }
-        .decrement-button:hover {
-          color: blue;
-        }.increment-button:hover {
-          color: blue;
-        }
-      </style>
+   
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
         <form>
@@ -88,7 +79,7 @@
                             <li> <a href="#account" data-bs-toggle="tab"
                                 class="nav-link btn btn-block btn-md btn-black-default-hover">Account Details</a></li>
                             <li><a href="#address" data-bs-toggle="tab"
-                                class="nav-link btn btn-block btn-md btn-black-default-hover">Addresses</a></li>
+                                class="nav-link btn btn-block btn-md btn-black-default-hover">Address</a></li>
 
                            
                                     <li><a href="#account-details" data-bs-toggle="tab"
@@ -362,6 +353,7 @@
                 </tr>
             </thead>
             <tbody>
+                
                 <% orderList.forEach((item,index)=>{%>
 
                     <tr id="cart-item-<%= item.orderItems.productId %>">
@@ -388,8 +380,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Full Name</th>
+                    <th scope="col">NO</th>
+                    <th   scope="col">Full Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Mobile Number</th>
                     <th scope="col">Address</th>
@@ -400,13 +392,15 @@
                 <% userDatas.addressDetails.forEach(function(user, index) { %>
                 <tr>
                     <th scope="row"><%= index + 1 %></th>
-                    <td><%= user.Fullname %></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.mobile %></td>
-                    <td><%= user.houseaddress %><%= user.city %> <br><%= user.state %> <br><%= user.postal_code %></td>
-                    <td class="d-flex">
+                    <td class="text-center"> <%= user.Fullname %></td>
+                    <td class="text-center"><%= user.email %></td>
+                    <td class="text-center"><%= user.mobile %></td>
+                    <td class="text-center"><%= user.houseaddress %><%= user.city %> <br><%= user.state %> <br><%= user.postal_code %></td>
+                    <td  class="d-flex text-center">
                         <a href="/address-edit?addressId=<%= user._id %>" class="btn btn-sm btn-primary me-2">Edit</a>
-                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                       
+                       
+                        <button type="button" class="btn btn-golden" data-bs-toggle="modal"
                             data-bs-target="#exampleModal<%= user._id %>">Delete</button>
                     </td>
                 </tr>
@@ -417,27 +411,28 @@
 </div>
 
 <% userDatas.addressDetails.forEach(function(user) { %>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal<%= user._id %>" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this address?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="/address-delete?id=<%= user._id %>" class="btn btn-danger">Delete</a>
-            </div>
-        </div>
-    </div>
-</div>
-<% }) %>
 
+
+
+  <!-- Modal -->
+<div class="modal fade " id="exampleModal<%= user._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog    ">
+      <div class="modal-content modal-dialog-centered modal-sm modal-dialog-scrollable">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Address</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a  class="btn btn-golden" href="/address-delete?id=<%= user._id %>">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<%})%>
 
 <!-- end order -->
 
@@ -547,6 +542,8 @@
     </div> <!-- ...:::: End Account Dashboard Section:::... -->
 
 
+
+
     <!-- Start Footer Section -->
     <footer class="footer-section footer-bg section-top-gap-100">
         <div class="footer-wrapper">
@@ -652,6 +649,8 @@
         </div>
     </div> <!-- End Modal Add cart -->
 
+
+
     <!-- Start Modal Quickview cart -->
     <div class="modal fade" id="modalQuickview" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered" role="document">
@@ -693,6 +692,8 @@
                                         </div>
                                     </div>
                                     <!-- End Large Image -->
+
+
                                     <!-- Start Thumbnail Image -->
                                     <div
                                         class="product-image-thumb modal-product-image-thumb swiper-container pos-relative mt-5">

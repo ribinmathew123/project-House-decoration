@@ -10,6 +10,8 @@ const couponmodel=require("../models/couponModel")
 const wishlistData=require("../models/wishlistModel")
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+const sharp = require("sharp")
+
 const storage = multer.memoryStorage();
 const Razorpay=require("razorpay")
 const DataUri = new require("datauri/parser");
@@ -81,6 +83,53 @@ const postaddcategorypage = (req, res) => {
 // };
 
 
+// image upload and crop using sharp library
+
+// const postproduct = async (req, res) => {
+//   try {
+//     let images = [];
+
+//     if (req.files) {
+//       for (let i = 0; i < req.files.length; i++) {
+//         const file = req.files[i].buffer;
+
+//         // crop the image using sharp
+//         const croppedImage = await sharp(file)
+//           .resize({ width: 485, height: 485, fit: 'cover' })
+//           .toBuffer();
+
+//         // convert buffer to string
+//         const imageString = croppedImage.toString();
+
+//         // upload the cropped image to Cloudinary
+//         const result = await uploader.upload(imageString);
+
+//         images.push(result.url);
+//       }
+//     }
+
+//     const data = {
+//       name: req.body.name,
+//       description: req.body.description,
+//       category: req.body.category_id,
+//       image_url: images,
+//       quantity: req.body.quantity,
+//       sell: req.body.sell,
+//       cost: req.body.cost,
+//     };
+
+//     const Product = new productModel(data);
+//     await Product.save();
+//     res.redirect("/product/product-lists");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+
+
+
+
 
 const getAddProductPage = (req, res) =>
   Category.find()
@@ -104,6 +153,9 @@ const postproduct = async (req, res) => {
           path.extname(req.files[i].originalname).toString(),
           req.files[i].buffer
         ).content;
+const resp = cloudinary.uploader.upload(file,{ transformation: [
+  { width: 485, height: 485, gravity: "face", crop: "fill" },
+]})
 
         const result = await uploader.upload(file);
         images.push(result.url);
@@ -128,6 +180,57 @@ const postproduct = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+const imageUpload = async (req, res) => {
+  try {
+    let images = [];
+
+    if (req.files) {
+      for (let i = 0; i < req.files.length; i++) {
+        const file = dUri.format(
+          path.extname(req.files[i].originalname).toString(),
+          req.files[i].buffer
+        ).content;
+const resp = cloudinary.uploader.upload(file,{ transformation: [
+  { width: 485, height: 485, gravity: "face", crop: "fill" },
+]})
+
+        const result = await uploader.upload(file);
+        images.push(result.url);
+      }
+    }
+
+    const data = {
+
+      image_url: images,
+      quantity: req.body.quantity,
+      sell: req.body.sell,
+      cost: req.body.cost,
+    };
+
+    const Product = new productModel(data);
+    await Product.save();
+    res.redirect("/product/product-lists");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
 const getcategorylist = async (req, res) => {
   // if (req.session.email) {
   try {
@@ -146,14 +249,26 @@ const getcategorylist = async (req, res) => {
   }
 };
 
+const MAX_WORDS = 10; 
 const getproductlistpage = async (req, res) => {
   try {
     productModel.find({}, (err, userdetails) => {
       if (err) {
         console.log(err);
       } else {
+
+        const products = userdetails.map(product => {
+          const words = product.description.split(' ');
+          const truncatedWords = words.slice(0, MAX_WORDS);
+          const truncatedDescription = truncatedWords.join(' ');
+          return {
+            ...product.toObject(),
+            description: truncatedDescription
+          }
+        });
+
         res.render("../views/admin/productList.ejs", {
-          details: userdetails,
+          details: products,
         });
       }
     });
@@ -391,60 +506,10 @@ const getCheckoutPage = async (req, res) => {
         $unwind: "$product",
       },
     ]);
-    //  console.log("cartList: cart datas...................", cartList);
-
-
-    // cartList.forEach((item) => {
-    //   console.log("item starting");
-    //   console.log("Product Name : "+item.product.name );
-    //   console.log("Product image : "+item.product.image_url[0] );
-    //   console.log("quantity"+ item.cartItems.qty );
-    //   console.log("Product ID:" + item.cartItems.productId );
-    //   console.log("user ID:"+item.userId );
-
-
-    // });
-    // console.log("item ending");
-
-    
-    // const totalAmount = cartList.reduce((total, item) => {
-    //   return total + item.cartItems.qty * item.product.cost;
-    // }, 0);
-    // //  con
-    // const order = new orderModel({
-    //   userId: userId,
-    //   orderItems: cartList.map((item) => ({
-    //     productId: item.product._id,
-    //     quantity: item.cartItems.qty,
-    //   })),
-    //   totalPrice: totalAmount,
-    // });
-    // await order.save();
-    
-
-    // const order = new ordermodel({
-    //   userId: item.userId,
-    //   productId: item.cartItems.productId,
-    //   productName: item.product.name,
-    //   productImage: item.product.image_url[0],
-    //   quantity: item.cartItems.qty
-    // });
-    
-    // order.save((err) => {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log("Order saved successfully");
-    //   }
-    // });
-    // console.log("cartList:", cartList);
-
-
-
     res.render("../views/user/checkout.ejs", {
       cartList: cartList,
       userData: user,
-      userId: req.session.userEmail,
+      userId: userId,
     });
   } catch (error) {
     console.log(error);
@@ -484,34 +549,34 @@ const postCheckoutPage = async (req, res) => {
     ]);
    
 
-    console.log("item ending");
-    const totalAmount = cartList.reduce((total, item) => {
-      return total + item.cartItems.qty * item.product.cost;
-    }, 0);
-    //  con
+    // console.log("item ending");
+    // const totalAmount = cartList.reduce((total, item) => {
+    //   return total + item.cartItems.qty * item.product.cost;
+    // }, 0);
+    // //  con
 
-    console.log(req.body.paymentMethod);
+    // console.log(req.body.paymentMethod);
 
-    const order = new orderModel({
-      userId: userId,
+    // const order = new orderModel({
+    //   userId: userId,
       
 
-      orderItems: cartList.map((item) => ({
-        productId: item.product._id,
-        quantity: item.cartItems.qty,
-      })),
-      totalPrice: totalAmount,
-      name: req.body.name,
-      shop: req.body.shop,
-      state: req.body.state,
-      city: req.body.city,
-      street: req.body.street,
-      code: req.body.code,
-      mobile: req.body.mobile,
-      email: req.body.email,
-      paymentMethod:req.body.paymentMethod
-    });
-    await order.save();
+    //   orderItems: cartList.map((item) => ({
+    //     productId: item.product._id,
+    //     quantity: item.cartItems.qty,
+    //   })),
+    //   totalPrice: totalAmount,
+    //   name: req.body.name,
+    //   shop: req.body.shop,
+    //   state: req.body.state,
+    //   city: req.body.city,
+    //   street: req.body.street,
+    //   code: req.body.code,
+    //   mobile: req.body.mobile,
+    //   email: req.body.email,
+    //   paymentMethod:req.body.paymentMethod
+    // });
+    // await order.save();
     
     res.render("../views/user/successPage.ejs", {
       cartList: cartList,
@@ -527,62 +592,103 @@ const postCheckoutPage = async (req, res) => {
 
 
 
+const getorderManagement=async(req,res)=>
+{
+try {
+
+  const orderList = await orderModel.aggregate([
+     {
+        $unwind: "$orderItems",
+     },
+    {
+    $lookup: {
+         from: "products",
+           localField: "orderItems.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+     {
+        $unwind: "$product",
+      },
+   ]);
+ 
+
+  res.render("../views/admin/adminOrderManagement.ejs", {
+  orderList,
+  });
+} catch (error) {
+  next(error);
+}
+};
+
+
+// order status changing
+
+const orderStatusChanging = async (req, res, next) => {
+  try {
+      const id = req.params.id;
+      const productId = req.params.productId;
+      const data = req.body;
+      
+     console.log(req.params.productId); 
+     
+
+    
+      await orderModel.updateOne(
+          
+
+          { _id: id, "orderItems.productId": productId },
+          {
+            $set: {
+              "orderItems.$.orderStatus": data.orderStatus
+            }             //     orderStatus: data.orderStatus,
+              //     paymentMethod: data.paymentStatus,
+              
+          }
+      )
+      res.redirect("/product/order-management");
+  } catch (err) {
+      // next(err)
+      console.log(err);
+  }
+};
 
 
 
 
+//           orderModel.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "products",
+//                     localField: "orderItems.productId",
+//                     foreignField: "_id",
+//                     as: "product"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "userId",
+//                     foreignField: "_id",
+//                     as: "users"
+//                 }
+//             },
+//             {
+//                 $sort: {
+//                     createdAt: -1
+//                 }
+//             }
+//         ]).then((orderDetails) => {
+//           console.log(orderDetails+"orderDetailsuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+//             res.render("../views/admin/adminOrderManagement.ejs", { orderDetails });
+//         })
+//     } 
+    
+//     catch (err) {  console.log(err);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//     }
+// };
 
 
 
@@ -597,10 +703,14 @@ const postCheckoutPage = async (req, res) => {
 //     const user = await userdata.findOne({ email: req.session.userEmail });
 //     let userid = user._id;
 //     console.log(userid + "gggggggggggggggggg");
+
 //     const cartdata = await cartmodel.findOne({ userId: userid });
 //     const checkcoupon = await couponmodel.findOne({
 //       name: req.body.inputValue,
 //     });
+
+
+
 //     const checkcouponused = await couponmodel.findOne({
 //       name: req.body.inputValue,
 //       userdata: { $elemMatch: { userId: userid } },
@@ -669,200 +779,88 @@ const postCheckoutPage = async (req, res) => {
 //   }
 // };
 
+
+
 // const couponcheck = async (req, res) => {
 //   try {
-//     const user = await userdata.findOne({ email: req.session.userEmail });
-//     const userid = user._id;
-//     const cartdata = await cartmodel.findOne({ userId: userid });
-//     const couponName = req.body.couponCode;
-//     console.log(couponName+"coupon body");
-//     const coupon = await couponmodel.findOne({ couponCode: couponName });
+//     const couponCode = req.body.couponCode;
+//     console.log(couponCode);
+//    const user = await userdata.findOne({ email: req.session.userEmail });
+//     let userid = user._id;
+// console.log(userid+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
 
-// console.log('====================================');
-// console.log(coupon);
-// console.log('====================================');
-  
-//     if (!coupon) {
-//       console.log("Coupon not found");
-//       res.status(400).json({ error: "Coupon not found" });
-//       return;
-//     }
-//     if (coupon.expiredate < new Date()) {
-//       console.log("Coupon has expired");
-//       res.status(400).json({ error: "Coupon has expired" });
-//       return;
-//     }
-//     if (cartdata.totalPrice < coupon.minpurchaseamount) {
-//       console.log("Cart total price is below minimum purchase amount");
-//       res.status(400).json({ error: "Cart total price is below minimum purchase amount" });
-//       return;
-//     }
-//     const couponUser = coupon.userdata.find(u => u.userId === userid);
-//     if (couponUser) {
-//       console.log("Coupon has already been used by this user");
-//       res.status(400).json({ error: "Coupon has already been used by this user" });
-//       return;
-//     }
-//     const discount = (cartdata.totalPrice * coupon.discount) / 100;
-//     const discountedPrice = cartdata.totalPrice - discount;
-//     await cartmodel.updateOne({ userId: userid }, { $set: { discoundamount: discount } });
-//     await couponmodel.updateOne({ _id: coupon._id }, { $push: { userdata: { userId } } });
-//     console.log("Coupon applied successfully");
-//     res.json({ success: true, discountedPrice });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
+    // const checkcouponused = await couponmodel.findOne({ couponCode: couponCode ,userdta:{ $elemMatch: { userId: userid }}});
 
 
 
-const getorderManagement=async(req,res)=>
-{
-try {
 
-  const orderList = await orderModel.aggregate([
-     {
-        $unwind: "$orderItems",
-     },
-    {
-    $lookup: {
-         from: "products",
-           localField: "orderItems.productId",
-          foreignField: "_id",
-          as: "product",
-        },
-      },
-     {
-        $unwind: "$product",
-      },
-   ]);
+
+    //  await userdata.updateOne(
+
+    //                 { _id:userid },
+    //                 {
+    //                   $push: { coupondata: { coupons: req.body.inputValue } },
+    //                 }
+    //               );
+
+
+
+    const couponcheck = async (req, res) => {
+      try {
+        const couponCode = req.body.couponCode;
+        console.log(couponCode);
+    
+        const user = await userdata.findOne({ email: req.session.userEmail });
+        const userId = user._id;
+    
+        const couponUsed = await couponmodel.findOne({
+          couponCode: couponCode,
+          user: { $elemMatch: { userId: userId } }
+        });
+    
+        if (couponUsed) {
+          res.status(400).send("Coupon has already been used.");
+        } else {
+
+
+          const coupon = await couponmodel.findOne({
+            couponCode: couponCode,
+          });
+    
+          res.status(200).json(coupon);
+        }
+    
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal server error.");
+      }
+    };
+    
  
 
-console.log(orderList+"ggggggggggggggggggggggggggggggggggggggggggggggg");
-  res.render("../views/admin/adminOrderManagement.ejs", {
-  orderList,
-  });
-} catch (error) {
-  next(error);
-}
-};
 
+//     console.log(coupon.endDate);
 
-// order status changing
+//     console.log(coupon.minimumAmount);
 
-const orderStatusChanging = async (req, res, next) => {
-  try {
-      const id = req.params.id;
-      const productId = req.params.productId;
-      const data = req.body;
-      
-     console.log(req.params.productId); 
-     
+//     console.log("coupon details end");
 
-    
-      await orderModel.updateOne(
-          
+//     if (coupon) {
+//       console.log("Coupon found");
+//       console.log(coupon+"fffffffffffffffffffffffffffffffffffff");
+//       res.status(200).json(coupon);
 
-          { _id: id, "orderItems.productId": productId },
-          {
-            $set: {
-              "orderItems.$.orderStatus": data.orderStatus
-            }             //     orderStatus: data.orderStatus,
-              //     paymentMethod: data.paymentStatus,
-              
-          }
-      )
-      res.redirect("/product/order-management");
-  } catch (err) {
-      // next(err)
-      console.log(err);
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-//           orderModel.aggregate([
-//             {
-//                 $lookup: {
-//                     from: "products",
-//                     localField: "orderItems.productId",
-//                     foreignField: "_id",
-//                     as: "product"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "userId",
-//                     foreignField: "_id",
-//                     as: "users"
-//                 }
-//             },
-//             {
-//                 $sort: {
-//                     createdAt: -1
-//                 }
-//             }
-//         ]).then((orderDetails) => {
-//           console.log(orderDetails+"orderDetailsuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-//             res.render("../views/admin/adminOrderManagement.ejs", { orderDetails });
-//         })
-//     } 
-    
-//     catch (err) {  console.log(err);
+//     } else {
+//       // Coupon not 
+//       console.log("Coupon not found");
+//       res.status(400).json({ error: "Coupon not found" });
 
 //     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
 // };
-
-
-
-
-
-
-
-
-
-const couponcheck = async (req, res) => {
-  try {
-    const couponCode = req.body.couponCode;
-    console.log(couponCode);
-    
-    const coupon = await couponmodel.findOne({ couponCode: couponCode });
-  
-    console.log("coupon details start");
-
-    console.log(coupon.endDate);
-
-    console.log(coupon.minimumAmount);
-
-    console.log("coupon details end");
-
-    if (coupon) {
-      console.log("Coupon found");
-      res.status(200).json(coupon);
-
-    } else {
-      // Coupon not 
-      console.log("Coupon not found");
-      res.status(400).json({ error: "Coupon not found" });
-
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
 
 
 
@@ -937,13 +935,12 @@ const wishlistDisplyPage = async (req, res) => {
 
 
 
+
+
 const postOrderpage=async(req,res)=>
 {
-// const{amount}=req.body
-
-const email = req.session.userEmail;
-    const user = await order.findOne({ email: email });
-  amount=user.totalPrice
+ const amount=req.body.total_amount
+ console.log(amount);
 
 const razorpayInstance = new Razorpay({ 
 // key_id:process.env.KEY_ID,
@@ -953,18 +950,78 @@ key_secret:"vtqqLXg2NsCftCLpYZShms7M"
 })
 razorpayInstance.orders.create({
 
-amount:amount,
+amount:amount*100,
   currency:"INR"
 },(err,order)=>{
   console.log(order)
   res.json({success:true,order,amount})
 })
-
-
 }
 
 
+const paymentConfirm=async(req,res)=>
+{
+   const userId=req.body.userId
+  try {
+    const razorpayInstance = new Razorpay({
+       key_id:"rzp_test_7gAGPftwtY20XB",
+       key_secret:"vtqqLXg2NsCftCLpYZShms7M" 
+    });
+    const order = await razorpayInstance.orders.fetch(req.body.response.razorpay_order_id)
+    if (order.status === 'paid') {
 
+
+      const cartList = await cartmodel.aggregate([
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+        },
+        {
+          $unwind: "$cartItems",
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "cartItems.productId",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        {
+          $unwind: "$product",
+        },
+      ]);
+        const newOrder = new orderModel({
+
+        // userId: req.session.user.userId
+        orderItems: cartList.map((item) => ({
+          productId: item.product._id,
+          quantity: item.cartItems.qty,
+        })),
+            products: req.session.orderedItems,
+            totalPrice: order.amount/100,
+            razor_pay_order_id: req.body.response.razorpay_order_id,
+            name: req.body.name,
+            shop: req.body.shop,
+            state: req.body.state,
+            city: req.body.city,
+            street: req.body.street,
+            code: req.body.code,
+            mobile: req.body.mobile,
+            email: req.body.email,
+            paymentMethod:req.body.statusdata
+        })
+        newOrder.save().then((data) => {
+
+            req.session.orderedItems = null
+            // console.log(data);
+        })
+    }
+} catch (err) {
+  console.log(err);
+}
+}
 
 
 module.exports = {
@@ -983,10 +1040,11 @@ module.exports = {
   postCartIncDec,
   getCheckoutPage,
   couponcheck,
- wishlistDisplyPage,
+  wishlistDisplyPage,
   userAddToWishlist,
   postCheckoutPage,
   postOrderpage,
   getorderManagement, 
-  orderStatusChanging
+  orderStatusChanging,
+  paymentConfirm
 };

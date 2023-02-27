@@ -50,6 +50,60 @@
                 <input type="text"   name=" description" class="form-control" id="inputNanme4" required value="<%=user.description%>">
 
               </div>
+
+              <div class="col-12">
+                <label for="inputImage" class="form-label">Product Image</label>
+                <% for(var i=0;i<user.image_url.length;i++) { %>
+                  <div class="image-container">
+                    <img src="<%= user.image_url[i] %>" width="100" height="100">
+                    <input type="file" name="image" class="form-control" id="inputImage">
+                    <button class="update-image-btn" data-image-index="<%= i %>">Update Image</button>
+                  </div>
+                <% } %>
+              </div>
+              
+
+
+              <script>
+                // Add event listener to update image button
+              
+              
+                  console.log('====================================');
+                  console.log("data entering");
+                  console.log('====================================');
+               
+
+                   // Add event listener to parent element and delegate to update image buttons
+const updateImageContainer = document.querySelector('.col-12');
+updateImageContainer.addEventListener('click', (e) => {
+  if (e.target.classList.contains('update-image-btn')) {
+    console.log('Button clicked');
+
+    const imageIndex = e.target.dataset.imageIndex;
+    const imageInput = document.querySelectorAll('.image-container')[imageIndex].querySelector('input[type="file"]');
+    const formData = new FormData();
+    formData.append('image', imageInput.files[0]);
+
+    // Send AJAX request to update image
+    fetch('/update-image-url', {
+      method: 'POST',
+      body: formData
+    }).then(response => {
+      // Handle response here
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+});
+
+             
+              </script>
+
+
+
+
+
+
              
               <div class="text-center">
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -105,8 +159,10 @@
   <script src="/public/assets/js/main.js"></script>
 
 </body>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <script>
+  <!-- <script>
   $(document).ready(function(){
     $("#myinput").on("keyup", function() {
       var value = $(this).val().toLowerCase();
@@ -117,6 +173,6 @@
   }); 
 
 
- </script>
+ </script>  -->
 
 </html>

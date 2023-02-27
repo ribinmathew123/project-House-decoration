@@ -82,11 +82,16 @@ const orderSchema = new mongoose.Schema({
     },
     email: {
       type: String,
-
     },
+
+
     paymentMethod:{type:String},
-   
-  
+
+    razor_pay_order_id:{
+      type: String,
+    }
+
+    
 
   }, {
     timestamps: true

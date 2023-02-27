@@ -18,7 +18,7 @@ router.get("/user-list", adminSession, admincontroller.getuserlistpage);
 router.get("/user-lists", adminSession, admincontroller.blockuser);
 
 router.post("/login", withOutAdminSession, admincontroller.adminverification);
-router.post(  "/product-edit/:product_id",adminSession,admincontroller.postproducteditpage);
+router.post("/product-edit/:product_id",adminSession,admincontroller.postproducteditpage);
 router.get("/product-edit", adminSession, admincontroller.getproducteditpage);
 router.get("/coupon", adminSession, admincontroller.getCouponPage);
 router.post("/coupon",adminSession,admincontroller.postCouponPage)

@@ -14,13 +14,23 @@ const userSchema=new mongoose.Schema
    email: String,
    phone:Number,
    password:String, otp:otpSchema,
+
+   isVerified: {
+      type: Boolean,
+      default: false,
+    },
+ 
+
    iBlocked:{
      type:Boolean,
      default:true
     
  }, 
 
-
+ coupondata:[{
+   coupons:String
+  }],
+ 
 
  
  addressDetails:[

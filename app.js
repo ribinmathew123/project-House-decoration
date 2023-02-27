@@ -60,6 +60,39 @@ app.use("/", userRouter);
 
 
 
+
+const fileUpload = require('express-fileupload');
+
+// enable file upload middleware
+app.use(fileUpload());
+
+
+// handle image upload request
+app.post('/upload', (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  // get the uploaded image file
+  let image = req.files.image;
+
+  // generate a unique filename for the image
+  let filename = Date.now() + '-' + image.name;
+
+  // move the uploaded file to the server's uploads directory
+  image.mv('uploads/' + filename, function(err) {
+    if (err) {
+      return res.status(500).send(err);
+    }
+
+    // return the URL of the uploaded image
+    res.send('/uploads/' + filename);
+  });
+});
+
+
+
+
 app.listen(PORT, () => {
   console.log(`\nSERVER RUNNING ON PORT: ${PORT}`);
 });

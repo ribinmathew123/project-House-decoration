@@ -1,6 +1,8 @@
 const express = require("express");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
+const cartmodel = require("../models/cart");
+
 
 const bcrypt = require("bcrypt");
 const { sendOTPViaEmail } = require("../util/sendOtpViaEmail");
@@ -31,7 +33,11 @@ const usersignup = async (req, res, next) => {
 };
 
 const insertUserData = async (req, res) => {
+  const otpError = req.session.otpError;
+
+
   try {
+
     User.findOne({ email: req.body.email }).then((user) => {
       // console.log(user)
       if (user) {
@@ -49,7 +55,9 @@ const insertUserData = async (req, res) => {
               password: hashedPasword,
             });
             let savedUser = user.save();
-            console.log(user);
+
+
+
             let otp;
             otp = Math.floor(Math.random() * 1000000);
             const email = req.body.email;
@@ -81,8 +89,33 @@ const insertUserData = async (req, res) => {
   }
 };
 const verifyotp = (req, res) => {
-  res.render("../views/user/otp", { userId: req.params.user_id });
+  const otpError = req.session.otpError;
+  req.session.otpError=null;
+
+  res.render("../views/user/otp", { userId: req.params.user_id ,otpError});
 };
+
+
+
+// const verify = async (req, res) => {
+//   try {
+//     const otp = parseInt(req.body.otp);
+//     console.log(otp);
+//     console.log("verify body otp");
+//     const user = await User.findOne({ _id: req.params.user_id });
+//     if (otp == user.otp.otp) {
+//       console.log("correct");
+//       req.session.userEmail = user.email;
+//       res.redirect("/");
+//     } else {
+//       res.redirect("/verifyotp");
+//     }
+
+//     console.log("otp wrong");
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 const verify = async (req, res) => {
   try {
@@ -93,9 +126,12 @@ const verify = async (req, res) => {
     if (otp == user.otp.otp) {
       console.log("correct");
       req.session.userEmail = user.email;
+      user.isVerified = true; // Mark the user as verified
+      await user.save(); // Save the user's data to the database
       res.redirect("/");
     } else {
-      res.redirect("/verifyotp");
+      req.session.otpError = "Invalid OTP. Please try again.";
+      res.redirect(`/verifyotp/${req.params.user_id}`);
     }
 
     console.log("otp wrong");
@@ -103,6 +139,9 @@ const verify = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
+
 
 const userLogin = async (req, res) => {
   // if (req.session.username) {
@@ -118,47 +157,96 @@ const userLogin = async (req, res) => {
 
 // user login check and go to user home page
 
-let user;
+
 const userVerification = async (req, res) => {
   try {
-    const emaill = req.body.email;
+    const email = req.body.email;
     const password = req.body.password;
 
-    console.log(emaill);
-    console.log(password);
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-    user = await User.findOne({ email: emaill });
-    // console.log(user);
-    if (user && user.iBlocked == true) {
-      bcrypt
-        .compare(password, user.password)
-        .then((status) => {
-          if (status) {
-            console.log(status);
-            req.session.userEmail = req.body.email;
-            res.redirect("/");
-          } else {
-            res.render("../views/user/userLogin.ejs", {
-              wrongs: "Invalid Credentials",
-            });
-          }
-        })
-        .catch((err) => {
-          res.send(err);
-        });
+    if (!user.isVerified) {
+      throw new Error("Email not verified");
+    }
+
+    if (user.iBlocked) {
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      if (isPasswordMatch) {
+        req.session.userEmail = req.body.email;
+        res.redirect("/");
+      } else {
+        throw new Error("Invalid password");
+      }
     } else {
-      res.render("../views/user/userLogin.ejs", {
-        wrongs: "Invalid Credentials",
-      });
+      throw new Error("User is blocked");
     }
   } catch (error) {
     console.log(error.message);
-    //edit
     res.render("../views/user/userLogin.ejs", {
-      wrongs: "Invalid Credentials",
+      wrongs: error.message,
     });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let user;
+// const userVerification = async (req, res) => {
+//   try {
+//     const emaill = req.body.email;
+//     const password = req.body.password;
+
+//     console.log(emaill);
+//     console.log(password);
+
+//     user = await User.findOne({ email: emaill });
+//     // console.log(user);
+//     if (user && user.iBlocked == true) {
+//       bcrypt
+//         .compare(password, user.password)
+//         .then((status) => {
+//           if (status) {
+//             console.log(status);
+//             req.session.userEmail = req.body.email;
+//             res.redirect("/");
+//           } else {
+//             res.render("../views/user/userLogin.ejs", {
+//               wrongs: "Invalid Credentials",
+//             });
+//           }
+//         })
+//         .catch((err) => {
+//           res.send(err);
+//         });
+//     } else {
+//       res.render("../views/user/userLogin.ejs", {
+//         wrongs: "Invalid Credentials",
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//     //edit
+//     res.render("../views/user/userLogin.ejs", {
+//       wrongs: "Invalid Credentials",
+//     });
+//   }
+// };
 
 // load home page
 
@@ -177,6 +265,52 @@ const loadHome = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// resend otp
+
+const resendotppage = async (req, res) => {
+  const userId = req.params.user_id;
+  const user = await User.findOne({ _id: req.params.user_id });
+ const email=user.email
+
+  try {
+
+    let otp;
+            otp = Math.floor(Math.random() * 1000000);
+            console.log(otp);
+
+            const emailStatus = await sendOtpViaEmail(email, otp, res);
+            if (emailStatus) {
+              User.findByIdAndUpdate(
+                { _id: user._id },
+                {
+                  $set: {
+                    "otp.expiredAt": new Date(Date.now() + 20 * 60 * 1000),
+                    "otp.otp": otp,
+                  },
+                }
+              ).then(() => {
+                res.redirect("/verifyotp/" + user._id);
+              });
+            }
+      
+        else {
+          throw new Error("Password is required");
+        }
+      
+ 
+  } catch (err) {
+    console.log("err");
+  }
+}
+  
+
+
+
+
+
+
+
 
 // user profile 
 
@@ -200,13 +334,14 @@ const getProfileAddressPage=async(req,res)=>{
 
 
 
-// dissply all product
+// disply all product
 const getallproductpage = async (req, res) => {
   try {
     const categoryData = await Categories.find({}, { name: 1 });
 
-    Product.find(
-      req.query?.category ? { category: req.query.category } : null,
+
+
+    Product.find( req.query?.category ? { category: req.query.category } : null,
       (err, details) => {
         // console.log(details);
         if (err) {
@@ -223,6 +358,10 @@ const getallproductpage = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
+
+
 
 const getproductdetailspage = async (req, res) => {
   console.log(req.params.product_id);
@@ -242,45 +381,51 @@ const getproductdetailspage = async (req, res) => {
 // data
 const getUserOrderPage=async(req,res)=>
 {
+//   console.log("data enter");
+
   try {
-    let email = req.session.userEmail;
+//     let email = req.session.userEmail;
 
    
-     const user = await  User.findOne({ email: email });
+//      const user = await  User.findOne({ email: email });
     
-        const userId = user._id;
-        console.log(userId);
+//         const userId = user._id;
+//         console.log(userId);
     
-         const orderList = await orderModel.aggregate([
-         {
-           $match: {
-             userId: new mongoose.Types.ObjectId(userId),
-           },
-        },
-          {
-             $unwind: "$orderItems",
-          },
-         {
-         $lookup: {
-              from: "products",
-                localField: "orderItems.productId",
-               foreignField: "_id",
-               as: "product",
-             },
-           },
-          {
-             $unwind: "$product",
-           },
-        ]);
+//          const orderList = await orderModel.aggregate([
+//          {
+//            $match: {
+//              userId: new mongoose.Types.ObjectId(userId),
+//            },
+//         },
+//           {
+//              $unwind: "$orderItems",
+//           },
+//          {
+//          $lookup: {
+//               from: "products",
+//                 localField: "orderItems.productId",
+//                foreignField: "_id",
+//                as: "product",
+//              },
+//            },
+//           {
+//              $unwind: "$product",
+//            },
+//         ]);
 
 
       
+// console.log("hhhhhhhhhhhh")
+// console.log(orderList)
 
-        res.render("../views/user/userOrder.ejs", {
+// console.log("nnnnnnnnnnnnnnnn")
+
+//         res.render("../views/user/profile.ejs", {
           // cartList: cartList,
           // userData: user,
           // userId: req.session.userEmail,
-        });
+        // });
 
 
   } catch (error) {
@@ -302,7 +447,8 @@ const getuserProfilePage = async (req, res, next) => {
   
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
-    const userId = user._id;
+   
+    const userId = userData._id;
     
 
     const orderList = await orderModel.aggregate([
@@ -326,7 +472,9 @@ const getuserProfilePage = async (req, res, next) => {
           $unwind: "$product",
         },
      ]);
-   
+   console.log(11111111111111111);
+console.log(orderList);
+console.log(11111111111111111);
 
 
     res.render("../views/user/userProfile", {
@@ -543,8 +691,6 @@ const postAddress = async (req, res, next) => {
 
 
 const fetchAddress = async (req, res) => {
-  console.log("fetch entering......................");
-  const addressId=req.params.userid
   try {
     const addressId = req.params.userid;
     const email = req.session.userEmail;
@@ -564,33 +710,53 @@ const fetchAddress = async (req, res) => {
 
 
 
-
-
-
 const postCashonDelivery = async (req, res) => {
 
-  console.log("starting................"); 
-  console.log(req.body); 
-
-  const totalAmount = $('#total-amount').text();
-  console.log( totalAmount);
-
-
-  console.log(" body ending");
- 
   try {
-    const $ = cheerio.load('<span id="total-amount"><%=totalAmount%></span>');
-
-    const totalAmount = $('#total-amount').text();
-    console.log(totalAmount);
+    const userId = req.query.userId;
+    console.log(userId);
 
 
+    const cartItems = await cartmodel.find({ user: userId });
+    console.log(cartItems);
 
-  } catch (error) {
-    console.log(error);
-    
+    console.log("333333333333");
+
+
+    const productArray = cartItems.map(item => {
+      return { productId: item.product, quantity: item.quantity };
+    });
+    console.log(productArray);
+    console.log("44444444444444");
+
+    const lastOrder = await orderModel.find().sort({ _id: -1 }).limit(1);
+    let orderId = 'BKWM000001';
+    if (lastOrder.length > 0) {
+      const lastOrderId = lastOrder[0].orderId;
+      const orderIdNumber = parseInt(lastOrderId.slice(4));
+      orderId = `BKWM${("000000" + (orderIdNumber + 1)).slice(-6)}`;
+    }
+
+    const newOrder = new orderModel({
+      orderId,
+      user: userId,
+      product: productArray,
+      address: req.body.address,
+      totalAmount: req.body.totalAmount,
+      paymentMethod: "COD",
+    });
+
+    await newOrder.save();
+
+    await cartmodel.deleteMany({ user: userId });
+
+    res.status(200).send({ orderId });
+  } catch (err) {
+    console.error(`Error Product Remove:`,err);
+    res.status(500).send("Internal server error");
+    res.redirect("/");
   }
-}
+};
 
 
 
@@ -642,7 +808,6 @@ const userAddressDelete = async (req, res) => {
     try {
       
       const addressId = req.query.addressId;
-      console.log(addressId+"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
       const email = req.session.userEmail;
       const userData = await User.findOne({ email: email });
   
@@ -660,22 +825,37 @@ const userAddressDelete = async (req, res) => {
   };
   
 
+const getforgotPasswordPage= async(req,res)=>{
+
+  try {
+    const errorData=req.session.er
+    req.session.er=null
+    res.render("../views/user/forgotPassMailPage.ejs",{errorData})
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
+const postforgotPasswordPage = async (req, res) => {
+  try {
+    User.findOne({ email: req.body.email }).then((user) => {
+      console.log(user);
+      if (user) {
+        if (req.body.email === user.email) {
+console.log("user found");
+res.render("../views/user/forgotOtp.ejs" )
+        }
+      } else {
+        req.session.er = "Email not found"
+        console.log("user Notfound");
 
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
+res.redirect("/forgot-password")      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
 module.exports = {
@@ -703,5 +883,8 @@ module.exports = {
   getUserOrderPage,
   userAddressDelete,
   userAddressEdit,
-  updateAddressPage
+  updateAddressPage,
+  getforgotPasswordPage,
+  postforgotPasswordPage,
+  resendotppage
 };

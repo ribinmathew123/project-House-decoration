@@ -2154,7 +2154,7 @@
         
     </li>
     <li class="cart"><div class="product-add-to-cart">	
-    <form action="https://ecolife.posthemes.com/demo4/decoration3/en/cart" method="post" class="add-to-cart-or-refresh">
+    <form action="" method="post" class="add-to-cart-or-refresh">
     <input type="hidden" name="token" value="44de839971e67a062fc114b478c66f62">
     <input type="hidden" name="id_product" value="10" class="product_page_product_id">
     <input type="hidden" name="qty" value="1" min="1">
@@ -2178,7 +2178,7 @@
     
     
     <div class="hook-reviews">
-    <div class="comments_note" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+    <div class="comments_note" itemprop="aggregateRating" itemscope itemtype="">
     <div class="star_content clearfix">
     <span class="rating_star" style="width: 100%;"></span>
     <meta itemprop="worstRating" content = "0" />

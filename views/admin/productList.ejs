@@ -66,7 +66,7 @@
 
             <form class="row g-3" action="" method="" >
               <div class="col-12">
-                <table class="table table-bordered text-center table-hover table-responsive" id=mytable  >
+                <table  id=example class="table table-bordered text-center table-hover table-responsive" id=mytable  >
                     <thead class="bg-dark text-white">
                       <tr>
                         <th scope="col">No.</th>
@@ -87,6 +87,7 @@
                         </thead>
                     <thead >
                           <tbody >
+                            
                             <% details.forEach(function(product, index){ %> 
                                 <!-- <tr class="bg-success text-white"> -->
                                 <tr class="table-info">
@@ -96,6 +97,7 @@
                                   <td><%= product.sell%></td>
                                   <td><%= product.quantity%></td>
 
+                        
 
                                   <td><%= product.description%></td>
                                   <td> <img style="height: 100px; width: 100px;" src="<%= product.image_url[1]%>" alt=""></td>
@@ -123,7 +125,9 @@
 
                                            </tbody>
                                </table>
-            </form>
+
+
+                               
             
             <!-- Vertical Form -->
 
@@ -167,18 +171,21 @@
   <script src="/public/assets/js/main.js"></script>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <script>
-  $(document).ready(function(){
-    $("#myinput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#mytable tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
+<script src="/public/assets/js/main.js"></script>
+
+</body>
+
+
+<script>
+  $(document).ready(function () {
+    var table = $('#example').DataTable({
+      rowReorder: {
+        selector: 'td:nth-child(2)'
+      },
+      responsive: true
     });
-  }); 
-
-
- </script>
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>

@@ -50,7 +50,7 @@
                         <h3>Billing Details</h3>
                         <div class="row">
 
-                            <div class="col-12" id="selectedAddressDetails">
+                            <div class="col-12" >
 
                                 <div class="select_form_select default-form-box">
                                     <label for="countru_name">Your Address </label>
@@ -75,9 +75,9 @@
 
 
 
-                            <form id="paymentForm" action="/product/checkoutn" method="post">
+                            <!-- <form> -->
 
-                                <div class="col-12" id="selectedAddressDetails">
+                                <div class="col-12" >
                                     <div class="default-form-box">
                                         <label>Full Name <span>*</span></label>
                                         <input type="text" id="name" name="name" value="">
@@ -213,22 +213,14 @@
                             <div class="panel-default">
 
 
-                                <!-- <label><input type="radio" value="COD" name="paymentMethod" class="mr-2" checked required> COD (cash on delivery)</label> -->
-                                <div class="">
-                                    <label class="radio-default" for="currencyCod" data-bs-toggle="collapse"
-                                        data-bs-target="#methodCod">
-                                        <input type="radio"  name="payment" value="cod" id="payment" >
-                                        <span>Cash on Delivery</span>
-                                    </label>
+                                
 
+                                <button class="btn btn-primary btn-sm btn-block my-2" onclick="cashOnDelivary('<%= userId %>')">Chash On
+                                    delivary</button>
+                            
+                                <button data-value="OnlinePayment" type="submit" onclick="onlinePayment('<%= userId %>')" class="btn btn-danger btn-sm btn-block my-2"  id="rzp-button1">Online Payment</button>
+                            
 
-                                    <label class="radio-default" for="currencyCod" data-bs-toggle="collapse"
-                                        data-bs-target="#methodCod">
-                                        <input type="radio" name="payment" value="online" id="payment">
-                                        <span>Online Payment</span>
-                                    </label>
-
-                                </div>
                                 <div class="order_button pt-3">
                                     <button class="btn btn-md btn-black-default-hover" type="submit">Apply
                                         </button>
@@ -238,7 +230,7 @@
 
 
 
-                                </form>
+                                <!-- </form> -->
                             </div>
                         </div>
                     </div>
@@ -285,6 +277,68 @@
                 }
             }
         </script>
+
+
+
+
+
+
+
+
+
+
+<script>
+    function cashOnDelivary(userId){
+        console.log("work");
+        const ordertotalAmount = document.getElementById('totalAmount').innerText;
+        const url = window.location.origin;
+        console.log(url);
+        fetch(`${url}/cashon-delivery?userId=${userId}`, {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            // address : orderAddress,
+            totalAmount : ordertotalAmount
+            })
+        })
+            .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok');
+            })
+            .then((data) => {
+            console.log(data, 'This is data');
+            swal({
+                title: "Order Placed Successfully!",
+                text: `Your order has been placed successfully! Your order id is ${data.orderId}`,
+                icon: "success",
+                button: "Okay",
+            })
+                .then(() => {
+                    window.location.href = `/myOrder/${userId}`;
+                });
+                setTimeout(() => {
+                    window.location.href = `/myOrder/${userId}`;
+                }, 3000);
+            })
+            .catch((error) => {
+            console.error(`There was a problem with the fetch operation: ${error.message}`);
+            // Show error modal
+            swal({
+                title: "Error",
+                text: "There was an error placing your order. Please try again later.",
+                icon: "error",
+                button: "Okay",
+            });
+            });
+    }
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 
         <script src="/public/asset/js/vendor/vendor.min.js"></script>
