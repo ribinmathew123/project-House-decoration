@@ -939,7 +939,7 @@ const wishlistDisplyPage = async (req, res) => {
 
 const postOrderpage=async(req,res)=>
 {
- const amount=req.body.total_amount
+ const amount=req.body.amount
  console.log(amount);
 
 const razorpayInstance = new Razorpay({ 

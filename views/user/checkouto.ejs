@@ -745,3 +745,97 @@
     <script src="/public/asset/js/main.js"></script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+function onlinePayment(userId) {
+  const amount = document.querySelector("#totalAmount").innerText;
+  const name = document.querySelector("#name").value;
+  const shop = document.querySelector("#shop").value;
+  const state = document.querySelector("#state").value;
+  const city = document.querySelector("#city").value;
+  const street = document.querySelector("#street").value;
+  const code = document.querySelector("#code").value;
+  const email = document.querySelector("#email").value;
+  const mobile = document.getElementById("mobile").value;
+
+  const status = document.getElementById("rzp-button1");
+  const statusdata = status.getAttribute("data-value");
+
+  fetch("/product/order", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      var options = {
+        key: "rzp_test_7gAGPftwtY20XB", // Enter the Key ID generated from the Dashboard
+        name: "Test Company",
+        amount: res.order.amount,
+        order_id: res.order.id, // For one time payment
+        handler: function (response) {
+          console.log(response);
+
+
+          fetch("/product/confirm-order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name,
+              shop,
+              state,
+              city,
+              street,
+              code,
+              email,
+              mobile,
+              userId,
+              statusdata,
+              response,
+            }),
+          })
+            .then(() => {
+              console.log("Order confirmation successful");
+              // Show a sweet alert upon successful payment
+              swal({
+                title: "Payment Successful",
+                text: "Thank you for your purchase.",
+                icon: "success",
+              }).then(() => {
+                window.location.href = "/admin";
+              });
+            })
+            .catch((error) => {
+              console.error("Error while confirming order:", error);
+            });
+        },
+      };
+
+      var rzp1 = new Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        swal({
+          title: "Payment Failed",
+          text: response.error.description,
+          icon: "error",
+        });
+        console.log(response.error);
+      });
+      rzp1.open();
+    })
+    .catch((error) => {
+      console.error("Error while fetching order:", error);
+    });
+}

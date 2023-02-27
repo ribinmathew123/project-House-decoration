@@ -453,28 +453,21 @@ const getuserProfilePage = async (req, res, next) => {
 
     const orderList = await orderModel.aggregate([
       {
-        $match: {
-          userId: new mongoose.Types.ObjectId(userId),
-        },
-     },
-       {
-          $unwind: "$orderItems",
+         $unwind: "$orderItems",
+      },
+     {
+     $lookup: {
+          from: "products",
+            localField: "orderItems.productId",
+           foreignField: "_id",
+           as: "product",
+         },
        },
       {
-      $lookup: {
-           from: "products",
-             localField: "orderItems.productId",
-            foreignField: "_id",
-            as: "product",
-          },
-        },
-       {
-          $unwind: "$product",
-        },
-     ]);
-   console.log(11111111111111111);
-console.log(orderList);
-console.log(11111111111111111);
+         $unwind: "$product",
+       },
+    ]);
+  
 
 
     res.render("../views/user/userProfile", {
