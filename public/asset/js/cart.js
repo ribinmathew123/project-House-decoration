@@ -231,7 +231,9 @@ function onlinePayment(userId) {
                 text: "Thank you for your purchase.",
                 icon: "success",
               }).then(() => {
-                window.location.href = "/";
+                // window.location.href = `/success-page/${userId}`;
+                window.location.href = `/success-page/${userId}`;
+
               });
             })
             .catch((error) => {
@@ -255,6 +257,9 @@ function onlinePayment(userId) {
       console.error("Error while fetching order:", error);
     });
 }
+
+
+
 
 
 // cashondelivery

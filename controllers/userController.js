@@ -697,11 +697,9 @@ const fetchAddress = async (req, res) => {
 
 
 const postCashonDelivery = async (req, res) => {
-  console.log("enerrrrrrrrrrrrrrrrrrrrrrrrrr")
   try {
     const userId = req.query.userId;
 
-    console.log(userId+"iiiiiiiiiiiiiiiiiiiiiii");
 
     const cartList = await cartmodel.aggregate([
       {
@@ -725,12 +723,9 @@ const postCashonDelivery = async (req, res) => {
       },
     ]);
 
-    console.log("ffffffffffffffffffff");
 
     let orderId = 'HomeDEC00001';
     
-
-
     const newOrder = new orderModel({
       orderItems: cartList.map((item) => ({
         productId: item.product._id,
@@ -750,10 +745,8 @@ const postCashonDelivery = async (req, res) => {
       paymentMethod: "COD",
     });
 
-    console.log("333333333333333333");
 
     await newOrder.save(); // save the new order to the database
-    console.log("555555555555555");
 
     req.session.orderedItems = null;
       

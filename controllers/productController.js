@@ -623,6 +623,11 @@ try {
 };
 
 
+
+
+
+
+
 // order status changing
 
 const orderStatusChanging = async (req, res, next) => {
@@ -1012,20 +1017,36 @@ const paymentConfirm=async(req,res)=>
             email: req.body.email,
             paymentMethod:req.body.statusdata
         })
-        newOrder.save().then((data) => {
 
-            req.session.orderedItems = null
-            // console.log(data);
+          newOrder.save().then(async(data) => {
+          req.session.orderedItems = null
+          res.json({ status: true, message: "order placed" })
+         await cartmodel.deleteMany({ userId: userId });
 
-        })
-        
-        await cartmodel.deleteMany({ userId: userId });
-
-    }
+      }).catch(() => {
+          res.json({
+              status: false, message: "order not placed"
+          })
+      })
+  } else {
+      res.json({
+          status: false, message: "order not placed"
+      })
+  }
 } catch (err) {
   console.log(err);
 }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {
