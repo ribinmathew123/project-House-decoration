@@ -1001,7 +1001,7 @@ const paymentConfirm=async(req,res)=>
         })),
             products: req.session.orderedItems,
             totalPrice: order.amount/100,
-            razor_pay_order_id: req.body.response.razorpay_order_id,
+            order_id: req.body.response.razorpay_order_id,
             name: req.body.name,
             shop: req.body.shop,
             state: req.body.state,
@@ -1016,7 +1016,11 @@ const paymentConfirm=async(req,res)=>
 
             req.session.orderedItems = null
             // console.log(data);
+
         })
+        
+        await cartmodel.deleteMany({ userId: userId });
+
     }
 } catch (err) {
   console.log(err);

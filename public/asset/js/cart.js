@@ -116,37 +116,51 @@ function deleteItem(productId, price) {
 }
 
 let status = false
+
 function applyCoupon() {
   const couponCode = document.getElementById("coupon-code-input").value;
   let total_amount = document.querySelector("#total-amount1");
 
   if(!status){
-
     fetch("/product/couponcheck", {
       method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ couponCode: couponCode }),
-  })
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ couponCode: couponCode }),
+    })
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
       console.log(data.minimumAmount);
 
-
       if (data.minimumAmount <= total_amount.innerText) {
-        
         const discountAmount = data.discount / 100;
-        const toalDiscount = Number(total_amount.innerText * discountAmount);
-        total_amount.innerText = Number(total_amount.innerText - toalDiscount);
-        status=true
+        const totalDiscount = Number(total_amount.innerText * discountAmount);
+        const newTotal = Number(total_amount.innerText - totalDiscount);
+        total_amount.innerText = newTotal;
+        status=true;
+        Swal.fire({
+          icon: 'success',
+          title: 'Coupon applied successfully!',
+          text: `Discount: ${totalDiscount.toFixed(2)}\nNew total: ${newTotal.toFixed(2)}`,
+        });
       } else {
         console.log("Minimum amount not met");
+        Swal.fire({
+          icon: 'warning',
+          title: 'Minimum amount not met',
+          text: `The minimum amount required for this coupon is ${data.minimumAmount}`,
+        });
       }
     })
     .catch((error) => {
       console.error("Failed to apply coupon:" + error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to apply coupon',
+      });
     });
   }
 }
@@ -243,40 +257,63 @@ function onlinePayment(userId) {
 }
 
 
+// cashondelivery
 
 
-// document.querySelector("#paymentForm").addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   let total_amount = document.querySelector("#totalAmount").innerText;
-  
+function cashOnDelivary(userId){
+  const amount = document.querySelector("#totalAmount").innerText;
+  const name = document.querySelector("#name").value;
+  const shop = document.querySelector("#shop").value;
+  const state = document.querySelector("#state").value;
+  const city = document.querySelector("#city").value;
+  const street = document.querySelector("#street").value;
+  const code = document.querySelector("#code").value;
+  const email = document.querySelector("#email").value;
+  const mobile = document.getElementById("mobile").value;
 
-//   console.log(total_amount+"tatoal amount");
+  const url = window.location.origin;
+  console.log(url);
+  fetch(`${url}/cashon-delivery?userId=${userId}`, {
+      method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
 
-//   const payment = document.querySelectorAll('input[name="payment"]');
-//   console.log(payment[0].value);
-//   if (payment[1].value == "online") {
-//     fetch("/product/order", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({}),
-//     })
-//       .then((response) => response.json())
-//       .then((order) => {
-//         console.log(order);
-//         var options = {
-//           key: "rzp_test_7gAGPftwtY20XB",
-//           name: "Test Company",
-//           amount:order.amount*100,
-
-//           order_id: order.id,
-//         };
-//         var rzp = new Razorpay(options);
-//         rzp.open();
-//       })
-//       .catch((error) => {
-//         console.error("Failed to apply coupon:" + error);
-//       });
-//   }
-// });
+        amount,name,shop,state,city,street,code,email,mobile
+     
+      })
+  })
+      .then((response) => {
+      if (response.ok) {
+          return response.json();
+      }
+      throw new Error('Network response was not ok');
+      })
+      .then((data) => {
+      console.log(data, 'This is data');
+      swal({
+          title: "Order Placed Successfully!",
+          text: `Your order has been placed successfully! Your order id is ${data.orderId}`,
+          icon: "success",
+          button: "Okay",
+      })
+          .then(() => {
+              window.location.href = `/success-page/${userId}`;
+          });
+          setTimeout(() => {
+              window.location.href = `/success-page/${userId}`;
+          }, 3000);
+      })
+      .catch((error) => {
+      console.error(`There was a problem with the fetch operation: ${error.message}`);
+      // Show error modal
+      swal({
+          title: "Error",
+          text: "There was an error placing your order. Please try again later.",
+          icon: "error",
+          button: "Okay",
+      });
+      });
+}

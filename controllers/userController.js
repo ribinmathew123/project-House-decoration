@@ -467,9 +467,6 @@ const getuserProfilePage = async (req, res, next) => {
          $unwind: "$product",
        },
     ]);
-  
-
-
     res.render("../views/user/userProfile", {
       login: req.session,
       userDatas: userData,orderList, 
@@ -489,8 +486,6 @@ const getuserProfilePage = async (req, res, next) => {
 // edit user data
 const postusereditProfilePage = async (req, res) => {
   try {
-    // console.log(req.body.name);
-    // console.log(req.params.Dataid);
 
     await User.findByIdAndUpdate(
       { _id: req.params.Dataid },
@@ -515,7 +510,6 @@ const getchangepasswordPage = async (req, res) => {
 
 // edit user password
 
-// console.log(user);
 
 const postChangePasswordPage = async (req, res) => {
   let email = req.session.userEmail;
@@ -702,46 +696,69 @@ const fetchAddress = async (req, res) => {
 
 
 
-
 const postCashonDelivery = async (req, res) => {
-
+  console.log("enerrrrrrrrrrrrrrrrrrrrrrrrrr")
   try {
     const userId = req.query.userId;
-    console.log(userId);
 
+    console.log(userId+"iiiiiiiiiiiiiiiiiiiiiii");
 
-    const cartItems = await cartmodel.find({ user: userId });
-    console.log(cartItems);
+    const cartList = await cartmodel.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $unwind: "$cartItems",
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "cartItems.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: "$product",
+      },
+    ]);
 
-    console.log("333333333333");
+    console.log("ffffffffffffffffffff");
 
+    let orderId = 'HomeDEC00001';
+    
 
-    const productArray = cartItems.map(item => {
-      return { productId: item.product, quantity: item.quantity };
-    });
-    console.log(productArray);
-    console.log("44444444444444");
-
-    const lastOrder = await orderModel.find().sort({ _id: -1 }).limit(1);
-    let orderId = 'BKWM000001';
-    if (lastOrder.length > 0) {
-      const lastOrderId = lastOrder[0].orderId;
-      const orderIdNumber = parseInt(lastOrderId.slice(4));
-      orderId = `BKWM${("000000" + (orderIdNumber + 1)).slice(-6)}`;
-    }
 
     const newOrder = new orderModel({
-      orderId,
-      user: userId,
-      product: productArray,
-      address: req.body.address,
-      totalAmount: req.body.totalAmount,
+      orderItems: cartList.map((item) => ({
+        productId: item.product._id,
+        quantity: item.cartItems.qty,
+      })),
+      products: req.session.orderedItems,
+      totalPrice: req.body.amount,
+      order_id: orderId, // use the generated orderId here
+      name: req.body.name,
+      shop: req.body.shop,
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      code: req.body.code,
+      mobile: req.body.mobile,
+      email: req.body.email,
       paymentMethod: "COD",
     });
 
-    await newOrder.save();
+    console.log("333333333333333333");
 
-    await cartmodel.deleteMany({ user: userId });
+    await newOrder.save(); // save the new order to the database
+    console.log("555555555555555");
+
+    req.session.orderedItems = null;
+      
+    await cartmodel.deleteMany({ userId: userId });
+
 
     res.status(200).send({ orderId });
   } catch (err) {
@@ -753,6 +770,22 @@ const postCashonDelivery = async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+   
 
 const userAddressDelete = async (req, res) => {
   try {
@@ -771,31 +804,6 @@ const userAddressDelete = async (req, res) => {
   
 
 
-  // const userAddressEdit=async(req,res)=>{
-
-  //   try {
-
-  //     let email = req.session.userEmail;
-  //     const userData = await User.findOne({ email: email });
-  //     console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
-  //     console.log(userData._id);
-  //     console.log('==========================hhhhhhhhhhhhhhhhhhhhh==========')
-      
-  //    res.render("../views/user/addressEditPage.ejs", {
-  //       login: req.session,
-  //       userDatas: userData._id,
-
-
-       
-  //     });
-      
-
-   
-  //   } catch (error) {
-  //     console.log(error);
-      
-  //   }
-  // }
 
   const userAddressEdit = async (req, res) => {
     try {
@@ -843,12 +851,35 @@ res.render("../views/user/forgotOtp.ejs" )
         req.session.er = "Email not found"
         console.log("user Notfound");
 
+
+
+
+
+
+
+
+
+
 res.redirect("/forgot-password")      }
     });
   } catch (error) {
     console.log(error);
   }
 };
+
+
+const codSuccessPage=async(req,res)=>{
+  try {
+    
+    res.render("../views/user/successPage.ejs")
+  } catch (error) {
+    console.log("error");
+  }
+}
+
+
+
+
 
 
 module.exports = {
@@ -879,5 +910,6 @@ module.exports = {
   updateAddressPage,
   getforgotPasswordPage,
   postforgotPasswordPage,
-  resendotppage
+  resendotppage,
+  codSuccessPage
 };

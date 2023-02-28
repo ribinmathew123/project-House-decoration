@@ -87,7 +87,7 @@ const orderSchema = new mongoose.Schema({
 
     paymentMethod:{type:String},
 
-    razor_pay_order_id:{
+    order_id:{
       type: String,
     }
 
@@ -96,6 +96,8 @@ const orderSchema = new mongoose.Schema({
   }, {
     timestamps: true
   });
+
+ 
   const order = mongoose.model('order', orderSchema);
 
 module.exports=order; 

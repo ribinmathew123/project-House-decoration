@@ -54,6 +54,7 @@ router.get("/forgot-password",usercontroller.getforgotPasswordPage)
 router.post("/forgot-password",usercontroller.postforgotPasswordPage)
 router.post("/resend-otp/:user_id",usercontroller.resendotppage)
 router.get("/exportorder", salesReport.exportorder);
+router.get("/success-page/:user_id",usercontroller.codSuccessPage)
 
 
 

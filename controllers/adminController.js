@@ -3,6 +3,7 @@ const Admin = require("../models/adminModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const couponModel = require("../models/couponModel");
+const ordermodel=require("../models/orderModel")
 const bcrypt = require("bcrypt");
 const { render } = require("ejs");
 
@@ -40,8 +41,35 @@ const adminverification = async (req, res, next) => {
 
 // loadadmin-Homepage
 const adminhomepageload = async (req, res) => {
-  res.render("../views/admin/adminHome.ejs");
+  
+  // find order
+  const order = await Product.find();
+  // find order
+  const boardorderdata = await ordermodel.find();
+  // user
+  const userdata = await User.find();
+  // product count
+  const productcount = await Product.find();
+  // Return','Shipped', 'Placed', 'Delivered', 'Cancelled
+const ordePending = await ordermodel.find({status:'pending'}).count()
+const Return = await ordermodel.find({status:'return'}).count()
+const shipped = await ordermodel.find({status:'shippid'}).count()
+const Delivered = await ordermodel.find({status:'delivered'}).count()
+const Cancelled = await ordermodel.find({status:'cancel'}).count()
+
+let orderPerMonth=[]
+    for (let i=0;i<12;i++){
+        let numberOfOrders=await ordermodel.find({month:i}).count()
+        orderPerMonth.push(numberOfOrders)
+    }
+console.log(orderPerMonth);
+
+  res.render("../views/admin/adminHome.ejs", {  boardorderdata, order,userdata,productcount,ordePending,Return,shipped,Delivered,Cancelled,orderPerMonth })
 };
+
+
+
+
 
 // user list show
 
