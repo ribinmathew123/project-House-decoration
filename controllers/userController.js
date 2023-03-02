@@ -2,6 +2,8 @@ const express = require("express");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
 const cartmodel = require("../models/cart");
+const bannermodel = require("../models/bannermodel")
+
 
 
 const bcrypt = require("bcrypt");
@@ -88,6 +90,10 @@ const insertUserData = async (req, res) => {
     console.log("err");
   }
 };
+
+
+
+
 const verifyotp = (req, res) => {
   const otpError = req.session.otpError;
   req.session.otpError=null;
@@ -95,27 +101,6 @@ const verifyotp = (req, res) => {
   res.render("../views/user/otp", { userId: req.params.user_id ,otpError});
 };
 
-
-
-// const verify = async (req, res) => {
-//   try {
-//     const otp = parseInt(req.body.otp);
-//     console.log(otp);
-//     console.log("verify body otp");
-//     const user = await User.findOne({ _id: req.params.user_id });
-//     if (otp == user.otp.otp) {
-//       console.log("correct");
-//       req.session.userEmail = user.email;
-//       res.redirect("/");
-//     } else {
-//       res.redirect("/verifyotp");
-//     }
-
-//     console.log("otp wrong");
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 const verify = async (req, res) => {
   try {
@@ -144,9 +129,7 @@ const verify = async (req, res) => {
 
 
 const userLogin = async (req, res) => {
-  // if (req.session.username) {
-  //   res.redirect("/home");
-  // } else {
+ 
   try {
     res.render("../views/user/userLogin");
   } catch (error) {
@@ -201,64 +184,17 @@ const userVerification = async (req, res) => {
 
 
 
-
-
-
-
-
-// let user;
-// const userVerification = async (req, res) => {
-//   try {
-//     const emaill = req.body.email;
-//     const password = req.body.password;
-
-//     console.log(emaill);
-//     console.log(password);
-
-//     user = await User.findOne({ email: emaill });
-//     // console.log(user);
-//     if (user && user.iBlocked == true) {
-//       bcrypt
-//         .compare(password, user.password)
-//         .then((status) => {
-//           if (status) {
-//             console.log(status);
-//             req.session.userEmail = req.body.email;
-//             res.redirect("/");
-//           } else {
-//             res.render("../views/user/userLogin.ejs", {
-//               wrongs: "Invalid Credentials",
-//             });
-//           }
-//         })
-//         .catch((err) => {
-//           res.send(err);
-//         });
-//     } else {
-//       res.render("../views/user/userLogin.ejs", {
-//         wrongs: "Invalid Credentials",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//     //edit
-//     res.render("../views/user/userLogin.ejs", {
-//       wrongs: "Invalid Credentials",
-//     });
-//   }
-// };
-
 // load home page
 
 const loadHome = async (req, res) => {
   req.session.userEmail;
   try {
+    const bannerimg = await bannermodel.find({status:true});
     Product.find({}, (err, details) => {
-      // console.log(details);
       if (err) {
         console.log(err);
       } else {
-        res.render("../views/user/userHome.ejs", { alldetails: details });
+        res.render("../views/user/userHome.ejs", { alldetails: details, banner: bannerimg });
       }
     });
   } catch (error) {
@@ -310,8 +246,6 @@ const resendotppage = async (req, res) => {
 
 
 
-
-
 // user profile 
 
 const getProfileAddressPage=async(req,res)=>{
@@ -337,13 +271,12 @@ const getProfileAddressPage=async(req,res)=>{
 // disply all product
 const getallproductpage = async (req, res) => {
   try {
-    const categoryData = await Categories.find({}, { name: 1 });
+    const categoryData = await Categories.find({status:true}, { name: 1 });
 
 
 
     Product.find( req.query?.category ? { category: req.query.category } : null,
       (err, details) => {
-        // console.log(details);
         if (err) {
           console.log(err);
         } else {
@@ -381,51 +314,7 @@ const getproductdetailspage = async (req, res) => {
 // data
 const getUserOrderPage=async(req,res)=>
 {
-//   console.log("data enter");
-
   try {
-//     let email = req.session.userEmail;
-
-   
-//      const user = await  User.findOne({ email: email });
-    
-//         const userId = user._id;
-//         console.log(userId);
-    
-//          const orderList = await orderModel.aggregate([
-//          {
-//            $match: {
-//              userId: new mongoose.Types.ObjectId(userId),
-//            },
-//         },
-//           {
-//              $unwind: "$orderItems",
-//           },
-//          {
-//          $lookup: {
-//               from: "products",
-//                 localField: "orderItems.productId",
-//                foreignField: "_id",
-//                as: "product",
-//              },
-//            },
-//           {
-//              $unwind: "$product",
-//            },
-//         ]);
-
-
-      
-// console.log("hhhhhhhhhhhh")
-// console.log(orderList)
-
-// console.log("nnnnnnnnnnnnnnnn")
-
-//         res.render("../views/user/profile.ejs", {
-          // cartList: cartList,
-          // userData: user,
-          // userId: req.session.userEmail,
-        // });
 
 
   } catch (error) {
@@ -551,12 +440,12 @@ const postChangePasswordPage = async (req, res) => {
 };
 
 
+
+
 const getusereditProfilePage = async (req, res) => {
-  // if (req.session.email) {
   try {
     const id = req.query.id;
     const userData = await User.findById({ _id: id });
-    // console.log(req.session.error);
     if (userData) {
       let error = req.session.error;
       req.session.error = null;
@@ -566,9 +455,7 @@ const getusereditProfilePage = async (req, res) => {
       });
     }
 
-    // else {
-    //   res.redirect("/admin");
-    // }
+   
   } catch (error) {
     console.log(error.message);
   }
@@ -577,14 +464,8 @@ const getusereditProfilePage = async (req, res) => {
 
 
 
-
-
-
-
 const postAddressPage = async (req, res) => {
   let email = req.session.userEmail;
-
-
   try {
     let email = req.session.userEmail;
     await User.updateOne(
@@ -644,10 +525,6 @@ const updateAddressPage = async (req, res) => {
   }
 };
 
-
-
-
-
 const logout = async (req, res) => {
   req.session.userEmail = null;
   console.log("user session disstroyed");
@@ -659,8 +536,7 @@ const logout = async (req, res) => {
 
 const postAddress = async (req, res, next) => {
   try {
-    // console.log(req.session);
-    //  let userData= req.session
+    
     let email = req.session.userEmail;
     const userData = await User.findOne({ email: email });
     res.render("../views/user/checkout.ejs", {
@@ -818,7 +694,6 @@ const userAddressDelete = async (req, res) => {
     }
   };
   
-
 const getforgotPasswordPage= async(req,res)=>{
 
   try {
@@ -831,27 +706,46 @@ const getforgotPasswordPage= async(req,res)=>{
 }
 
 
+
+
+
+
+
 const postforgotPasswordPage = async (req, res) => {
   try {
-    User.findOne({ email: req.body.email }).then((user) => {
+    User.findOne({ email: req.body.email }).then(async(user) => {
       console.log(user);
       if (user) {
         if (req.body.email === user.email) {
-console.log("user found");
-res.render("../views/user/forgotOtp.ejs" )
+            console.log("user found");
+            // res.render("../views/user/forgotOtp.ejs" )
+               const email= user.email
+              let otp;
+                      otp = Math.floor(Math.random() * 1000000);
+                      console.log(otp);
+          
+                      const emailStatus = await sendOtpViaEmail(email, otp, res);
+                      if (emailStatus) {
+                        User.findByIdAndUpdate(
+                          { _id: user._id },
+                          {
+                            $set: {
+                              "otp.expiredAt": new Date(Date.now() + 20 * 60 * 1000),
+                              "otp.otp": otp,
+                            },
+                          }
+                        ).then(() => {
+                          res.redirect("/verify-otp/"+user._id);
+                        });
+                      } 
+                
+                  else {
+                    throw new Error("Password is required");
+                  }
         }
       } else {
         req.session.er = "Email not found"
         console.log("user Notfound");
-
-
-
-
-
-
-
-
-
 
 res.redirect("/forgot-password")      }
     });
@@ -861,13 +755,97 @@ res.redirect("/forgot-password")      }
 };
 
 
-const codSuccessPage=async(req,res)=>{
+const verifyOtp = (req, res) => {
+  const otpError = req.session.otpError;
+  req.session.otpError=null;
+
+  res.render("../views/user/forgotOtp.ejs", { userId: req.params.user_id ,otpError});
+};
+
+
+const verifypassword= async (req, res) => {
+  try {
+    const otp = parseInt(req.body.otp);
+    console.log(otp);
+    console.log("verify body otp");
+    const user = await User.findOne({ _id: req.params.user_id });
+    if (otp == user.otp.otp) {
+      console.log("correct password");
+      res.render("../views/user/userPasswordChange.ejs",{ userId: req.params.user_id})
+
+    
+    } else {
+      req.session.otpError = "Invalid OTP. Please try again.";
+      res.redirect(`/verify-otp/${req.params.user_id}`);
+    }
+
+    console.log("otp wrong");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+
+
+const getUserPasswordChange =async( req,res)=>
+{
+  try {
+    res.render("../views/user/userPasswordChange.ejs")
+  } catch (error) {
+    
+  }
+}
+
+
+
+
+const postuserChangePasswordPage = async (req, res) => {
+  console.log("data");
+  const user = await User.findOne({ _id: req.params.user_id });
+  console.log(user.email);
+    // Compare new password and confirm password
+    if (req.body.new === req.body.confirm) {
+
+
+      // Hash new password
+      bcrypt.hash(req.body.new, 10, async (err, hash) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ success: false });
+        }
+        // Update user's password
+        await User.updateOne(
+          { email: user.email },
+          { $set: { password: hash } }
+        );
+        console.log("password change");
+        res.render("../views/user/userLogin.ejs")
+      });
+    } else {
+      console.log("New password and confirm password do not match.");
+      res.status(400).json({ success: false });
+    }
+  };
+  
+      
+
+  
+
+
+
+
+
+
+const codSuccessPage=async(req,res, next)=>{
   try {
     
     res.render("../views/user/successPage.ejs")
   } catch (error) {
-    console.log("error");
-  }
+    next(error)
+ }
 }
 
 
@@ -904,5 +882,8 @@ module.exports = {
   getforgotPasswordPage,
   postforgotPasswordPage,
   resendotppage,
-  codSuccessPage
+  codSuccessPage,
+  getUserPasswordChange,
+  verifyOtp,verifypassword,
+  postuserChangePasswordPage
 };

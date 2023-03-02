@@ -25,7 +25,7 @@ const sendOtpViaEmail = (email, otp) => {
       } else {
         resolve(true);
       }
-      res.render("../views/user");
+      res.render("../views/user/otp");
     });
   });
 };

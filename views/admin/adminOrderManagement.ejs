@@ -50,11 +50,85 @@
           <td ><%=item.name%> <%=item.street%> <%=item.city%> <%=item.state%> <%=item.code%></td>
           <td> 
             
-            <a  href="/order-view/<%= item._id %>" type="button" 
-            class="btn btn-primary">
-            View
-                 </a>     
+           
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#exampleModl-<%= item._id %>">
+                              View
+                          </button>      
            </td>
+
+           <div class="modal fade" id="exampleModl-<%= item._id %>" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"> Orders</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form >
+
+                            <div class="mb-3">
+                                <label for="recipient-name" name="orderStatus"
+                                    class="col-form-label">ORDER DETAILS</label>
+                               
+                            </div>
+                            <div class="mb-3" class="d-flex justify-content-center">
+                                <label for="message-text" name="orderStatus "class="col-form-label"><b>Name:</b></label>
+                                <p><%=item.product.name%></p>
+                               
+                            </div>
+
+                            <div class="mb-3">
+                              <label for="message-text" name="orderStatus "class="col-form-label"><b>Quentity:</b></label>
+                              <p><%=item.orderItems.quantity%></p>
+                             
+                          </div>
+
+                          <div class="mb-3">
+                            <label for="message-text" name="orderStatus "class="col-form-label"><b>Payment Method:</b></label>
+                            <p><%=item.paymentMethod%></p>
+                           
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="message-text" name="orderStatus "class="col-form-label"> <b>product cost:</b></label>
+                          <p><%=item.product.cost%></p>
+                         
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="message-text" name="orderStatus "class="col-form-label"> <b>Address:</b> </label>
+                      
+                        <p>  <%=item.name%> <%=item.street%> <%=item.city%> <%=item.state%> <%=item.code%></p>
+                       
+                    </div>
+
+                    
+                      
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
            <td>
           <button type="button" class="btn btn-success" data-bs-toggle="modal"
           data-bs-target="#exampleModal-<%= item._id %>">

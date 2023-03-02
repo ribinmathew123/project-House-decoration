@@ -53,78 +53,12 @@ const postaddcategorypage = (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      // Handle error checking if category exists
     });
 };
 
 
 
 
-
-
-
-// const postaddcategorypage = (req, res) => {
-//   const category = new Category({ name: req.body.catname });
-
-
-//   category
-//     .save()
-//     .then(() => {
-//       res.redirect("/product/category-list");
-//     })
-//     .catch((error) => {
-//       res.redirect("/product/category");
-
-//       req.session.error = " Already Exits";
-
-
-//       console.log(error);
-//     });
-// };
-
-
-// image upload and crop using sharp library
-
-// const postproduct = async (req, res) => {
-//   try {
-//     let images = [];
-
-//     if (req.files) {
-//       for (let i = 0; i < req.files.length; i++) {
-//         const file = req.files[i].buffer;
-
-//         // crop the image using sharp
-//         const croppedImage = await sharp(file)
-//           .resize({ width: 485, height: 485, fit: 'cover' })
-//           .toBuffer();
-
-//         // convert buffer to string
-//         const imageString = croppedImage.toString();
-
-//         // upload the cropped image to Cloudinary
-//         const result = await uploader.upload(imageString);
-
-//         images.push(result.url);
-//       }
-//     }
-
-//     const data = {
-//       name: req.body.name,
-//       description: req.body.description,
-//       category: req.body.category_id,
-//       image_url: images,
-//       quantity: req.body.quantity,
-//       sell: req.body.sell,
-//       cost: req.body.cost,
-//     };
-
-//     const Product = new productModel(data);
-//     await Product.save();
-//     res.redirect("/product/product-lists");
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
 
 
 
@@ -232,7 +166,6 @@ const resp = cloudinary.uploader.upload(file,{ transformation: [
 
 
 const getcategorylist = async (req, res) => {
-  // if (req.session.email) {
   try {
     Category.find({}, (err, userdetails) => {
       console.log(userdetails);
@@ -549,34 +482,7 @@ const postCheckoutPage = async (req, res) => {
     ]);
    
 
-    // console.log("item ending");
-    // const totalAmount = cartList.reduce((total, item) => {
-    //   return total + item.cartItems.qty * item.product.cost;
-    // }, 0);
-    // //  con
-
-    // console.log(req.body.paymentMethod);
-
-    // const order = new orderModel({
-    //   userId: userId,
-      
-
-    //   orderItems: cartList.map((item) => ({
-    //     productId: item.product._id,
-    //     quantity: item.cartItems.qty,
-    //   })),
-    //   totalPrice: totalAmount,
-    //   name: req.body.name,
-    //   shop: req.body.shop,
-    //   state: req.body.state,
-    //   city: req.body.city,
-    //   street: req.body.street,
-    //   code: req.body.code,
-    //   mobile: req.body.mobile,
-    //   email: req.body.email,
-    //   paymentMethod:req.body.paymentMethod
-    // });
-    // await order.save();
+   
     
     res.render("../views/user/successPage.ejs", {
       cartList: cartList,
@@ -662,151 +568,10 @@ const orderStatusChanging = async (req, res, next) => {
 
 
 
-//           orderModel.aggregate([
-//             {
-//                 $lookup: {
-//                     from: "products",
-//                     localField: "orderItems.productId",
-//                     foreignField: "_id",
-//                     as: "product"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "userId",
-//                     foreignField: "_id",
-//                     as: "users"
-//                 }
-//             },
-//             {
-//                 $sort: {
-//                     createdAt: -1
-//                 }
-//             }
-//         ]).then((orderDetails) => {
-//           console.log(orderDetails+"orderDetailsuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-//             res.render("../views/admin/adminOrderManagement.ejs", { orderDetails });
-//         })
-//     } 
-    
-//     catch (err) {  console.log(err);
-
-//     }
-// };
 
 
 
 
-
-
-
-// const couponcheck = async (req, res) => {
-//   try {
-//     // console.log(req.body.inputValue);
-
-//     const user = await userdata.findOne({ email: req.session.userEmail });
-//     let userid = user._id;
-//     console.log(userid + "gggggggggggggggggg");
-
-//     const cartdata = await cartmodel.findOne({ userId: userid });
-//     const checkcoupon = await couponmodel.findOne({
-//       name: req.body.inputValue,
-//     });
-
-
-
-//     const checkcouponused = await couponmodel.findOne({
-//       name: req.body.inputValue,
-//       userdata: { $elemMatch: { userId: userid } },
-//     });
-//     const finded = await User.find({
-//       coupondata: { $elemMatch: { coupons: req.body.inputValue } },
-//     });
-//     let exp = checkcoupon.expiredate;
-//     let date = new Date().toJSON();
-//     let total = parseInt(cartdata.totalPrice);
-//     let minamound = parseInt(checkcoupon.minpurchaseamount);
-//     if (checkcoupon != null) {
-//       console.log("iam in");
-
-//       if (date < exp.toJSON()) {
-//         console.log("date is not expire");
-//         if (finded == "") {
-//           // if(cartdata.status == true){
-//           // console.log(total);
-//           // console.log(minamound);
-//           if (total > minamound) {
-//             console.log("total is more");
-//           } else {
-//             console.log(
-//               "lesser than min amound" +
-//                 (cartdata.totalPrice * checkcoupon.discount) / 100
-//             );
-//             let discoun =
-//               (parseInt(cartdata.totalPrice) * parseInt(checkcoupon.discount)) /
-//               100;
-//             let discount = parseInt(cartdata.totalPrice) - parseInt(discoun);
-//             console.log(discount);
-//             await User.updateOne(
-//               { _id: userdata._id },
-//               {
-//                 $push: { coupondata: { coupons: req.body.inputValue } },
-//               }
-//             );
-//             console.log(userdata._id);
-
-//             await cartmodel.updateOne(
-//               { userId: userdata._id },
-//               { $set: { discoundamount: discount } }
-//             );
-//           }
-//         } else {
-//           console.log("coupon is used");
-//         }
-//       } else {
-//         console.log("created date is not reach");
-//         console.log(expdate);
-//       }
-//     } else {
-//       console.log("ther is no coupon");
-//     }
-//     // let a=10
-//     // if(a===a){
-//     let dis = cartdata.discoundamount;
-//     res.json({ dis });
-
-//     // const success= (req,res)=>{
-//     // res.render('../views/payment/sucess.ejs')
-//     // }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-
-
-// const couponcheck = async (req, res) => {
-//   try {
-//     const couponCode = req.body.couponCode;
-//     console.log(couponCode);
-//    const user = await userdata.findOne({ email: req.session.userEmail });
-//     let userid = user._id;
-// console.log(userid+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-
-    // const checkcouponused = await couponmodel.findOne({ couponCode: couponCode ,userdta:{ $elemMatch: { userId: userid }}});
-
-
-
-
-
-    //  await userdata.updateOne(
-
-    //                 { _id:userid },
-    //                 {
-    //                   $push: { coupondata: { coupons: req.body.inputValue } },
-    //                 }
-    //               );
 
 
 
@@ -844,28 +609,6 @@ const orderStatusChanging = async (req, res, next) => {
  
 
 
-//     console.log(coupon.endDate);
-
-//     console.log(coupon.minimumAmount);
-
-//     console.log("coupon details end");
-
-//     if (coupon) {
-//       console.log("Coupon found");
-//       console.log(coupon+"fffffffffffffffffffffffffffffffffffff");
-//       res.status(200).json(coupon);
-
-//     } else {
-//       // Coupon not 
-//       console.log("Coupon not found");
-//       res.status(400).json({ error: "Coupon not found" });
-
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 
 

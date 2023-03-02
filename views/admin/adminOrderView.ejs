@@ -50,11 +50,65 @@
           <td ><%=item.name%> <%=item.street%> <%=item.city%> <%=item.state%> <%=item.code%></td>
           <td> 
             
-            <a  href="/order-view/<%= item._id %>" type="button" 
-            class="btn btn-primary">
-            View
-                 </a>     
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#exampleModl-<%= item._id %>">
+                              View
+                          </button>   
            </td>
+
+           <div class="modal fade" id="exampleModl-<%= item._id %>" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit orders</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form >
+
+                            <div class="mb-3">
+                                <label for="recipient-name" name="orderStatus"
+                                    class="col-form-label"> Details</label>
+                               
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" name="orderStatus "class="col-form-label">Payment status</label>
+                                <select  name="paymentStatus" class="form-select" id="">
+                                    
+                                    <option selected><%= item.paymentStatus %></option>
+                                    <option value="not paid" name="paymentStatus">not paid</option>
+                                    <option value="paid" name="paymentStatus">paid</option>
+                                   
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                                    
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
            <td>
           <button type="button" class="btn btn-success" data-bs-toggle="modal"
           data-bs-target="#exampleModal-<%= item._id %>">

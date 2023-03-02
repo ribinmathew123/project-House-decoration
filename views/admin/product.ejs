@@ -69,15 +69,18 @@
                   <label for="inputAddress" class="form-label">Enter product description</label>
                   <input type="text" class="form-control" name="description" id="inputAddress" placeholder="" required>
                 </div>
+
+
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">product Images</label>
 
+                  <!-- <input class="form-control" type="file" id="file"
+                  onchange="return fileValidation()" name="image" accept="image/*" multiple > -->
+                  <input type="file" id="file" name="images" onchange="return fileValidation()" multiple>
 
-                  <input type="file" name="images" multiple>
-                
-
-          
               </div>
+
+
 
 
                 <div class="text-center ">
@@ -136,6 +139,26 @@
     <!-- Template Main JS File -->
     <script src="/public/assets/js/main.js"></script>
 
+    <script>
+      function fileValidation() {
+        var fileInput =
+          document.getElementById('file');
+        
+        var filePath = fileInput.value;
+      
+        // Allowing file type
+        var allowedExtensions =
+            /(\.jpg|\.jpeg|\.png)$/i;
+        
+        if (!allowedExtensions.exec(filePath)) {
+          alert('Invalid file type');
+          fileInput.value = '';
+          return false;
+        }
+      }
+    </script>
+
+  
     </body>
 
     </html>

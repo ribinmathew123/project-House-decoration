@@ -225,7 +225,8 @@ function onlinePayment(userId) {
           })
             .then(() => {
               console.log("Order confirmation successful");
-              // Show a sweet alert upon successful payment
+             
+             
               swal({
                 title: "Payment Successful",
                 text: "Thank you for your purchase.",
@@ -236,11 +237,16 @@ function onlinePayment(userId) {
 
               });
             })
+
+            
             .catch((error) => {
               console.error("Error while confirming order:", error);
             });
         },
       };
+
+
+
 
       var rzp1 = new Razorpay(options);
       rzp1.on("payment.failed", function (response) {
