@@ -103,6 +103,7 @@ const postproduct = async (req, res) => {
       category: req.body.category_id,
       image_url: images,
       quantity: req.body.quantity,
+      firstQuantity:req.body.quantity,
       sell: req.body.sell,
       cost: req.body.cost,
     };
@@ -916,74 +917,17 @@ const paymentConfirm=async(req,res)=>
 
 
  const postproducteditpage = async (req, res) => {
-  console.log("vvvvvvvvvvvvvvvvv");
-
-
-  console.log(req.body);
+ const product_id=req.params.id
 
   try {
-   console.log("hhhhhhhhhhhhhh");
     const userData = await productModel.findByIdAndUpdate(
-      { _id: req.params.product_id },
+      { _id: product_id},
       { $set: { name: req.body.name,  cost:req.body.cost, 
-        quantity: req.body.quantity, sell: req.body.sell, 
+        quantity: req.body.quantity, 
+        firstQuantity:req.body.quantity,
+        sell: req.body.sell, 
         description: req.body.description } }
     );
-
-
-
-    // try {
-
- 
-
-    // if (req.files) {
-    //   for (let i = 0; i < req.files.length; i++) {
-    //     const file = dUri.format(
-    //       path.extname(req.files[i].originalname).toString(),
-    //       req.files[i].buffer
-    //     ).content;
-
-//     console.log();
-//         const files = req.files;
-//         console.log( req.body._id);
-//         console.log(files+"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-//         const promises = await files.map(async (file, index) => {
-//           const checkedit = await productModel.findById({ _id:  req.body.id });  
-//           return new Promise( (resolve, reject) => {
-//             cloudinary.uploader.upload(file.path,
-//              {
-//               public_id: checkedit.image[index].public_id, 
-//             overwrite: true,
-//               transformation: [
-//                 { width: 1125, height: 1500, gravity: "face", crop: "fill" },
-//               ]
-//             }
-//             , (error, result) => {
-//               if (error) {
-//                 reject(error);
-//               } else {
-//                 resolve(result);
-//               }
-//             });
-//       });
-//       });
-//       Promise.all(promises)
-//           .then(async (results) => {
-//               const checkedit = await productModel.findById({ _id:  req.body.id });
-//               await Product.updateOne(
-//                 { _id:  req.body.id },
-//                 {
-//                   $set: {
-//                     name: req.body.name,
-//                     cost:req.body.cost, 
-//                     quantity: req.body.quantity, sell: req.body.sell, 
-//                     description: req.body.description,
-//                     image: results,           
-//                   },
-//                 }
-//               );
-//             })
-
     res.redirect("/product/product-lists");
   } catch (error) {
     console.log(error.message);

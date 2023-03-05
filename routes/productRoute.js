@@ -38,9 +38,7 @@ router.get('/inventory-management',adminSession,productController.getinventoryMa
 
 router.post('/order-statuschange/:id',adminSession,productController.orderStatusChanging)
 router.post('/confirm-order',userSession,productController.paymentConfirm)
- router.post("/product-edit",adminSession, productController.postproducteditpage);
-// router.post( "/product-edit",adminSession, uploadbuffer.array("image", 12),productController.postproducteditpage);
-// router.post( "/product-insert", uploadbuffer.array("image", 12), productController.postproduct );
+ router.post("/product-edit/:id",adminSession, productController.postproducteditpage);
 
 
 

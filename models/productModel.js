@@ -12,11 +12,13 @@ const productSchema = new mongoose.Schema({
    cost: {
     type: Number,
   },
+
   quantity: {
     type: Number,
   },
   firstQuantity: {
     type: Number,
+    
   },
   
    iBlocked:{
