@@ -30,7 +30,8 @@
 
               <!-- End Reports -->
 
-              <form class="row g-3" action="/product/product-list" method="post" enctype="multipart/form-data">
+              <form class="row g-3" action="/product/product-insert" method="post" enctype="multipart/form-data">
+                
                 <div class="col-12">
                   <label for="inputNanme4" class="form-label">Product Name</label>
                   <input type="text" class="form-control" name="name" id="inputNanme4" required>
@@ -76,7 +77,10 @@
 
                   <!-- <input class="form-control" type="file" id="file"
                   onchange="return fileValidation()" name="image" accept="image/*" multiple > -->
-                  <input type="file" id="file" name="images" onchange="return fileValidation()" multiple>
+                  <input type="file" id="file" name="images" onchange="return fileValidation()" multiple> 
+                  
+                <!-- <input class="form-control" id="image" onchange="return fileValidations()"type="file" name="image" multiple> -->
+              </div>
 
               </div>
 
@@ -162,3 +166,6 @@
     </body>
 
     </html>
+
+
+    

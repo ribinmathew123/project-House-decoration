@@ -13,16 +13,17 @@ const cloudinary = require("cloudinary").v2;
 const sharp = require("sharp")
 
 const storage = multer.memoryStorage();
+
 const Razorpay=require("razorpay")
 const DataUri = new require("datauri/parser");
+
 const dUri = new DataUri();
 const path = require("path");
 const uploadMiddleware = multer({ storage }).array("images", 10);
+const uploadSingleImage = multer({ storage }).single("images");
+
 const { cloudinaryConfig, uploader } = require("../config/cloudinary");
 const order = require("../models/orderModel");
-
-
-
 
 const getProductCategoryPage = (req, res) => {
   // catdata
@@ -32,8 +33,9 @@ const getProductCategoryPage = (req, res) => {
   res.render("../views/admin/productcategory.ejs",{ catData, errorData } );
 }
 const postaddcategorypage = (req, res) => {
-  let categoryName = req.body.catname.trim(); // trim whitespace
 
+  let categoryName = req.body.catname.trim();
+  categoryName = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
 
   Category.findOne({ name: categoryName })
     .then(existingCategory => {
@@ -78,21 +80,20 @@ const getAddProductPage = (req, res) =>
 
 
 const postproduct = async (req, res) => {
+
   try {
     let images = [];
-
     if (req.files) {
       for (let i = 0; i < req.files.length; i++) {
         const file = dUri.format(
           path.extname(req.files[i].originalname).toString(),
           req.files[i].buffer
         ).content;
-const resp = cloudinary.uploader.upload(file,{ transformation: [
-  { width: 485, height: 485, gravity: "face", crop: "fill" },
-]})
 
-        const result = await uploader.upload(file);
-        images.push(result.url);
+        const result = await uploader.upload(file,{ transformation: [
+            { width: 1125, height: 1500, gravity: "face", crop: "fill" },
+          ]});
+        images.push(result);
       }
     }
 
@@ -113,49 +114,140 @@ const resp = cloudinary.uploader.upload(file,{ transformation: [
     console.error(error);
   }
 };
+//  insert image
+
+
+// const postproduct = async (req, res) => {
+//   console.log("dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//   console.log('====================================');
+//   console.log(req.body);
+//   console.log('====================================');
+
+//   console.log("data11111111");
+//   if (req.files) {
+//     try {
+//       // cloudinary
+//       console.log("data22222211111111");
+
+//       const files = req.files;
+//       console.log('====================================');
+//       console.log(files);
+//       console.log('====================================');
+//       const promises = await files.map(file => {
+//         return new Promise((resolve, reject) => {
+//           cloudinary.uploader.upload(file.path, {
+//             transformation: [
+//               { width: 485, height: 485, gravity: "face", crop: "fill" },
+//             ]
+//           }, (error, result) => {
+//             if (error) {
+//               reject(error);
+//             } else {
+//               resolve(result);
+//             }
+//           });
+//         });
+//       });
+//       console.log("data22222211111111");
+
+//       Promise.all(promises)
+//         .then(async (results) => {
+//           const newProduct = new productModel({
+//             name: req.body.name,
+//             description: req.body.description,
+//             category: req.body.category_id,
+//             image_url: results.map(result => result.url), // Use the URLs returned by Cloudinary
+//             quantity: req.body.quantity,
+//             sell: req.body.sell,
+//             cost: req.body.cost,
+//           })
+//           await newProduct.save() // Wait for the product to be saved before redirecting
+//           console.log("data777777772222211111111");
+//           res.redirect("/product/product-lists");
+//         })
+//     } catch (error) {
+//       console.log(error.message);
+//       res.redirect('/error')
+//     }
+//   }  
+// };
+
+// const productImageEdit = async (req, res) => {
+//   console.log("dartttttttttt");
+//   console.log(req.params.product_id);
+
+//   try {
+//     let images = [];
+// console.log(req.file+"fileeeeeeeeee");
+// console.log(req.body+"bodynnnnnnnnnnnnnnn");
+//     if (req.file) {
+//       // for (let i = 0; i < req.files.length; i++) {
+//         const file = dUri.format(
+//           path.extname(req.file.originalname).toString(),
+//           req.file.buffer
+//         ).content;
+
+//         const result = await uploader.upload(file,{ transformation: [
+//             { width: 1125, height: 1500, gravity: "face", crop: "fill" },
+//           ]});
+//         images.push(result);
+//       }
+//     // }
+
+//     const data = {
+//       image_url: images,
+
+//     };
+//     { _id:  req.body.id },
+//     {
+//       $set: {
+//         image: results, 
+
+//       }}
+//     const Product = new productModel(data);
+//     res.redirect("/product/product-lists");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 
 
-
-
-
-
-const imageUpload = async (req, res) => {
+const productImageEdit = async (req, res) => {
   try {
-    let images = [];
+    // Get the public ID of the image from the request parameters
+    const public_id  = req.params.public_id;
+    const product_id  = req.params.product_id;
+    console.log(req.file+"data file");
 
-    if (req.files) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = dUri.format(
-          path.extname(req.files[i].originalname).toString(),
-          req.files[i].buffer
-        ).content;
-const resp = cloudinary.uploader.upload(file,{ transformation: [
-  { width: 485, height: 485, gravity: "face", crop: "fill" },
-]})
 
-        const result = await uploader.upload(file);
-        images.push(result.url);
-      }
+    // Check that an image file was uploaded
+    if (!req.file) {
+      throw new Error('No image file provided');
     }
 
-    const data = {
+    // Upload the image to Cloudinary
+    const file = dUri.format(
+      path.extname(req.file.originalname).toString(),
+      req.file.buffer
+    ).content;
+    const result = await uploader.upload(file, {
+      transformation: [{ width: 1125, height: 1500, gravity: "face", crop: "fill" }]
+    });
 
-      image_url: images,
-      quantity: req.body.quantity,
-      sell: req.body.sell,
-      cost: req.body.cost,
-    };
-
-    const Product = new productModel(data);
-    await Product.save();
+    await productModel.updateOne(
+      { _id: product_id, "image_url.public_id": public_id },
+      {
+        $set: {
+          "image_url.$": result,
+        },
+      }
+    );
     res.redirect("/product/product-lists");
   } catch (error) {
     console.error(error);
   }
 };
-
-
 
 
 
@@ -209,6 +301,8 @@ const getproductlistpage = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
 
 //  blockcategory,
 const blockcategory = async (req, res) => {
@@ -372,8 +466,6 @@ const postCartIncDec = async (req, res, next) => {
     const type = req.params.type;
     const userId = req.body.user_id;
     const productId = req.body.product_id;
-
-
     let update = {};
     if (type === "inc") {
       update = { $inc: { "cartItems.$.qty": 1 } };
@@ -452,6 +544,8 @@ const getCheckoutPage = async (req, res) => {
 
 
 
+
+
 const postCheckoutPage = async (req, res) => {
   try {
     const email = req.session.userEmail;
@@ -481,9 +575,6 @@ const postCheckoutPage = async (req, res) => {
       },
     ]);
    
-
-   
-    
     res.render("../views/user/successPage.ejs", {
       cartList: cartList,
       userData: user,
@@ -503,9 +594,6 @@ const getorderManagement=async(req,res)=>
 try {
 
   const orderList = await orderModel.aggregate([
-     {
-        $unwind: "$orderItems",
-     },
     {
     $lookup: {
          from: "products",
@@ -514,11 +602,12 @@ try {
           as: "product",
         },
       },
-     {
-        $unwind: "$product",
-      },
+    
    ]);
- 
+   console.log("orderList start")
+
+console.log(orderList)
+console.log("orderList end")
 
   res.render("../views/admin/adminOrderManagement.ejs", {
   orderList,
@@ -539,23 +628,17 @@ try {
 const orderStatusChanging = async (req, res, next) => {
   try {
       const id = req.params.id;
-      const productId = req.params.productId;
       const data = req.body;
       
-     console.log(req.params.productId); 
-     
-
-    
       await orderModel.updateOne(
           
 
-          { _id: id, "orderItems.productId": productId },
+          { _id: id },
           {
             $set: {
-              "orderItems.$.orderStatus": data.orderStatus
-            }             //     orderStatus: data.orderStatus,
-              //     paymentMethod: data.paymentStatus,
-              
+              orderStatus: data.orderStatus,
+                        paymentStatus: data.paymentStatus,
+            }   
           }
       )
       res.redirect("/product/order-management");
@@ -564,6 +647,39 @@ const orderStatusChanging = async (req, res, next) => {
       console.log(err);
   }
 };
+
+
+
+
+const getinventoryManagement=async(req,res)=>
+{
+try {
+
+  const orderList = await orderModel.aggregate([
+    {
+    $lookup: {
+         from: "products",
+           localField: "orderItems.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+    
+   ]);
+   console.log("orderList start")
+
+console.log(orderList)
+console.log("orderList end")
+
+  res.render("../views/admin/adminInventoryManagement.ejs", {
+  orderList,
+  });
+} catch (error) {
+  next(error);
+}
+};
+
+
 
 
 
@@ -613,8 +729,6 @@ const orderStatusChanging = async (req, res, next) => {
 
 
 
-
-
 // wishList
 
 const userAddToWishlist= async (req, res) => {
@@ -640,6 +754,8 @@ const userAddToWishlist= async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 
 // wishlist Display
@@ -792,6 +908,197 @@ const paymentConfirm=async(req,res)=>
 
 
 
+
+
+
+
+
+
+
+ const postproducteditpage = async (req, res) => {
+  console.log("vvvvvvvvvvvvvvvvv");
+
+
+  console.log(req.body);
+
+  try {
+   console.log("hhhhhhhhhhhhhh");
+    const userData = await productModel.findByIdAndUpdate(
+      { _id: req.params.product_id },
+      { $set: { name: req.body.name,  cost:req.body.cost, 
+        quantity: req.body.quantity, sell: req.body.sell, 
+        description: req.body.description } }
+    );
+
+
+
+    // try {
+
+ 
+
+    // if (req.files) {
+    //   for (let i = 0; i < req.files.length; i++) {
+    //     const file = dUri.format(
+    //       path.extname(req.files[i].originalname).toString(),
+    //       req.files[i].buffer
+    //     ).content;
+
+//     console.log();
+//         const files = req.files;
+//         console.log( req.body._id);
+//         console.log(files+"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+//         const promises = await files.map(async (file, index) => {
+//           const checkedit = await productModel.findById({ _id:  req.body.id });  
+//           return new Promise( (resolve, reject) => {
+//             cloudinary.uploader.upload(file.path,
+//              {
+//               public_id: checkedit.image[index].public_id, 
+//             overwrite: true,
+//               transformation: [
+//                 { width: 1125, height: 1500, gravity: "face", crop: "fill" },
+//               ]
+//             }
+//             , (error, result) => {
+//               if (error) {
+//                 reject(error);
+//               } else {
+//                 resolve(result);
+//               }
+//             });
+//       });
+//       });
+//       Promise.all(promises)
+//           .then(async (results) => {
+//               const checkedit = await productModel.findById({ _id:  req.body.id });
+//               await Product.updateOne(
+//                 { _id:  req.body.id },
+//                 {
+//                   $set: {
+//                     name: req.body.name,
+//                     cost:req.body.cost, 
+//                     quantity: req.body.quantity, sell: req.body.sell, 
+//                     description: req.body.description,
+//                     image: results,           
+//                   },
+//                 }
+//               );
+//             })
+
+    res.redirect("/product/product-lists");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+// edit product
+// const   postproducteditpage= async (req, res) => {
+//   console.log(req.query + '1232322222222');
+//   console.log(req.body);
+//   try {
+//   const files = req.files;
+//   const promises = await files.map(async (file, index) => {
+//     const checkedit = await Product.findById({ _id:  req.body.id });  
+//     return new Promise( (resolve, reject) => {
+//       cloudinary.uploader.upload(file.path,
+//        {
+//         public_id: checkedit.image[index].public_id, 
+//       overwrite: true,
+//         transformation: [
+//           { width: 485, height: 485, gravity: "face", crop: "fill" },
+//         ]
+//       }
+//       , (error, result) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+// });
+// });
+//   Promise.all(promises)
+//     .then(async (results) => {
+//         const checkedit = await Product.findById({ _id:  req.body.id });
+//         await Product.updateOne(
+//           { _id:  req.body.id },
+//           {
+//             $set: {
+//               name: req.body.name,
+//               description: req.body.description,
+//               category: req.body.category,
+//               image: results,           
+//                  price: req.body.price,
+//               quantity: req.body.quantity,
+//             },
+//           }
+//         );
+//       })
+//     res.redirect("/adminproducts");
+//   } catch (error) {
+//     console.log(error.message);
+//     res.redirect('/error')
+//   }
+// };
+
+// const postproducteditpage = async (req, res) => {
+//   console.log( req.body.id);
+//   console.log(req.body);
+//   try {
+//     if (!req.files) {
+//       throw new Error('No files uploaded');
+//     }
+//   const files = req.files;
+//   console.log(req.files+"gggggggggggggggggggggggg");
+//   const promises = await files.map(async (file, index) => {
+//     const checkedit = await productModel.findById({ _id:  req.body.id });  
+//     return new Promise( (resolve, reject) => {
+
+//       cloudinary.uploader.upload(file.path,
+//        {
+//         public_id: checkedit.image[index].public_id, 
+//       overwrite: true,
+//         transformation: [
+//           { width: 485, height: 485, gravity: "face", crop: "fill" },
+//         ]
+//       }
+//       , (error, result) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+// });
+// });
+//   Promise.all(promises)
+//     .then(async (results) => {
+//         const checkedit = await productModel.findById({ _id:  req.body.id });
+//         await Product.updateOne(
+//           { _id:  req.body.id },
+//           {
+//             $set: {
+//               image: results,           
+//             },
+//           }
+//         );
+//       })
+//     res.redirect("/adminproducts");
+//   } catch (error) {
+//     console.log(error.message);
+//     res.redirect('/error')
+//   }
+// };
+
+
+
+
+
+
+
+
 module.exports = {
   getProductCategoryPage,
   blockproduct,
@@ -802,6 +1109,7 @@ module.exports = {
   getcategorylist,
   blockcategory,
   uploadMiddleware,
+  uploadSingleImage,
   getAddToCartPage,
   cartDisplyPage,
   removeCartItemPage,
@@ -814,5 +1122,9 @@ module.exports = {
   postOrderpage,
   getorderManagement, 
   orderStatusChanging,
-  paymentConfirm
+  paymentConfirm  ,
+  postproducteditpage,
+  getinventoryManagement,
+  productImageEdit,
+
 };

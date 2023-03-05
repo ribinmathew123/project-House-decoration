@@ -2,24 +2,23 @@ const mongoose=require("mongoose")
 const productSchema = new mongoose.Schema({
    name: {
      type: String,
-     required: true
    },
    description: {
      type: String,
-     required: true
    },
    sell: {
      type: Number,
-     required: true
    },
    cost: {
     type: Number,
-    required: true
   },
   quantity: {
     type: Number,
-    required: true
   },
+  firstQuantity: {
+    type: Number,
+  },
+  
    iBlocked:{
     type:Boolean,
     default:true
@@ -29,7 +28,7 @@ const productSchema = new mongoose.Schema({
      type: mongoose.Schema.Types.ObjectId,
   
    },
-   image_url: { type: [String], required: true}
+   image_url: { type:Array}
 
 },  
 

@@ -269,24 +269,99 @@ const getProfileAddressPage=async(req,res)=>{
 
 
 // disply all product
+// const getallproductpage = async (req, res) => {
+//   try {
+//     const categoryData = await Categories.find({status:true}, { name: 1 });
+
+
+
+//     Product.find( req.query?.category ? { category: req.query.category } : null,
+//       (err, details) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           res.render("../views/user/shop.ejs", {
+//             alldetails: details,
+//             catData: categoryData,
+//           });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
+
+
+
+
+// shop page
 const getallproductpage = async (req, res) => {
   try {
+    console.log(req.query+"gggggggggggggggggggkkkkkkkkkkkkkk");
+
+    console.log(req.query.sort +"ttttttttttttttttttkk");
+
+    const perPage = 6;
+    const page = parseInt(req.query.page) || 1;
+    const sortOption = req.query.sort ;
+ console.log(sortOption+"kkkkkkkkkkkkkk");
     const categoryData = await Categories.find({status:true}, { name: 1 });
 
+    const filter = {};
+    const category = req.query.category;
+    const searchKeyword = req.query.search || '';
+    if (category) {
+      filter.category = category;
+    }
+    if (searchKeyword) {
+      filter.name = { $regex: new RegExp(searchKeyword, 'i') };
+    }
 
+    let sort = {};
+    switch (sortOption) {
+      // case 'newness':
+      //   sort = { created_at: -1 };
+      //   break;
+      case 'low-to-high':
+        sort = { cost: 1 };
+        break;
+      case 'high-to-low':
+        sort = { cost: -1 };
+        break;
+      case 'name-ascending':
+        sort = { name: 1 };
+        break;
+      case 'name-descending':
+        sort = { name: -1 };
+        break;
+      default:
+        sort = { created_at: -1 };
+        break;
+    }
 
-    Product.find( req.query?.category ? { category: req.query.category } : null,
-      (err, details) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("../views/user/shop.ejs", {
-            alldetails: details,
-            catData: categoryData,
-          });
-        }
-      }
-    );
+    const totalCount = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(totalCount / perPage);
+    const nextPage = (page < totalPages) ? page + 1 : null;
+    const prevPage = (page > 1) ? page - 1 : null;
+
+    const products = await Product.find(filter)
+      .sort(sort)
+      .skip((perPage * (page - 1)))
+      .limit(perPage);
+
+    res.render('../views/user/shop.ejs', {
+      alldetails: products,
+      catData: categoryData,
+      totalCount,
+      currentPage: page,
+      totalPages,
+      nextPage,
+      prevPage,
+      searchKeyword,
+      sortby: sortOption,
+      selectedCategory: category
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -339,7 +414,6 @@ const getuserProfilePage = async (req, res, next) => {
    
     const userId = userData._id;
     
-
     const orderList = await orderModel.aggregate([
       {
          $unwind: "$orderItems",
@@ -525,6 +599,8 @@ const updateAddressPage = async (req, res) => {
   }
 };
 
+
+
 const logout = async (req, res) => {
   req.session.userEmail = null;
   console.log("user session disstroyed");
@@ -570,12 +646,9 @@ const fetchAddress = async (req, res) => {
 }
 
 
-
-
 const postCashonDelivery = async (req, res) => {
   try {
     const userId = req.query.userId;
-
 
     const cartList = await cartmodel.aggregate([
       {
@@ -599,9 +672,8 @@ const postCashonDelivery = async (req, res) => {
       },
     ]);
 
-
     let orderId = 'HomeDEC00001';
-    
+
     const newOrder = new orderModel({
       orderItems: cartList.map((item) => ({
         productId: item.product._id,
@@ -621,21 +693,100 @@ const postCashonDelivery = async (req, res) => {
       paymentMethod: "COD",
     });
 
+    // Save the new order to the database
+    await newOrder.save();
 
-    await newOrder.save(); // save the new order to the database
+    // Update the product table quantity
+    for (const item of cartList) {
+      await Product.updateOne(
+        { _id: item.product._id },
+        { $inc: { quantity: -item.cartItems.qty } }
+      );
+    }
 
+    // Clear the ordered items from the session and the cart items from the database
     req.session.orderedItems = null;
-      
     await cartmodel.deleteMany({ userId: userId });
-
 
     res.status(200).send({ orderId });
   } catch (err) {
-    console.error(`Error Product Remove:`,err);
+    console.error(`Error Product Remove:`, err);
     res.status(500).send("Internal server error");
     res.redirect("/");
   }
 };
+
+
+
+
+
+
+
+
+// const postCashonDelivery = async (req, res) => {
+//   try {
+//     const userId = req.query.userId;
+
+
+//     const cartList = await cartmodel.aggregate([
+//       {
+//         $match: {
+//           userId: new mongoose.Types.ObjectId(userId),
+//         },
+//       },
+//       {
+//         $unwind: "$cartItems",
+//       },
+//       {
+//         $lookup: {
+//           from: "products",
+//           localField: "cartItems.productId",
+//           foreignField: "_id",
+//           as: "product",
+//         },
+//       },
+//       {
+//         $unwind: "$product",
+//       },
+//     ]);
+
+
+//     let orderId = 'HomeDEC00001';
+    
+//     const newOrder = new orderModel({
+//       orderItems: cartList.map((item) => ({
+//         productId: item.product._id,
+//         quantity: item.cartItems.qty,
+//       })),
+//       products: req.session.orderedItems,
+//       totalPrice: req.body.amount,
+//       order_id: orderId, // use the generated orderId here
+//       name: req.body.name,
+//       shop: req.body.shop,
+//       state: req.body.state,
+//       city: req.body.city,
+//       street: req.body.street,
+//       code: req.body.code,
+//       mobile: req.body.mobile,
+//       email: req.body.email,
+//       paymentMethod: "COD",
+//     });
+
+
+//     await newOrder.save(); // save the new order to the database
+
+//     req.session.orderedItems = null;
+      
+//     await cartmodel.deleteMany({ userId: userId });
+
+
+//     res.status(200).send({ orderId });
+//   } catch (err) {
+//     console.error(`Error Product Remove:`,err);
+//     res.status(500).send("Internal server error");
+//     res.redirect("/");
+//   }
+// };
 
 
 

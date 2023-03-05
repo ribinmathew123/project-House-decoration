@@ -16,12 +16,15 @@ const orderSchema = new mongoose.Schema({
       },
       quantity: {
         type: Number,
-      }, orderStatus: {
-        type: String,
-        default: 'pending'
-      },
+      }, 
     }],
-   
+    orderStatus: {
+      type: String,
+      default: 'pending'
+    },
+    paymentStatus: {
+      type: String,
+    },
     paymentMethod: {
       type: String,
     },
@@ -41,9 +44,9 @@ const orderSchema = new mongoose.Schema({
     paidAt: {
       type: Date
     },
-    isDelivered: {
+    Qtystatus: {
       type: Boolean,
-      default: false
+      default: true
     },
     deliveredAt: {
       type: Date

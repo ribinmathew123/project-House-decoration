@@ -1,0 +1,26 @@
+
+<form action="/product/product-edit" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="<%= user._id %>">
+    <label for="inputName4" class="form-label">Product Name</label>
+    <input type="text" name="name" class="form-control" id="inputName4" required value="<%= user.name %>">
+  
+    <label for="inputDescription" class="form-label">Product Description</label>
+    <textarea class="form-control" name="description" id="inputDescription" rows="3" required><%= user.description %></textarea>
+  
+    <label for="inputCategory" class="form-label">Product Category</label>
+    <input type="text" name="category" class="form-control" id="inputCategory" required value="<%= user.category %>">
+  
+    <label for="inputPrice" class="form-label">Product Price</label>
+    <input type="text" name="price" class="form-control" id="inputPrice" required value="<%= user.price %>">
+  
+    <label for="inputQuantity" class="form-label">Product Quantity</label>
+    <input type="text" name="quantity" class="form-control" id="inputQuantity" required value="<%= user.quantity %>">
+  
+    <div class="mb-3">
+      <label for="inputImage" class="form-label">Product Images</label>
+      <input class="form-control" type="file" name="image" id="inputImage" multiple>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+  

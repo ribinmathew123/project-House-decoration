@@ -1,5 +1,72 @@
 <%- include('partials/header') %>
 
+        <!-- Start Offcanvas Mobile Menu Wrapper -->
+        <!-- <div class="offcanvas-wishlist-wrapper">
+            <h4 class="offcanvas-title">Wishlist</h4>
+            <ul class="offcanvas-wishlist">
+                <li class="offcanvas-wishlist-item-single">
+                    <div class="offcanvas-wishlist-item-block">
+                        <a href="#" class="offcanvas-wishlist-item-image-link">
+                            <img src="assets/images/product/default/home-1/default-1.jpg" alt=""
+                                class="offcanvas-wishlist-image">
+                        </a>
+                        <div class="offcanvas-wishlist-item-content">
+                            <a href="#" class="offcanvas-wishlist-item-link">Car Wheel</a>
+                            <div class="offcanvas-wishlist-item-details">
+                                <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
+                                <span class="offcanvas-wishlist-item-details-price">$49.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offcanvas-wishlist-item-delete text-right">
+                        <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                </li>
+                <li class="offcanvas-wishlist-item-single">
+                    <div class="offcanvas-wishlist-item-block">
+                        <a href="#" class="offcanvas-wishlist-item-image-link">
+                            <img src="assets/images/product/default/home-2/default-1.jpg" alt=""
+                                class="offcanvas-wishlist-image">
+                        </a>
+                        <div class="offcanvas-wishlist-item-content">
+                            <a href="#" class="offcanvas-wishlist-item-link">Car Vails</a>
+                            <div class="offcanvas-wishlist-item-details">
+                                <span class="offcanvas-wishlist-item-details-quantity">3 x </span>
+                                <span class="offcanvas-wishlist-item-details-price">$500.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offcanvas-wishlist-item-delete text-right">
+                        <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                </li>
+                <li class="offcanvas-wishlist-item-single">
+                    <div class="offcanvas-wishlist-item-block">
+                        <a href="#" class="offcanvas-wishlist-item-image-link">
+                            <img src="assets/images/product/default/home-3/default-1.jpg" alt=""
+                                class="offcanvas-wishlist-image">
+                        </a>
+
+
+                        <div class="offcanvas-wishlist-item-content">
+                            <a href="#" class="offcanvas-wishlist-item-link"></a>
+                            <div class="offcanvas-wishlist-item-details">
+                                <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
+                                <span class="offcanvas-wishlist-item-details-price">$350.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offcanvas-wishlist-item-delete text-right">
+                        <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="offcanvas-wishlist-action-button">
+                <li><a href="#" class="btn btn-block btn-golden">View wishlist</a></li>
+            </ul>
+        </div> End Offcanvas Mobile Menu Wrapper -->
+
+    <!-- </div> End Offcanvas Mobile Menu Section -->
 
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
@@ -8,7 +75,7 @@
             <input type="search" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
-    </div>
+    </div> 
     <!-- End Offcanvas Search Bar Section -->
 
     <!-- Offcanvas Overlay -->
@@ -54,42 +121,43 @@
                                             <!-- Start Single Menu Collapse List -->
                                             <li class="sidebar-menu-collapse-list">
                                                 <div class="accordion">
-                                                    <a href="/product-display" class="accordion-title collapsed">
-                                                        <p>All Items </p>
+                                                    <a href="/product-display"
+                                                        class="accordion-title collapsed">
+                                                       <p>All Items </p> 
                                                     </a>
-
+                                                  
                                                     <% catData.forEach(function(catdata) { %>
 
-                                                        <ul class="accordion-category-list">
-                                                            <li>
-
-
-                                                                <a href="?category=<%= catdata._id%>"
-                                                                    class="accordion-title collapsed">
-                                                                    <%= catdata.name%>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
+                                                    <ul class="accordion-category-list">
+                                                        <li>
+                                                        
+                                                   
+                                                        <a href="?category=<%= catdata._id%>"
+                                                            class="accordion-title collapsed">
+                                                            <%= catdata.name%>
+                                                        </a>
+                                                    </li>
+                                                    </ul> 
                                                         <% }); %>
 
 
 
                                                             <div id="men-fashion" class="collapse">
-                                                                <ul class="accordion-category-list">
-                                                                    <li><a href="#">Dresses</a></li>
-                                                                    <li><a href="#">Jackets &amp; Coats</a></li>
-                                                                    <li><a href="#">Sweaters</a></li>
-                                                                    <li><a href="#">Jeans</a></li>
-                                                                    <li><a href="#">Blouses &amp; Shirts</a></li>
-                                                                </ul>
+                                                            <ul class="accordion-category-list">
+                                                            <li><a href="#">Dresses</a></li>
+                                                            <li><a href="#">Jackets &amp; Coats</a></li>
+                                                            <li><a href="#">Sweaters</a></li>
+                                                            <li><a href="#">Jeans</a></li>
+                                                            <li><a href="#">Blouses &amp; Shirts</a></li>
+                                                        </ul> 
                                                             </div>
                                                 </div>
                                             </li> <!-- End Single Menu Collapse List -->
                                         </ul>
                                     </li>
 
-
-
+                                 
+                                    
                                 </ul>
                             </div>
                         </div> <!-- End Single Sidebar Widget -->
@@ -115,47 +183,26 @@
 
                                         <!-- Start Page Amount -->
                                         <div class="page-amount ml-2">
-                                            <!-- <span>Showing 1–9 of 21 results</span> -->
-                                            <form action="/product-display" method="GET">
-                                                <div class="form-group">
-                                                    <input type="text" name="search" class="form-control"
-                                                        placeholder="Search Products" value="<%= searchKeyword %>">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </form>
+                                            <span>Showing 1–9 of 21 results</span>
                                         </div> <!-- End Page Amount -->
                                     </div> <!-- End Sort tab Button -->
 
                                     <!-- Start Sort Select Option -->
-                                    <form action="/product-display" method="GET">
-                                        <div class="page-amount ml-2">
-                                            <div class="form-group">
-                                                <input type="text" name="search" class="form-control"
-                                                    placeholder="Search Products" value="<%= searchKeyword %>">
-                                            </div>
-                                            <!-- <button type="submit" class="btn btn-primary">Search</button>
-                                          <input type="hidden" name="sortby" value="<%= sortby %>"> -->
-                                        </div>
-
-                                        <div class="sort-select-list d-flex align-items-center">
-                                            <label class="mr-2">Sort By:</label>
-                                            <select name="sort" id="sorting" onchange="this.form.submit()">
-                                                <!-- <option value="newness" <%= sortby === "newness" ? "selected" : "" %>>Sort by newness</option> -->
-                                                <option value="low-to-high" <%=sortby==="low-to-high" ? "selected" : ""
-                                                    %>
-                                                    >Sort by price: low to high</option>
-                                                <option value="high-to-low" <%=sortby==="high-to-low" ? "selected" : ""
-                                                    %>
-                                                    >Sort by price: high to low</option>
-                                                <option value="name-ascending" <%=sortby==="name-ascending" ? "selected"
-                                                    : "" %>>Product Name: A to Z</option>
-                                                <option value="name-descending" <%=sortby==="name-descending"
-                                                    ? "selected" : "" %>>Product Name: Z to A</option>
-                                            </select>
-                                        </div>
-                                    </form>
-
-
+                                    <div class="sort-select-list d-flex align-items-center">
+                                        <label class="mr-2">Sort By:</label>
+                                        <form action="#">
+                                            <fieldset>
+                                                <select name="speed" id="speed">
+                                                    <option>Sort by average rating</option>
+                                                    <option>Sort by popularity</option>
+                                                    <option selected="selected">Sort by newness</option>
+                                                    <option>Sort by price: low to high</option>
+                                                    <option>Sort by price: high to low</option>
+                                                    <option>Product Name: Z</option>
+                                                </select>
+                                            </fieldset>
+                                        </form>
+                                    </div> <!-- End Sort Select Option -->
 
 
 
@@ -177,16 +224,13 @@
 
                                                     <div class="col-xl-4 col-sm-6 col-12">
                                                         <!-- Start Product Default Single Item -->
-                                                        <div class="product-default-single-item product-color--golden  border shadow-sm p-2 "
-                                                            style="height:20rem ;" data-aos="fade-up"
-                                                            data-aos-delay="200">
+                                                        <div class="product-default-single-item product-color--golden  border shadow-sm p-2 " style="height:20rem ;"
+                                                            data-aos="fade-up" data-aos-delay="200">
                                                             <div class="image-box">
                                                                 <a href="/product-details/<%= product._id%>"
                                                                     class="image-link">
-                                                                    <img style="max-height:250px"
-                                                                        src="<%= product.image_url[0].url %>" alt="">
-                                                                    <img style="max-height:250px"
-                                                                        src="<%= product.image_url[1].url%>" alt="">
+                                                                    <img style="max-height:250px" src="<%= product.image_url[0].url %>" alt="">
+                                                                    <img style="max-height:250px" src="<%= product.image_url[1].url%>" alt="">
                                                                 </a>
                                                                 <!-- <div class="action-link">
                                                                     <div class="action-link-left">
@@ -214,7 +258,7 @@
                                                                 <li class="d-flex justify-content-center">
                                                                     $<%= product.cost %>
                                                                 </li>
-
+                                                              
                                                             </ul>
 
 
@@ -317,45 +361,16 @@
 
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
-
                         <ul>
-
-
-
-                            <% if (prevPage) { %>
-                                <li>
-                                    <a href="?page=<%= prevPage %>&sortby=<%= sortby %>">
-                                        <i class="ion-ios-skipbackward"></i>
-                                    </a>
-                                </li>
-                                <% } %>
-                                    <% for (let i=1; i <=totalPages; i++) { %>
-                                        <li <% if (currentPage===i) { %> class="active" <% } %>>
-                                                <a href="?page=<%= i %>&sortby=<%= sortby %>">
-                                                    <%= i %>
-                                                </a>
-                                        </li>
-                                        <% } %>
-                                            <% if (nextPage) { %>
-                                                <li>
-                                                    <a href="?page=<%= nextPage %>&sortby=<%= sortby %>">
-                                                        <i class="ion-ios-skipforward"></i>
-                                                    </a>
-                                                </li>
-                                                <% } %>
-                        </ul>
-                    </div>
-
-
-                    <!-- <li><a class="active" href="#">1</a></li>
+                            <li><a class="active" href="#">1</a></li>
                             <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li> -->
-                    <!-- <li><a href="#"><i class="ion-ios-skipforward"></i></a></li> -->
-                    </ul>
-                </div> <!-- End Pagination -->
+                            <li><a href="#">3</a></li>
+                            <li><a href="#"><i class="ion-ios-skipforward"></i></a></li>
+                        </ul>
+                    </div> <!-- End Pagination -->
+                </div>
             </div>
         </div>
-    </div>
     </div> <!-- ...:::: End Shop Section:::... -->
 
     <!-- Start Footer Section -->
@@ -400,7 +415,7 @@
                                 data-aos-delay="400">
                                 <h5 class="title">CATEGORIES</h5>
                                 <ul class="footer-nav">
-
+                                 
                                 </ul>
                             </div>
                             <!-- End Footer Single Item -->
@@ -680,7 +695,10 @@
                                         </div>
                                     </div> <!-- End Product Variable Area -->
                                     <div class="modal-product-about-text">
-                                        <p></p>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia iste
+                                            laborum ad impedit pariatur esse optio tempora sint ullam autem deleniti nam
+                                            in quos qui nemo ipsum numquam, reiciendis maiores quidem aperiam, rerum vel
+                                            recusandae</p>
                                     </div>
                                     <!-- Start  Product Details Social Area-->
                                     <div class="modal-product-details-social">
@@ -731,8 +749,8 @@
 
     <!-- Main JS -->
     <script src="/public/asset/js/main.js"></script>
-    </body>
+</body>
 
 
 
-    </html>
+</html>

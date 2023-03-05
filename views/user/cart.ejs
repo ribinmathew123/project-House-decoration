@@ -103,12 +103,13 @@
 
                 
 
-                                      <td class="product_thumb">  <img src="<%= item.product.image_url[0] %>" /> </td>
+                                      <td class="product_thumb">  <img src="<%= item.product.image_url[0].url %>" /> </td>
                                          
 
                                           <td class="product_name"><%=item.product.name%></td>
 
                                           <td class="product-price">$<%=item.product.cost%></td>
+
 
                               <!-- decrement and increment section start -->
 
@@ -118,7 +119,9 @@
                                                 <i class="fas fa-minus-circle"></i>
                                               </button>
                                              <p   id="Quantity<%= item.cartItems.productId%>" class="quantity-text d-flex justify-content-center align-items-center w-100"><%= item.cartItems.qty %></p>
-                                              <button class="increment-button btn d-flex justify-content-center align-items-center" onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>')" data-product-id="<%= item.cartItems.productId%>">
+                                              <button class="increment-button btn d-flex justify-content-center align-items-center"
+                                               onclick="incrementCount('<%= item.userId%>','<%= item.cartItems.productId%>','<%=item.product.cost%>',' <%=item.product.quantity%>')" 
+                                               data-product-id="<%= item.cartItems.productId%>">
                                                 <i class="fas fa-plus-circle"></i>
                                               </button>
                                             </div> 
@@ -145,19 +148,6 @@
                               </tr>
                                  <!-- delete -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-       
                               
 
 
@@ -406,6 +396,8 @@
                                       </div>
                                   </div>
                                   <!-- End Large Image -->
+
+
                                   <!-- Start Thumbnail Image -->
                                   <div
                                       class="product-image-thumb modal-product-image-thumb swiper-container pos-relative mt-5">

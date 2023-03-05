@@ -23,11 +23,7 @@ router.get("/user-list", adminSession, admincontroller.getuserlistpage);
 router.get("/user-lists", adminSession, admincontroller.blockuser);
 
 router.post("/login", withOutAdminSession, admincontroller.adminverification);
-router.post(
-  "/product-edit/:product_id",
-  adminSession,
-  admincontroller.postproducteditpage
-);
+
 router.get("/product-edit", adminSession, admincontroller.getproducteditpage);
 router.get("/coupon", adminSession, admincontroller.getCouponPage);
 router.post("/coupon", adminSession, admincontroller.postCouponPage);
@@ -47,6 +43,10 @@ admincontroller.insertbanner
 // banner block
 router.get("/imageblock", adminSession, admincontroller.bannerblock);
 router.get("/get-month-wise-data",admincontroller.dashBoardDataGet)
+router.get("/get-order-status",admincontroller.dashBoardOrderStatus)
+
+
+
 
 
 module.exports = router;

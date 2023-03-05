@@ -35,7 +35,7 @@
                       </div>
                       <div class="ps-3">
                         <h6>
-                          <%=productcount.length%>
+                          <%=productData.length%>
                         </h6>
                         <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
 
@@ -63,7 +63,7 @@
                       </div>
                       <div class="ps-3">
                         <h6>
-                          <%=order.length%>
+                          <%=orderData.length%>
                         </h6>
                         <span class="text-success small pt-1 fw-bold"></span> <span
                           class="text-muted small pt-2 ps-1"></span>
@@ -102,7 +102,7 @@
                           </div>
                           <div class="ps-3">
                             <h6>
-                              <%=userdata.length%>
+                              <%=userData.length%>
                             </h6>
                             <!-- <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span> -->
 
@@ -192,6 +192,9 @@
 
                 <script>
                   document.addEventListener("DOMContentLoaded", () => {
+                    fetch('/admin/get-order-status').then((res) => res.json()).then((orderData) => {
+                      console.log(orderData);
+
                     echarts.init(document.querySelector("#trafficChart")).setOption({
                       tooltip: {
                         trigger: 'item'
@@ -201,7 +204,7 @@
                         left: 'center'
                       },
                       series: [{
-                        name: 'Revenue',
+                        name: 'Orders',
                         type: 'pie',
                         radius: ['40%', '70%'],
                         avoidLabelOverlap: false,
@@ -220,29 +223,26 @@
                           show: false
                         },
                         data: [{
-
-                         
-                        
-                          value: ' <%=ship.count%>',
+                          value: orderData?.ship, 
                           name: 'Shipped Items'
                         },
                         {
-                          value:' <%=delivered.count%>',
+                          value:orderData?.delivered,
                           name: 'Delivered Items'
                         },
                         {
 
                         
-                          value:'<%= pending.count%>',
+                          value: orderData?.pending,
                           name: 'Pending Items'
                         },
                         {
-                          value: '<%= outdelivery.count%>',
+                          value: orderData?.outdelivery,
                           name: 'Out of Delivery'
                         }
                         ]
                       }]
-                    });
+                    });})
                   });
                 </script>
 

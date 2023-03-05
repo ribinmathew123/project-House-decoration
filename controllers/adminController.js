@@ -9,7 +9,7 @@ const bannermodel = require("../models/bannermodel");
 const bcrypt = require("bcrypt");
 const { render } = require("ejs");
 
-// get admin loginpage
+
 const adminLoginpage = async (req, res) => {
   res.render("../views/admin/adminlogin");
 };
@@ -42,70 +42,62 @@ const adminverification = async (req, res, next) => {
   }
 };
 
-// loadadmin-Homepage
-const adminhomepageload = async (req, res) => {
 
-  // find order
-  const order = await Product.find();
-  // find order
-  const boardorderdata = await ordermodel.find();
-  // user
-  const userdata = await User.find();
-  // product count
-  const productcount = await Product.find();
-  // Return','Shipped', 'Placed', 'Delivered', 'Cancelled
-  const ordePending = await ordermodel.find({ status: 'pending' }).count()
-  const Return = await ordermodel.find({ status: 'return' }).count()
-  const shipped = await ordermodel.find({ status: 'shippid' }).count()
-  const Delivered = await ordermodel.find({ status: 'delivered' }).count()
-  const Cancelled = await ordermodel.find({ status: 'cancel' }).count()
 
-  
-  
-  
-  const cartList = await ordermodel.aggregate([
-    { $unwind: "$orderItems" },
-    { $project: { _id: 0, orderStatus: "$orderItems.orderStatus", count: { $sum: 1 } } },
-    { $group: { _id: "$orderStatus", count: { $sum: 1 } } }
+const dashBoardOrderStatus=async(req,res)=>{
+try {
+
+  const orderCounts = await ordermodel.aggregate([
+    {
+      $group: {
+        _id: "$orderStatus",
+        count: { $sum: 1 },
+      },
+    },
   ]);
   
-  console.log(cartList);
+  const counts = {};
   
-  const delivered = cartList.find(item => item._id === "delivered");
-  const pending = cartList.find(item => item._id === "pending");
-  const outdelivery = cartList.find(item => item._id === "out for Delivery");
-  const ship= cartList.find(item => item._id === "shipped");
+  orderCounts.forEach(({ _id, count }) => {
+    counts[_id] = count;
+  });
 
+  res.json({
+    delivered: counts['delivered'] || 0, 
+    pending: counts['pending'] || 0,
+    outdelivery: counts['out for Delivery'] || 0,
+    ship: counts['shipped'] || 0,
+  });
+
+} catch (error) {
+  console.log(error);
+}
+}
+
+
+
+
+// loadadmin-Homepage
+const adminhomepageload = async (req, res) => {
+  try {
+  const orderData = await ordermodel.find();
+  const userData = await User.find();
+  const productData = await Product.find();
+res.render("../views/admin/adminHome.ejs", {  orderData, userData, productData})
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+
+ 
+}
 
   
-  // if (delivered) {
-  //   console.log(`Delivered count: ${delivered.count}`);
-  //   console.log(` count: ${pending.count}`);
-
-  //   console.log(`Delivered count: ${outdelivery.count}`);
-
-  //   console.log(`Delivered count: ${ship.count}`);
-
-  // } else {
-  //   console.log("No deliveries found");
-  // }
+  
+  
   
 
-
-
-  // let orderPerMonth = []
-  // for (let i = 0; i < 12; i++) {
-  //   let numberOfOrders = await ordermodel.find({ month: i }).count()
-  //   orderPerMonth.push(numberOfOrders)
-  // }
-  // console.log(orderPerMonth);
-
-  res.render("../views/admin/adminHome.ejs", { boardorderdata, order, userdata, productcount, pending, Return, ship, outdelivery,delivered, Cancelled})
-};
-
-
-
-// dashboard
 
 
 
@@ -181,21 +173,11 @@ const getproducteditpage = async (req, res) => {
   }
 };
 
-const postproducteditpage = async (req, res) => {
-  try {
-    console.log(req.body.name);
-    console.log(req.body.id);
 
-    const userData = await Product.findByIdAndUpdate(
-      { _id: req.params.product_id },
-      { $set: { name: req.body.name, quantity: req.body.quantity, sell: req.body.sell, description: req.body.description } }
-    );
 
-    res.redirect("/product/product-lists");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+
+
+
 
 
 
@@ -291,11 +273,6 @@ const getCouponDeletPage = async (req, res) => {
     console.log(error);
   }
 }
-
-
-
-
-
 
 
 
@@ -511,11 +488,7 @@ const dashBoardDataGet = async (req, res) => {
   const userChart = await User.aggregate(pipeLine)
   const product = await Product.aggregate(pipeLine)
   const orderChart = await ordermodel.aggregate(pipeLine)
-  console.log(
-    userChart,
-    product,
-    orderChart
-  );
+
   res.json({
 
     userChart,
@@ -526,16 +499,11 @@ const dashBoardDataGet = async (req, res) => {
 }
 
 
-
-
-
-
 module.exports = {
   adminverification,
   adminLoginpage,
   newUserLoad,
   adminlogout,
-  postproducteditpage,
   adminhomepageload,
   getuserlistpage,
   blockuser,
@@ -548,5 +516,7 @@ module.exports = {
   getCouponDeletPage,
   insertbanner
   , bannerblock,
-  banner, dashBoardDataGet,
+  banner,
+   dashBoardDataGet,
+   dashBoardOrderStatus,
 };

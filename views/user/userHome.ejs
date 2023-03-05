@@ -22,6 +22,8 @@
                 aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
+            <% if (banner) { %>
+
             <% for(let i=0; i< banner.length; i++) {%>
 
                 <div class="carousel-item active">
@@ -34,7 +36,9 @@
                     </div>
                 </div>
                 <%}%>
-
+                <% } else { %>
+                    <p>No data available</p>
+                <% } %>
 
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
@@ -75,6 +79,8 @@
                                 <!-- Start Grid View Product -->
                                 <div class="tab-pane active show sort-layout-single" id="layout-3-grid">
                                     <div class="row">
+                                        <% if (alldetails) { %>
+
                                         <% alldetails.slice(0, 9).forEach(function(product) { %>
 
 
@@ -85,9 +91,11 @@
                                                     <div class="image-box">
                                                         <a href="/product-details/<%= product._id%>" class="image-link">
                                                             <img style="max-height:250px"
-                                                                src="<%= product.image_url[0] %>" alt="">
+                                                              
+                                                          src="<%= product.image_url[0]?.url || '/public/image/defaultimg.jpg' %>" alt="">
+
                                                             <img style="max-height:250px"
-                                                                src="<%= product.image_url[2] %>" alt="">
+                                                                src="<%= product.image_url[2]?.url || '/public/image/defaultimg.jpg'%>" alt="">
                                                         </a>
                                                         <!-- <div class="action-link">
                                                                     <div class="action-link-left">
@@ -156,7 +164,9 @@
                                                 </div>
                                                 <!-- End Product Default Single Item -->
                                             </div>
-                                            <% }); %>
+                                            <% }); %>    <% } else { %>
+                                                <p>No data available</p>
+                                            <% } %>
 
 
                                                 <!-- Start Product Defautlt Single -->
@@ -497,10 +507,7 @@
                                         </div>
                                     </div> <!-- End Product Variable Area -->
                                     <div class="modal-product-about-text">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia iste
-                                            laborum ad impedit pariatur esse optio tempora sint ullam autem deleniti nam
-                                            in quos qui nemo ipsum numquam, reiciendis maiores quidem aperiam, rerum vel
-                                            recusandae</p>
+                                        <p></p>
                                     </div>
                                     <!-- Start  Product Details Social Area-->
                                     <div class="modal-product-details-social">

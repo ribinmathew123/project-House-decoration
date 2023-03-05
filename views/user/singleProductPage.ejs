@@ -56,7 +56,7 @@
                                 <% productDetails.image_url.forEach(function(image) { %>
 
                                     <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive">
-                                        <img src="<%= image %>" alt="">
+                                        <img src="<%= image.url %>" alt="">
                                     </div>
                                     <% }); %>
                                    
@@ -69,7 +69,7 @@
                             <div class="swiper-wrapper">
                                 <% productDetails.image_url.forEach(function(image) { %>
                                     <div class="product-image-thumb-single swiper-slide">
-                                        <img class="img-fluid" src="<%= image %>" alt="">
+                                        <img class="img-fluid" src="<%= image.url %>" alt="">
                                     </div>
                                     <% }); %>
                                         

@@ -100,7 +100,7 @@
                         
 
                                   <td><%= product.description%></td>
-                                  <td> <img style="height: 100px; width: 100px;" src="<%= product.image_url[1]%>" alt=""></td>
+                                  <td> <img style="height: 100px; width: 100px;" src="<%= product.image_url[0].url%>" alt=""></td>
 
                                       <td>
                                         <% if(product.iBlocked==true) {%>

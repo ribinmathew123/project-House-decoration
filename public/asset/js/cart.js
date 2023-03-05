@@ -1,10 +1,50 @@
 
-function incrementCount(userId, productId, price) {
+// function incrementCount(userId, productId, price,maxQuantity) {
+//   const baseUrl = window.location.origin;
+//   let quantity = document.querySelector("#Quantity" + productId);
+//   let total = document.querySelector("#total-price" + productId);
+//   let sub_total = document.querySelector("#total-amount1");
+//   let total_amount = document.querySelector("#total-amount2");
+
+//   fetch(baseUrl + "/product/increment-decrement-count/inc", {
+//     method: "PUT",
+//     headers: {
+//       Accept: "application/json, text/plain, */*",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       product_id: productId,
+//       user_id: userId,
+//     }),
+//   }).then(() => {
+//     quantity.innerText = Number(quantity.innerText) + 1;
+//     total_amount.innerText = Number(total_amount.innerText) + Number(price);
+//     sub_total.innerText = Number(sub_total.innerText) + Number(price);
+//     total.innerText = parseInt(total.innerText) + Number(price);
+//   });
+// }
+
+function incrementCount(userId, productId, price, maxQuantity) {
   const baseUrl = window.location.origin;
   let quantity = document.querySelector("#Quantity" + productId);
   let total = document.querySelector("#total-price" + productId);
   let sub_total = document.querySelector("#total-amount1");
   let total_amount = document.querySelector("#total-amount2");
+
+  // Get the current quantity and check if it has reached the maximum limit
+  let currentQuantity = Number(quantity.innerText);
+  if (currentQuantity >= maxQuantity) {
+// Replace this line:
+
+// With this line:
+Swal.fire({
+  icon: 'warning',
+  title: `Out Of Stock`,
+  showConfirmButton: false,
+  timer: 2000
+});
+    return;
+  }
 
   fetch(baseUrl + "/product/increment-decrement-count/inc", {
     method: "PUT",
@@ -17,13 +57,12 @@ function incrementCount(userId, productId, price) {
       user_id: userId,
     }),
   }).then(() => {
-    quantity.innerText = Number(quantity.innerText) + 1;
+    quantity.innerText = currentQuantity + 1;
     total_amount.innerText = Number(total_amount.innerText) + Number(price);
     sub_total.innerText = Number(sub_total.innerText) + Number(price);
     total.innerText = parseInt(total.innerText) + Number(price);
   });
 }
-
 
 
 
