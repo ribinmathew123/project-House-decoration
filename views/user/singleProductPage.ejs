@@ -53,6 +53,8 @@
                         <!-- Start Large Image -->
                         <div class="product-large-image product-large-image-horaizontal swiper-container">
                             <div class="swiper-wrapper">
+                         <% if(productDetails!=null){%>
+
                                 <% productDetails.image_url.forEach(function(image) { %>
 
                                     <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive">
@@ -72,6 +74,7 @@
                                         <img class="img-fluid" src="<%= image.url %>" alt="">
                                     </div>
                                     <% }); %>
+
                                         
                             </div>
                             <!-- Add Arrows -->
@@ -92,7 +95,7 @@
                                 <p>
                                     <%= productDetails.name%>
                             </h4>
-                            <div class="d-flex align-items-center">
+                            <!-- <div class="d-flex align-items-center">
                                 <ul class="review-star">
                                     <li class="fill"><i class="ion-android-star"></i></li>
                                     <li class="fill"><i class="ion-android-star"></i></li>
@@ -101,12 +104,14 @@
                                     <li class="empty"><i class="ion-android-star"></i></li>
                                 </ul>
                                 <a href="#" class="customer-review ml-2">(customer review )</a>
-                            </div>
+                            </div> -->
 
                             <div class="price">$<%= productDetails.cost%>
                             </div>
                             <p>
                                 <%= productDetails.description%>
+                                <%= productDetails.category%>
+
                             </p>
                         </div> <!-- End  Product Details Text Area-->
                         <!-- Start Product Variable Area -->
@@ -181,21 +186,21 @@
                                 </div>
                                 <!-- Start  Product Details Meta Area-->
                                 <div class="product-details-meta mb-21 ">
-                                    <a href="/product/wish-list?productid=<%=productDetails._id%>" class="icon-space-right"><i class="icon-heart">
+                                    <!-- <a href="/product/wish-list?productid=<%=productDetails._id%>" class="icon-space-right"><i class="icon-heart">
 
                                         </i>Add to
-                                        wishlist</a>
+                                        wishlist</a> -->
                                 </div> <!-- End  Product Details Meta Area-->
                             </div> <!-- End Product Variable Area -->
 
                             <!-- Start  Product Details Catagories Area-->
                             <div class="product-details-catagory mb-2">
-                                <span class="title">CATEGORIES:</span>
+                                <!-- <span class="title">CATEGORIES:</span>
                                 <ul>
                                     <li><a href="#">BAR STOOL</a></li>
                                     <li><a href="#">KITCHEN UTENSILS</a></li>
                                     <li><a href="#">TENNIS</a></li>
-                                </ul>
+                                </ul> -->
                             </div> <!-- End  Product Details Catagories Area-->
                             <!-- Start  Product Details Social Area-->
                             <!-- <div class="product-details-social">
@@ -241,9 +246,9 @@
                                 <li><a class="nav-link" data-bs-toggle="tab" href="#specification">
                                         Specification
                                     </a></li>
-                                <li><a class="nav-link" data-bs-toggle="tab" href="#review">
+                                <!-- <li><a class="nav-link" data-bs-toggle="tab" href="#review">
                                         Reviews (1)
-                                    </a></li>
+                                    </a></li> -->
                             </ul> <!-- End Product Details Tab Button -->
 
                             <!-- Start Product Details Tab Content -->
@@ -321,10 +326,22 @@
                                                             <div class="para-content">
                                                                 <p>
                                                                     <%= productDetails.description%>
+                                                                   
+
+
                                                                 </p>
                                                             </div>
+
                                                         </div>
                                                     </div>
+
+                                                    <%} else{%>
+                                                        <div class="errordiv" style="height: 55.4vh;">
+                                                          <h4 class=" d-flex justify-content-center  text-danger"> NO RESULT FOUND</h4>
+                                                
+                                                        </div>
+                                                
+                                                        <%}%>
                                                     <!-- Start - Review Comment Reply-->
                                                     <ul class="comment-reply">
                                                         <li class="comment-reply-list">
@@ -352,7 +369,7 @@
                                                     </ul> <!-- End - Review Comment Reply-->
                                                 </li> <!-- End - Review Comment list-->
                                                 <!-- Start - Review Comment list-->
-                                                <li class="comment-list">
+                                                <!-- <li class="comment-list">
                                                     <div class="comment-wrapper">
                                                         <div class="comment-img">
                                                             <img src="assets/images/user/image-3.png" alt="">
@@ -389,7 +406,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </li> <!-- End - Review Comment list-->
+                                                </li> End - Review Comment list -->
                                             </ul> <!-- End - Review Comment -->
                                             <div class="review-form">
                                                 <div class="review-form-text-top">

@@ -202,6 +202,15 @@
                                         <td><strong>$ <span id="totalAmount"> 
                                                     <%=totalAmount%>
                                                 </span> </strong></td>
+
+                                                <h2>Coupon Details</h2>
+<p>Coupon Code: <%= couponData.couponCode %></p>
+<p>Discount: <%= couponData.discount %> %</p>
+
+<h2>Total Amount</h2>
+<p>Amount: <%= totalAmount.amount %></p>
+<p>Discount: <%= totalAmount.discount %></p>
+<p>New Total: <%= totalAmount.newTotal %></p>
                                     </tr>
                                 </tfoot>
                             </table>

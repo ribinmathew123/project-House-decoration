@@ -5,28 +5,24 @@ const Product = require("../models/productModel");
 const couponModel = require("../models/couponModel");
 const ordermodel = require("../models/orderModel")
 const bannermodel = require("../models/bannermodel");
-
 const bcrypt = require("bcrypt");
 const { render } = require("ejs");
+
+
 
 
 const adminLoginpage = async (req, res) => {
   res.render("../views/admin/adminlogin");
 };
 
-
-// adminverification
 const adminverification = async (req, res, next) => {
   try {
-    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const admin = await Admin.findOne({ email: email });
 
     if (admin) {
-      console.log(admin);
       if (email == admin.email && password == admin.password) {
-        console.log(req.session);
         req.session.email = email;
         res.redirect("/admin");
       } else {
@@ -44,9 +40,8 @@ const adminverification = async (req, res, next) => {
 
 
 
-const dashBoardOrderStatus=async(req,res)=>{
+const dashBoardOrderStatus=async(req,res,next)=>{
 try {
-
   const orderCounts = await ordermodel.aggregate([
     {
       $group: {
@@ -57,11 +52,9 @@ try {
   ]);
   
   const counts = {};
-  
   orderCounts.forEach(({ _id, count }) => {
     counts[_id] = count;
   });
-
   res.json({
     delivered: counts['delivered'] || 0, 
     pending: counts['pending'] || 0,
@@ -70,53 +63,23 @@ try {
   });
 
 } catch (error) {
-  console.log(error);
+next(error)}
 }
-}
 
 
-
-
-// loadadmin-Homepage
-const adminhomepageload = async (req, res) => {
+const adminhomepageload = async (req, res,next) => {
   try {
   const orderData = await ordermodel.find();
   const userData = await User.find();
   const productData = await Product.find();
 res.render("../views/admin/adminHome.ejs", {  orderData, userData, productData})
-    
   } catch (error) {
-    console.log(error);
-    
+next(error)    
   }
-
- 
 }
 
-  
-  
-  
-  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// user list show
-
-const getuserlistpage = async (req, res) => {
+const getuserlistpage = async (req, res,next) => {
   try {
     User.find({}, (err, userdetails) => {
       if (err) {
@@ -128,13 +91,14 @@ const getuserlistpage = async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
-  }
+next(error)  }
 };
+
+
+
 
 const adminlogout = async (req, res) => {
   req.session.email = null;
-  // req.session.destroy();
   res.redirect("/admin/login");
 };
 const newUserLoad = async (req, res) => {
@@ -144,7 +108,6 @@ const newUserLoad = async (req, res) => {
       let wrongr = req.session.wrongr;
       req.session.wrong = null;
       req.session.wrongr = null;
-
       res.render("../views/admin/new-user", { wrong, wrongr });
     } catch (error) {
       console.log(error.message);
@@ -154,11 +117,12 @@ const newUserLoad = async (req, res) => {
   }
 };
 
-const getproducteditpage = async (req, res) => {
+
+
+const getproducteditpage = async (req, res,next) => {
   try {
     const id = req.query.id;
     const userData = await Product.findById({ _id: id });
-    console.log(req.session.error);
     if (userData) {
       let error = req.session.error;
       req.session.error = null;
@@ -169,24 +133,13 @@ const getproducteditpage = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
-  }
+next(error)  }
 };
 
 
-
-
-
-
-
-
-
-// block user
-const blockuser = async (req, res) => {
+const blockuser = async (req, res,next) => {
   try {
     const check = await User.findById({ _id: req.query.id });
-
-    console.log(req.query);
     if (check.iBlocked == true) {
       await User.findByIdAndUpdate(
         { _id: req.query.id },
@@ -200,22 +153,23 @@ const blockuser = async (req, res) => {
     }
     res.redirect("/admin/user-list");
   } catch (error) {
-    console.log(error.message);
-  }
+next(error)  }
 };
 
-// coupon manage
-const getCouponPage = async (req, res) => {
+
+
+
+// coupon management
+const getCouponPage = async (req, res,next) => {
   try {
     res.render("../views/admin/couponPage.ejs");
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const postCouponPage = async (req, res) => {
 
-
+const postCouponPage = async (req, res,next) => {
   const data = {
     couponName: req.body.couponName,
     description: req.body.des,
@@ -226,64 +180,50 @@ const postCouponPage = async (req, res) => {
     maximumAmount: req.body.max,
     discount: req.body.discount,
   };
-
   try {
     const coupon = new couponModel(data);
     await coupon.save();
     res.redirect("/admin/couponData");
   } catch (error) {
-    console.log(error);
+       next(error);
   }
 };
 
-const getCouponDisplayPage = async (req, res) => {
+
+const getCouponDisplayPage = async (req, res,next) => {
   try {
     const couponData = await couponModel.find();
     res.render("../views/admin/couponDisplayPage", { couponData });
 
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 }
 
-//cupon edit page
-const getCouponEditPage = async (req, res) => {
+
+const getCouponEditPage = async (req, res,next) => {
   try {
-
-    console.log(req.query.id)
     const couponData = await couponModel.find({ _id: req.query.id })
-    console.log(couponData);
-
     res.render("../views/admin/couponEditPage.ejs", { couponData })
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 }
 
 
-
-const getCouponDeletPage = async (req, res) => {
+const getCouponDeletPage = async (req, res,next) => {
   try {
-
-    console.log(req.query.id)
     const couponData = await couponModel.findByIdAndDelete({ _id: req.query.id });
     res.redirect("/admin/couponData");
-
   } catch (error) {
-    console.log(error);
+  next(error);
   }
 }
 
 
 
-
-
-
-const postCouponEditPage = async (req, res) => {
-
+const postCouponEditPage = async (req, res,next) => {
   try {
-    console.log(req.query.id);
-
     const userData = await couponModel.findByIdAndUpdate({ _id: req.query.id },
       {
         $set: {
@@ -298,47 +238,37 @@ const postCouponEditPage = async (req, res) => {
         }
       })
     res.redirect("/admin/couponData");
-
-
   } catch (error) {
-    console.log(error);
-
+    next(error);
   }
 }
 
-
-
-// insert banner
-const insertbanner = (req, res) => {
+const insertbanner = (req, res,next) => {
   try {
     let banner = new bannermodel({
       bannertext: req.body.bannertext,
-
       image: req.file.filename,
     });
     banner.save();
     res.redirect("/admin/adminbanner");
   } catch (error) {
-    console.log(error.message);
-  }
+next(error)  }
 };
 
-// display banner image
 const banner = async (req, res) => {
   try {
     const bannerData = await bannermodel.find({});
     res.render("../views/admin/banner.ejs", {
       bannerData: bannerData,
     });
-
-
   } catch (err) {
     console.log(err.message);
   }
   console.log("reach");
 };
-// block banner image
-const bannerblock = async (req, res) => {
+
+
+const bannerblock = async (req, res,next) => {
   try {
     const check = await bannermodel.findById({ _id: req.query.id });
 
@@ -355,8 +285,7 @@ const bannerblock = async (req, res) => {
     }
     res.redirect("/admin/adminbanner");
   } catch (error) {
-    console.log(error.message);
-  }
+next(error)  }
 };
 
 

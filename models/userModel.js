@@ -19,7 +19,10 @@ const userSchema=new mongoose.Schema
       type: Boolean,
       default: false,
     },
- 
+    status: {
+      type: Boolean,
+      default: true,
+    },
 
    iBlocked:{
      type:Boolean,

@@ -159,7 +159,8 @@ let status = false
 function applyCoupon() {
   const couponCode = document.getElementById("coupon-code-input").value;
   let total_amount = document.querySelector("#total-amount1");
-
+  console.log(total_amount);
+  const amount = total_amount.textContent;
   if(!status){
     fetch("/product/couponcheck", {
       method: "POST",
@@ -203,7 +204,6 @@ function applyCoupon() {
     });
   }
 }
-
 
 
 
